@@ -1,0 +1,278 @@
+@import "tailwindcss";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #0c0a09;
+  color: #f5f5f4;
+}
+
+/* ═══ 主容器 ═══ */
+.hero-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* ═══ 背景媒體 ═══ */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+/* ═══ 漸層遮罩 ═══ */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* 手機版遮罩: 底部集中 */
+.hero-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.05) 0%,
+    rgba(0,0,0,0.08) 35%,
+    rgba(0,0,0,0.6) 68%,
+    rgba(0,0,0,0.88) 100%
+  );
+}
+
+/* ═══ 頂部品牌 LOGO ═══ */
+.brand-top {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  padding: 20px 24px;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+}
+
+.brand-logo {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* ═══ 素材選擇器 ═══ */
+.picker-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 30;
+  padding: 8px 16px;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+}
+
+.picker-panel {
+  position: absolute;
+  top: 56px;
+  right: 16px;
+  z-index: 30;
+  width: 220px;
+  border-radius: 16px;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.15);
+  overflow: hidden;
+}
+
+.picker-header {
+  padding: 12px 16px 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.5);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.picker-item {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+
+.picker-item.active {
+  background: rgba(212,175,55,0.2);
+  color: #d4af37;
+  font-weight: 800;
+}
+
+/* ═══ 底部內容 (手機版) ═══ */
+.hero-content {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+  padding: 0 28px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ═══ 標語 ═══ */
+.hero-title {
+  color: white;
+  font-size: clamp(28px, 7.5vw, 44px);
+  font-weight: 900;
+  line-height: 1.15;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  letter-spacing: -0.01em;
+}
+
+/* ═══ 毛玻璃按鈕網格 ═══ */
+.btn-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  max-width: 360px;
+  margin-bottom: 28px;
+}
+
+.glass-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: white;
+  font-size: 16px;
+  font-weight: 800;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.glass-btn:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.25);
+  transform: scale(1.02);
+}
+
+/* ═══ 底部小字 ═══ */
+.hero-footer {
+  color: rgba(255,255,255,0.25);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════
+   電腦版 (>= 768px)
+   ═══════════════════════════════════════════ */
+@media (min-width: 768px) {
+  .hero-overlay {
+    background: linear-gradient(
+      135deg,
+      rgba(0,0,0,0.7) 0%,
+      rgba(0,0,0,0.4) 40%,
+      rgba(0,0,0,0.15) 70%,
+      rgba(0,0,0,0.1) 100%
+    );
+  }
+
+  .brand-top {
+    padding: 32px 48px;
+    justify-content: flex-start;
+  }
+
+  .brand-logo {
+    height: 36px;
+  }
+
+  .hero-content {
+    bottom: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    width: auto;
+    padding: 0 80px;
+    align-items: flex-start;
+    max-width: 700px;
+  }
+
+  .hero-title {
+    font-size: clamp(40px, 5vw, 64px);
+    text-align: left;
+    margin-bottom: 48px;
+  }
+
+  .btn-grid {
+    max-width: 480px;
+    gap: 16px;
+  }
+
+  .glass-btn {
+    padding: 32px 24px;
+    font-size: 18px;
+    border-radius: 20px;
+  }
+
+  .hero-footer {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+  }
+}
+
+/* ═══ 超寬螢幕 (>= 1200px) ═══ */
+@media (min-width: 1200px) {
+  .hero-content {
+    padding: 0 120px;
+    max-width: 800px;
+  }
+
+  .hero-title {
+    font-size: clamp(48px, 4.5vw, 72px);
+    margin-bottom: 56px;
+  }
+
+  .btn-grid {
+    max-width: 560px;
+    gap: 20px;
+  }
+
+  .glass-btn {
+    padding: 36px 28px;
+    font-size: 20px;
+  }
+}
