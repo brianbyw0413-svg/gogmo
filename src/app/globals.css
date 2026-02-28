@@ -221,28 +221,32 @@ body {
 .marquee-container {
   position: relative;
   width: 100%;
-  /* 左右漸隱遮罩 */
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0%,
-    black 8%,
-    black 92%,
+    black 6%,
+    black 94%,
     transparent 100%
   );
   mask-image: linear-gradient(
     to right,
     transparent 0%,
-    black 8%,
-    black 92%,
+    black 6%,
+    black 94%,
     transparent 100%
   );
 }
 
 .marquee-track {
   display: flex;
-  gap: var(--gap, 16px);
+  gap: var(--gap, 14px);
   width: max-content;
-  animation: marquee-scroll 30s linear infinite;
+  animation: marquee-scroll var(--speed, 30s) linear infinite;
+}
+
+/* 反向滾動（第二排） */
+.marquee-track.marquee-reverse {
+  animation: marquee-scroll-reverse var(--speed, 28s) linear infinite;
 }
 
 /* hover 時暫停 */
@@ -252,13 +256,12 @@ body {
 
 .marquee-card {
   flex-shrink: 0;
-  width: var(--card-width, 320px);
+  width: var(--card-width, 300px);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* hover 卡片微放大 */
 .marquee-card:hover {
-  transform: scale(1.03);
+  transform: scale(1.04);
   z-index: 10;
 }
 
@@ -267,6 +270,15 @@ body {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-1 * (var(--card-width, 320px) + var(--gap, 16px)) * var(--card-count, 6)));
+    transform: translateX(calc(-1 * (var(--card-width, 300px) + var(--gap, 14px)) * var(--card-count, 7)));
+  }
+}
+
+@keyframes marquee-scroll-reverse {
+  0% {
+    transform: translateX(calc(-1 * (var(--card-width, 300px) + var(--gap, 14px)) * var(--card-count, 7)));
+  }
+  100% {
+    transform: translateX(0);
   }
 }

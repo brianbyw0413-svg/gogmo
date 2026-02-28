@@ -1,13 +1,27 @@
 // 首頁 - 公開展示頁面
-// 動態 Case 卡片展示牆 — 無限水平滾動 (hover 暫停)
+// 動態 Case 卡片展示牆 — 三排無限水平滾動 (hover 暫停)
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Trip } from '@/types';
 import { getTrips } from '@/lib/data';
 import TripCard from '@/components/TripCard';
+
+/* 將行程分成 N 排，不足時循環填充 */
+function splitIntoRows(trips: Trip[], rowCount: number, minPerRow: number = 6): Trip[][] {
+  const rows: Trip[][] = [];
+  for (let i = 0; i < rowCount; i++) {
+    const row: Trip[] = [];
+    // 從不同偏移量開始取，讓每排內容不同
+    for (let j = 0; j < Math.max(trips.length, minPerRow); j++) {
+      row.push(trips[(j + i * 2) % trips.length]);
+    }
+    rows.push(row);
+  }
+  return rows;
+}
 
 export default function HomePage() {
   const [trips, setTrips] = useState<Trip[]>([]);
@@ -15,14 +29,16 @@ export default function HomePage() {
 
   useEffect(() => {
     getTrips().then(data => {
-      const activeTrips = data.filter(t => t.status !== 'completed' && t.status !== 'cancelled');
-      setTrips(activeTrips);
+      setTrips(data);
       setLoading(false);
     });
   }, []);
 
-  // 複製卡片以實現無縫循環
-  const marqueeTrips = trips.length > 0 ? [...trips, ...trips] : [];
+  // 三排卡片資料，每排複製一份實現無縫循環
+  const rows = useMemo(() => {
+    if (trips.length === 0) return [];
+    return splitIntoRows(trips, 3, 7);
+  }, [trips]);
 
   return (
     <div className="min-h-screen bg-[#0c0a09] grid-bg">
@@ -50,7 +66,7 @@ export default function HomePage() {
       <main className="pt-24 pb-12">
         <div className="max-w-7xl mx-auto px-4">
           {/* Hero 區域 */}
-          <div className="text-center mb-12 animate-fadeIn">
+          <div className="text-center mb-8 animate-fadeIn">
             <h1 className="text-4xl md:text-5xl font-bold text-[#fafaf9] mb-4">
               <span className="text-[#d4af37]">GMO</span>
               {' '}專業機場接送
@@ -62,7 +78,7 @@ export default function HomePage() {
           </div>
 
           {/* 統計資訊 */}
-          <div className="grid grid-cols-3 gap-4 mb-12 max-w-2xl mx-auto">
+          <div className="grid grid-cols-3 gap-4 mb-8 max-w-2xl mx-auto">
             <div className="glass-card p-4 text-center">
               <div className="text-2xl font-bold text-[#d4af37]">{trips.length}</div>
               <div className="text-xs text-[#a8a29e]">待執行行程</div>
@@ -82,13 +98,8 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* 即時行程 — 無限滾動卡片牆 */}
-        <div className="mb-12">
-          <h2 className="text-xl font-semibold text-[#fafaf9] mb-6 flex items-center gap-2 max-w-7xl mx-auto px-4">
-            <span className="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse-slow"></span>
-            即時行程
-          </h2>
-
+        {/* 三排無限滾動卡片牆 */}
+        <div className="mb-12 space-y-4">
           {loading ? (
             <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {[...Array(4)].map((_, i) => (
@@ -99,27 +110,34 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-          ) : marqueeTrips.length > 0 ? (
-            /* 無限水平滾動容器 */
-            <div className="marquee-container overflow-hidden w-full">
-              <div 
-                className="marquee-track"
-                style={{
-                  '--card-count': trips.length,
-                  '--card-width': '320px',
-                  '--gap': '16px',
-                } as React.CSSProperties}
-              >
-                {marqueeTrips.map((trip, index) => (
+          ) : rows.length > 0 ? (
+            rows.map((row, rowIndex) => {
+              const isReverse = rowIndex % 2 === 1; // 第二排反向
+              const duped = [...row, ...row]; // 複製一份無縫循環
+              const speed = [35, 28, 32][rowIndex]; // 每排速度不同
+              return (
+                <div key={rowIndex} className="marquee-container overflow-hidden w-full">
                   <div
-                    key={`${trip.id}-${index}`}
-                    className="marquee-card"
+                    className={`marquee-track ${isReverse ? 'marquee-reverse' : ''}`}
+                    style={{
+                      '--card-count': row.length,
+                      '--card-width': '300px',
+                      '--gap': '14px',
+                      '--speed': `${speed}s`,
+                    } as React.CSSProperties}
                   >
-                    <TripCard trip={trip} showActions={false} variant="public" />
+                    {duped.map((trip, index) => (
+                      <div
+                        key={`r${rowIndex}-${trip.id}-${index}`}
+                        className="marquee-card"
+                      >
+                        <TripCard trip={trip} showActions={false} variant="public" />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
+              );
+            })
           ) : (
             <div className="max-w-7xl mx-auto px-4">
               <div className="glass-card p-8 text-center">
