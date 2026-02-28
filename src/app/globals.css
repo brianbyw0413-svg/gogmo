@@ -216,3 +216,57 @@ body {
   color: var(--color-text);
   border-color: var(--color-gold);
 }
+
+/* ═══ 無限水平滾動 (Marquee) ═══ */
+.marquee-container {
+  position: relative;
+  width: 100%;
+  /* 左右漸隱遮罩 */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+}
+
+.marquee-track {
+  display: flex;
+  gap: var(--gap, 16px);
+  width: max-content;
+  animation: marquee-scroll 30s linear infinite;
+}
+
+/* hover 時暫停 */
+.marquee-container:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-card {
+  flex-shrink: 0;
+  width: var(--card-width, 320px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* hover 卡片微放大 */
+.marquee-card:hover {
+  transform: scale(1.03);
+  z-index: 10;
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-1 * (var(--card-width, 320px) + var(--gap, 16px)) * var(--card-count, 6)));
+  }
+}

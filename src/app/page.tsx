@@ -1,5 +1,5 @@
 // 首頁 - 公開展示頁面
-// 動態 Case 卡片展示牆
+// 動態 Case 卡片展示牆 — 無限水平滾動 (hover 暫停)
 
 'use client';
 
@@ -12,38 +12,17 @@ import TripCard from '@/components/TripCard';
 export default function HomePage() {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
-  const [displayTrips, setDisplayTrips] = useState<Trip[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
-  // 載入行程資料
   useEffect(() => {
     getTrips().then(data => {
-      // 過濾顯示：只顯示未完成的行程
       const activeTrips = data.filter(t => t.status !== 'completed' && t.status !== 'cancelled');
       setTrips(activeTrips);
-      setDisplayTrips(activeTrips.slice(0, 4));
       setLoading(false);
     });
   }, []);
 
-  // 自動輪播效果
-  useEffect(() => {
-    if (trips.length <= 4) return;
-
-    const interval = setInterval(() => {
-      setCurrentIndex(prev => {
-        const nextIndex = (prev + 1) % trips.length;
-        const newDisplay = [];
-        for (let i = 0; i < 4; i++) {
-          newDisplay.push(trips[(nextIndex + i) % trips.length]);
-        }
-        setDisplayTrips(newDisplay);
-        return nextIndex;
-      });
-    }, 3000); // 每 3 秒輪播
-
-    return () => clearInterval(interval);
-  }, [trips]);
+  // 複製卡片以實現無縫循環
+  const marqueeTrips = trips.length > 0 ? [...trips, ...trips] : [];
 
   return (
     <div className="min-h-screen bg-[#0c0a09] grid-bg">
@@ -68,8 +47,8 @@ export default function HomePage() {
       </header>
 
       {/* 主內容 */}
-      <main className="pt-24 pb-12 px-4">
-        <div className="max-w-7xl mx-auto">
+      <main className="pt-24 pb-12">
+        <div className="max-w-7xl mx-auto px-4">
           {/* Hero 區域 */}
           <div className="text-center mb-12 animate-fadeIn">
             <h1 className="text-4xl md:text-5xl font-bold text-[#fafaf9] mb-4">
@@ -101,52 +80,63 @@ export default function HomePage() {
               <div className="text-xs text-[#a8a29e]">今日總金額</div>
             </div>
           </div>
+        </div>
 
-          {/* 動態卡片牆 */}
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-[#fafaf9] mb-4 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse-slow"></span>
-              即時行程
-            </h2>
-            
-            {loading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {[...Array(4)].map((_, i) => (
-                  <div key={i} className="glass-card p-4 animate-pulse">
-                    <div className="h-4 bg-[#292524] rounded w-1/2 mb-4"></div>
-                    <div className="h-3 bg-[#292524] rounded w-3/4 mb-2"></div>
-                    <div className="h-3 bg-[#292524] rounded w-2/3"></div>
-                  </div>
-                ))}
-              </div>
-            ) : displayTrips.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {displayTrips.map((trip, index) => (
-                  <div 
-                    key={trip.id} 
-                    className="animate-fadeIn"
-                    style={{ animationDelay: `${index * 100}ms` }}
+        {/* 即時行程 — 無限滾動卡片牆 */}
+        <div className="mb-12">
+          <h2 className="text-xl font-semibold text-[#fafaf9] mb-6 flex items-center gap-2 max-w-7xl mx-auto px-4">
+            <span className="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse-slow"></span>
+            即時行程
+          </h2>
+
+          {loading ? (
+            <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="glass-card p-4 animate-pulse">
+                  <div className="h-4 bg-[#292524] rounded w-1/2 mb-4"></div>
+                  <div className="h-3 bg-[#292524] rounded w-3/4 mb-2"></div>
+                  <div className="h-3 bg-[#292524] rounded w-2/3"></div>
+                </div>
+              ))}
+            </div>
+          ) : marqueeTrips.length > 0 ? (
+            /* 無限水平滾動容器 */
+            <div className="marquee-container overflow-hidden w-full">
+              <div 
+                className="marquee-track"
+                style={{
+                  '--card-count': trips.length,
+                  '--card-width': '320px',
+                  '--gap': '16px',
+                } as React.CSSProperties}
+              >
+                {marqueeTrips.map((trip, index) => (
+                  <div
+                    key={`${trip.id}-${index}`}
+                    className="marquee-card"
                   >
                     <TripCard trip={trip} showActions={false} variant="public" />
                   </div>
                 ))}
               </div>
-            ) : (
+            </div>
+          ) : (
+            <div className="max-w-7xl mx-auto px-4">
               <div className="glass-card p-8 text-center">
                 <p className="text-[#a8a29e]">目前沒有待執行的行程</p>
               </div>
-            )}
-          </div>
+            </div>
+          )}
+        </div>
 
-          {/* CTA 按鈕 */}
-          <div className="text-center">
-            <Link href="/lobby" className="btn-gold-outline inline-flex items-center gap-2 px-6 py-3">
-              查看更多行程
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-          </div>
+        {/* CTA 按鈕 */}
+        <div className="text-center px-4">
+          <Link href="/lobby" className="btn-gold-outline inline-flex items-center gap-2 px-6 py-3">
+            查看更多行程
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
         </div>
       </main>
 
