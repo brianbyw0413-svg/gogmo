@@ -52,9 +52,9 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#d4af37] to-[#b8962f] flex items-center justify-center">
-              <span className="text-xl font-bold text-[#0c0a09]">P</span>
+              <span className="text-xl font-bold text-[#0c0a09]">G</span>
             </div>
-            <span className="text-xl font-bold text-[#fafaf9]">PickYouUP</span>
+            <span className="text-xl font-bold text-[#fafaf9]">GMO</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/lobby" className="text-[#a8a29e] hover:text-[#d4af37] transition-colors">
@@ -73,11 +73,12 @@ export default function HomePage() {
           {/* Hero 區域 */}
           <div className="text-center mb-12 animate-fadeIn">
             <h1 className="text-4xl md:text-5xl font-bold text-[#fafaf9] mb-4">
-              專業機場接送
+              <span className="text-[#d4af37]">GMO</span>
+              {' '}專業機場接送
               <span className="text-[#d4af37]">派單平台</span>
             </h1>
             <p className="text-lg text-[#a8a29e] max-w-2xl mx-auto">
-              連接車頭與司機的橋樑，即時派單、即時接單，讓接送更有效率
+              Give Me Order — 連接車頭與司機的橋樑，即時派單、即時接單
             </p>
           </div>
 
@@ -152,7 +153,7 @@ export default function HomePage() {
       {/* 頁腳 */}
       <footer className="border-t border-[#292524] py-8">
         <div className="max-w-7xl mx-auto px-4 text-center text-sm text-[#a8a29e]">
-          <p>© 2026 PickYouUP. All rights reserved.</p>
+          <p>© 2026 GMO — Give Me Order by PickYouUP. All rights reserved.</p>
           <p className="mt-2">MVP 版本 - 機場接送派單系統</p>
         </div>
       </footer>

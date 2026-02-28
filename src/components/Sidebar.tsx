@@ -53,7 +53,7 @@ export default function Sidebar() {
             <span className="text-xl font-bold text-[#0c0a09]">P</span>
           </div>
           <div>
-            <h1 className="text-lg font-bold text-[#fafaf9]">PickYouUP</h1>
+            <h1 className="text-lg font-bold text-[#fafaf9]">GMO</h1>
             <p className="text-xs text-[#a8a29e]">車頭端管理系統</p>
           </div>
         </Link>
@@ -89,7 +89,7 @@ export default function Sidebar() {
       {/* 底部資訊 */}
       <div className="p-4 border-t border-[#292524]">
         <div className="text-xs text-[#a8a29e] text-center">
-          <p>PickYouUP v1.0.0</p>
+          <p>GMO v1.0.0</p>
           <p className="mt-1">MVP 版本</p>
         </div>
       </div>

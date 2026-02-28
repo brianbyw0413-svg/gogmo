@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import Link from 'next/link';
 import Sidebar from '@/components/Sidebar';
 
 interface DashboardLayoutProps {
@@ -68,7 +69,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#d4af37] to-[#b8962f] flex items-center justify-center mx-auto mb-4">
               <span className="text-3xl font-bold text-[#0c0a09]">P</span>
             </div>
-            <h1 className="text-2xl font-bold text-[#fafaf9]">PickYouUP</h1>
+            <h1 className="text-2xl font-bold text-[#fafaf9]">GMO</h1>
             <p className="text-[#a8a29e] mt-2">車頭端管理系統</p>
           </div>
 

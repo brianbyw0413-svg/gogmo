@@ -67,7 +67,7 @@ export default function DispatchForm({ onSuccess }: DispatchFormProps) {
         ...formData,
         pickup_area: pickupArea,
         dropoff_area: dropoffArea,
-        driver_id: selectedDriver || null
+        driver_id: selectedDriver || undefined
       };
 
       const result = await createTrip(tripData);

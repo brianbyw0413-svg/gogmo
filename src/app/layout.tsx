@@ -16,8 +16,8 @@ const notoSansTC = Noto_Sans_TC({
 });
 
 export const metadata: Metadata = {
-  title: "PickYouUP - 派單牆",
-  description: "專業機場接送派單平台",
+  title: "GMO — Give Me Order | 派單平台",
+  description: "GMO 專業機場接送派單平台 by PickYouUP",
 };
 
 export default function RootLayout({
