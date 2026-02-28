@@ -274,6 +274,24 @@ body {
   }
 }
 
+/* ===== 智慧配對卡片光暈效果 ===== */
+.match-card-glow {
+  border-color: rgba(212, 175, 55, 0.4);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.1), inset 0 0 15px rgba(212, 175, 55, 0.03);
+  animation: matchGlow 3s ease-in-out infinite;
+}
+
+@keyframes matchGlow {
+  0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.1), inset 0 0 15px rgba(212, 175, 55, 0.03); }
+  50% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.2), inset 0 0 25px rgba(212, 175, 55, 0.05); }
+}
+
+/* ===== date/time input 深色主題 ===== */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.7);
+}
+
 @keyframes marquee-scroll-reverse {
   0% {
     transform: translateX(calc(-1 * (var(--card-width, 300px) + var(--gap, 14px)) * var(--card-count, 7)));
@@ -281,4 +299,88 @@ body {
   100% {
     transform: translateX(0);
   }
+}
+
+/* ═══ 司機端底部導航 ═══ */
+.driver-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1c1917;
+  border-top: 1px solid #292524;
+  z-index: 50;
+  padding: 8px 0;
+  padding-bottom: env(safe-area-inset-bottom, 8px);
+}
+
+/* 智慧配對推薦卡片 */
+.match-card {
+  border: 2px solid #d4af37;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+  animation: matchGlow 2s ease-in-out infinite;
+}
+
+@keyframes matchGlow {
+  0%, 100% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.15); }
+  50% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.35); }
+}
+
+/* 司機端 Sidebar */
+.driver-sidebar {
+  background: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border);
+}
+
+/* 成功提示 */
+.toast-success {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background: rgba(34, 197, 94, 0.9);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  z-index: 100;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Tab 按鈕群組 */
+.tab-group {
+  display: flex;
+  gap: 4px;
+  background: var(--color-bg-secondary);
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+}
+
+.tab-group button {
+  padding: 6px 14px;
+  border-radius: 7px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+/* 排序/篩選按鈕 */
+.filter-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  border-color: var(--color-gold);
+  color: var(--color-text);
+}
+
+.filter-btn.active {
+  background: var(--color-gold);
+  color: var(--color-bg);
+  border-color: var(--color-gold);
+  font-weight: 600;
 }

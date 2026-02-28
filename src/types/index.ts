@@ -70,6 +70,20 @@ export interface Transaction {
   driver?: Driver;
 }
 
+// 智慧配對結果
+export interface TripMatch {
+  trip: Trip;
+  matchType: 'route' | 'bundle' | 'time';
+  matchScore: number;
+  reason: string; // e.g. "與您 3/5 的桃園送機順路"
+}
+
+// 司機端登入資料
+export interface DriverSession {
+  driver: Driver;
+  loginAt: string;
+}
+
 // 派單表單資料
 export interface DispatchFormData {
   service_type: ServiceType;

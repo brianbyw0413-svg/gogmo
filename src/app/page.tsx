@@ -55,6 +55,9 @@ export default function HomePage() {
             <Link href="/lobby" className="text-[#a8a29e] hover:text-[#d4af37] transition-colors">
               接單大廳
             </Link>
+            <Link href="/driver" className="text-[#a8a29e] hover:text-[#d4af37] transition-colors">
+              司機登入
+            </Link>
             <Link href="/dashboard" className="btn-gold">
               車頭登入
             </Link>
