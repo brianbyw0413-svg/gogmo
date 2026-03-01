@@ -2,6 +2,10 @@
 
 import { Trip, Driver, Transaction } from '@/types';
 
+// 動態日期 — 讓急單呼吸效果能觸發
+const today = new Date().toISOString().split('T')[0];
+const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+
 // 模擬司機資料
 export const mockDrivers: Driver[] = [
   {
@@ -111,7 +115,7 @@ export const mockTrips: Trip[] = [
     dropoff_address: '台中市逢甲大學',
     pickup_area: '桃園機場',
     dropoff_area: '台中市',
-    service_date: '2026-03-01',
+    service_date: today,
     service_time: '14:00:00',
     flight_number: 'CI641',
     passenger_count: 2,
@@ -121,7 +125,8 @@ export const mockTrips: Trip[] = [
     note: '航班延誤勿催',
     status: 'open',
     driver_id: undefined,
-    updated_at: '2026-02-28T00:00:00Z'
+    updated_at: '2026-02-28T00:00:00Z',
+    price_boost: 200,
   },
   {
     id: 'trip-3',
@@ -176,7 +181,7 @@ export const mockTrips: Trip[] = [
     dropoff_address: '高雄國際機場',
     pickup_area: '台南市',
     dropoff_area: '高雄機場',
-    service_date: '2026-03-02',
+    service_date: today,
     service_time: '16:30:00',
     flight_number: '',
     passenger_count: 2,
@@ -186,7 +191,8 @@ export const mockTrips: Trip[] = [
     note: '',
     status: 'open',
     driver_id: undefined,
-    updated_at: '2026-02-28T00:00:00Z'
+    updated_at: '2026-02-28T00:00:00Z',
+    price_boost: 300,
   },
   {
     id: 'trip-6',
@@ -241,7 +247,7 @@ export const mockTrips: Trip[] = [
     dropoff_address: '台北市大安區信義路四段',
     pickup_area: '桃園機場',
     dropoff_area: '台北市',
-    service_date: '2026-03-01',
+    service_date: tomorrow,
     service_time: '16:30:00',
     flight_number: 'CX470',
     passenger_count: 2,
@@ -262,7 +268,7 @@ export const mockTrips: Trip[] = [
     dropoff_address: '桃園國際機場第一航廈',
     pickup_area: '新北市',
     dropoff_area: '桃園機場',
-    service_date: '2026-03-01',
+    service_date: tomorrow,
     service_time: '05:30:00',
     flight_number: 'BR867',
     passenger_count: 1,
@@ -272,7 +278,8 @@ export const mockTrips: Trip[] = [
     note: '凌晨班機，請準時',
     status: 'open',
     driver_id: undefined,
-    updated_at: '2026-02-28T11:00:00Z'
+    updated_at: '2026-02-28T11:00:00Z',
+    price_boost: 150,
   },
   {
     id: 'trip-10',

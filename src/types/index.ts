@@ -47,6 +47,7 @@ export interface Trip {
   status: TripStatus;
   driver_id?: string;
   updated_at: string;
+  price_boost?: number;
   // 關聯資料
   driver?: Driver;
 }

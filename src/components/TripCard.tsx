@@ -11,7 +11,7 @@ interface TripCardProps {
   onCancel?: (tripId: string) => void;
   onComplete?: (tripId: string) => void;
   showActions?: boolean;
-  variant?: 'default' | 'compact' | 'public';
+  variant?: 'default' | 'compact' | 'public' | 'driver';
 }
 
 // 取得狀態顯示文字
@@ -40,11 +40,6 @@ function getStatusClass(status: TripStatus): string {
   return classMap[status];
 }
 
-// 取得服務類型顯示
-function getServiceTypeText(type: string): string {
-  return type === 'dropoff' ? '送機' : '接機';
-}
-
 // 取得付款模式顯示
 function getPaymentModeText(mode: string): string {
   return mode === 'customer_pay' ? '客下匯款' : '司機回金';
@@ -60,6 +55,15 @@ export default function TripCard({
 }: TripCardProps) {
   const isCompact = variant === 'compact';
   const isPublic = variant === 'public';
+  const isDefault = variant === 'default';
+
+  // 急單判斷：status === 'open' 且服務時間在 24 小時內
+  const isUrgent = trip.status === 'open' && (() => {
+    const now = new Date();
+    const serviceDateTime = new Date(`${trip.service_date}T${trip.service_time}`);
+    const diffHours = (serviceDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+    return diffHours >= 0 && diffHours <= 24;
+  })();
 
   // 格式化時間
   const formatTime = (time: string) => {
@@ -75,21 +79,46 @@ export default function TripCard({
     return d.toLocaleDateString('zh-TW', { month: 'short', day: 'numeric' });
   };
 
+  const isPickup = trip.service_type === 'pickup';
+
   return (
     <div className={`
-      glass-card p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
+      glass-card p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg relative
       ${isCompact ? 'p-3' : ''}
       ${isPublic ? 'cursor-pointer hover:border-[#d4af37]' : ''}
+      ${isUrgent ? 'urgent-breathing' : ''}
     `}>
-      {/* 卡片-header：狀態標籤 + 服務類型 */}
+      {/* 急單加價標籤 */}
+      {trip.price_boost && trip.price_boost > 0 && (
+        <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse z-10">
+          🔥 加價 +${trip.price_boost}
+        </span>
+      )}
+
+      {/* 接機/送機大型標籤 */}
+      <div className="mb-3">
+        <span className={`inline-flex items-center gap-1.5 text-base font-bold px-3 py-1.5 rounded-lg border ${
+          isPickup
+            ? 'bg-blue-500/20 text-blue-400 border-blue-500/30'
+            : 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+        }`}>
+          {isPickup ? '✈️↓' : '✈️↑'} {isPickup ? '接機' : '送機'}
+        </span>
+      </div>
+
+      {/* 卡片-header：狀態標籤 + 付款模式 — 司機動態只在車頭介面(default)顯示 */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(trip.status)}`}>
-            {getStatusText(trip.status)}
-          </span>
-          <span className="text-xs text-[#a8a29e]">
-            {getServiceTypeText(trip.service_type)}
-          </span>
+          {isDefault && (
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(trip.status)}`}>
+              {getStatusText(trip.status)}
+            </span>
+          )}
+          {!isDefault && trip.status === 'open' && (
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(trip.status)}`}>
+              {getStatusText(trip.status)}
+            </span>
+          )}
         </div>
         {!isPublic && (
           <span className={`text-xs px-2 py-1 rounded ${trip.payment_mode === 'customer_pay' ? 'bg-[#d4af37]/20 text-[#d4af37]' : 'bg-blue-500/20 text-blue-400'}`}>
@@ -151,8 +180,8 @@ export default function TripCard({
         </div>
       )}
 
-      {/* 司機資訊（已接單時顯示） */}
-      {trip.driver && !isPublic && (
+      {/* 司機資訊（已接單時顯示）— 只在車頭介面 */}
+      {trip.driver && isDefault && (
         <div className="mb-3 p-2 rounded-lg bg-[#1c1917] border border-[#292524]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">

@@ -75,8 +75,10 @@ export default function HomePage() {
               <span className="text-[#d4af37]">M</span>e{' '}
               <span className="text-[#d4af37]">O</span>rder
             </h1>
-            <p className="text-lg md:text-xl text-[#a8a29e] tracking-widest uppercase mb-4">
-              — Get More Offers —
+            <p className="text-xl md:text-2xl text-[#fafaf9] tracking-wider font-semibold mb-4 animate-slideIn">
+              — <span className="text-[#d4af37]">G</span>et{' '}
+              <span className="text-[#d4af37]">M</span>ore{' '}
+              <span className="text-[#d4af37]">O</span>ffers —
             </p>
             <p className="text-sm text-[#78716c] max-w-xl mx-auto">
               專業機場接送派單平台｜連接車頭與司機的橋樑
@@ -120,7 +122,7 @@ export default function HomePage() {
             rows.map((row, rowIndex) => {
               const isReverse = rowIndex % 2 === 1; // 第二排反向
               const duped = [...row, ...row]; // 複製一份無縫循環
-              const speed = [35, 28, 32][rowIndex]; // 每排速度不同
+              const speed = 50; // 統一速度，放慢
               return (
                 <div key={rowIndex} className="marquee-container overflow-hidden w-full">
                   <div

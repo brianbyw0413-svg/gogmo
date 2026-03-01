@@ -384,3 +384,64 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   border-color: var(--color-gold);
   font-weight: 600;
 }
+
+/* ═══ 接機/送機標籤 ═══ */
+.tag-pickup {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.tag-dropoff {
+  background: rgba(249, 115, 22, 0.15);
+  color: #fb923c;
+  border: 1px solid rgba(249, 115, 22, 0.3);
+}
+
+/* ═══ 急單呼吸外框 ═══ */
+.urgent-breathing {
+  animation: urgentBreathing 2s ease-in-out infinite;
+  border-color: rgba(239, 68, 68, 0.5) !important;
+}
+
+@keyframes urgentBreathing {
+  0%, 100% { 
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+    border-color: rgba(239, 68, 68, 0.7);
+  }
+}
+
+/* ═══ 司機日曆 ═══ */
+.calendar-cell {
+  min-height: 70px;
+  border: 1px solid #292524;
+  padding: 4px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.calendar-cell:hover {
+  background: rgba(212, 175, 55, 0.05);
+  border-color: #d4af37;
+}
+
+.calendar-cell.today {
+  border-color: #d4af37;
+  background: rgba(212, 175, 55, 0.08);
+}
+
+.calendar-cell.selected {
+  border-color: #d4af37;
+  border-width: 2px;
+  background: rgba(212, 175, 55, 0.12);
+}
+
+
+.calendar-cell.has-trips {
+  background: rgba(212, 175, 55, 0.03);
+}
