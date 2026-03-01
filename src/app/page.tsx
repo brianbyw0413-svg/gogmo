@@ -70,13 +70,16 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4">
           {/* Hero 區域 */}
           <div className="text-center mb-8 animate-fadeIn">
-            <h1 className="text-4xl md:text-5xl font-bold text-[#fafaf9] mb-4">
-              <span className="text-[#d4af37]">GMO</span>
-              {' '}專業機場接送
-              <span className="text-[#d4af37]">派單平台</span>
+            <h1 className="text-4xl md:text-6xl font-bold text-[#fafaf9] mb-3">
+              <span className="text-[#d4af37]">G</span>ive{' '}
+              <span className="text-[#d4af37]">M</span>e{' '}
+              <span className="text-[#d4af37]">O</span>rder
             </h1>
-            <p className="text-lg text-[#a8a29e] max-w-2xl mx-auto">
-              Give Me Order — 連接車頭與司機的橋樑，即時派單、即時接單
+            <p className="text-lg md:text-xl text-[#a8a29e] tracking-widest uppercase mb-4">
+              — Get More Offers —
+            </p>
+            <p className="text-sm text-[#78716c] max-w-xl mx-auto">
+              專業機場接送派單平台｜連接車頭與司機的橋樑
             </p>
           </div>
 
