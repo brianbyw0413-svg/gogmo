@@ -198,6 +198,7 @@ export default function ControlPage() {
                 onComplete={handleComplete}
                 onUpdatePrice={handleUpdatePrice}
                 showChat={true}
+                tripNumber={index + 1}
               />
             </div>
           ))}

@@ -1,5 +1,5 @@
-// TripCard 元件 - 行程卡片 (行控中心優化版)
-// 根據老闆新設計：統一大小、三區塊佈局
+// TripCard 元件 - 行程卡片 (行控中心優化版 v2)
+// 根據老闆新設計：金額上方、訂單編號、光暈框線
 
 'use client';
 
@@ -16,6 +16,20 @@ interface TripCardProps {
   showActions?: boolean;
   variant?: 'default' | 'compact' | 'public' | 'driver';
   showChat?: boolean;
+  tripNumber?: number; // 訂單編號數字
+}
+
+// 取得月份縮寫
+function getMonthCode(dateStr: string): string {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+  return months[d.getMonth()];
+}
+
+// 產生訂單編號
+function generateTripNumber(tripNumber: number): string {
+  return `${getMonthCode(new Date().toISOString())}${String(tripNumber).padStart(5, '0')}`;
 }
 
 // 取得狀態顯示文字
@@ -42,19 +56,6 @@ function getExecutionStatus(status: TripStatus): string {
     'cancelled': '已取消'
   };
   return execMap[status];
-}
-
-// 取得執行狀態 CSS
-function getExecutionStatusClass(status: TripStatus): string {
-  const classMap: Record<TripStatus, string> = {
-    'open': 'bg-gray-500/20 text-gray-400',
-    'accepted': 'bg-yellow-500/20 text-yellow-400',
-    'arrived': 'bg-green-500/20 text-green-400',
-    'picked_up': 'bg-blue-500/20 text-blue-400',
-    'completed': 'bg-[#d4af37]/20 text-[#d4af37]',
-    'cancelled': 'bg-red-500/20 text-red-400'
-  };
-  return classMap[status];
 }
 
 // 急單判斷
@@ -89,7 +90,8 @@ export default function TripCard({
   onUpdatePrice,
   showActions = true,
   variant = 'default',
-  showChat = false
+  showChat = false,
+  tripNumber = 1
 }: TripCardProps) {
   const [showEditMenu, setShowEditMenu] = useState(false);
   const [showPriceMenu, setShowPriceMenu] = useState(false);
@@ -99,6 +101,11 @@ export default function TripCard({
   const isPickup = trip.service_type === 'pickup';
   const isUrgent = isUrgentTrip(trip);
   const isDefault = variant === 'default';
+  const isOpen = trip.status === 'open';
+  const isAccepted = trip.status === 'accepted';
+
+  // 訂單編號
+  const orderNumber = generateTripNumber(tripNumber);
 
   // 處理加價
   const handlePriceBoost = (amount: number) => {
@@ -123,158 +130,166 @@ export default function TripCard({
     if (option === 'cancel' && onCancel) {
       onCancel(trip.id);
     }
-    // 修改功能預留
     setShowEditMenu(false);
-  };
-
-  // 處理聊天室選項
-  const handleChatOption = (target: string) => {
-    // 這裡可以導向不同的聊天室
-    // 司機聊天室、客人聊天室、或三方聊天室
-    setShowChatMenu(false);
   };
 
   // 只有 default variant 使用新設計
   if (!isDefault) {
-    return null; // 其他 variant 暂时不处理
+    return null;
   }
 
+  // 根據狀態決定框線光暈
+  const getBorderGlow = () => {
+    if (isAccepted) return 'ring-2 ring-green-500/50 shadow-lg shadow-green-500/20';
+    if (isOpen) return 'ring-2 ring-red-500/50 shadow-lg shadow-red-500/20';
+    return '';
+  };
+
+  // 急單底色
+  const getBgClass = () => {
+    if (isUrgent) return 'bg-red-900/30';
+    return '';
+  };
+
   return (
-    <div className="glass-card p-4 transition-all duration-300 hover:shadow-lg relative h-[320px] flex flex-col">
-      {/* === 上方區域：標籤放置區 === */}
-      <div className="flex items-center gap-2 mb-3 flex-wrap">
-        {/* 接機/送機標籤 */}
-        <span className={`text-xs font-bold px-2.5 py-1 rounded ${
-          isPickup 
-            ? 'bg-blue-500/30 text-blue-300 border border-blue-500/30' 
-            : 'bg-orange-500/30 text-orange-300 border border-orange-500/30'
-        }`}>
-          {isPickup ? '接機' : '送機'}
-        </span>
-
-        {/* 狀態標籤 */}
-        <span className={`text-xs font-bold px-2.5 py-1 rounded ${
-          trip.status === 'open' ? 'bg-red-500/30 text-red-300 border border-red-500/30' :
-          trip.status === 'accepted' ? 'bg-green-500/30 text-green-300 border border-green-500/30' :
-          trip.status === 'arrived' ? 'bg-purple-500/30 text-purple-300 border border-purple-500/30' :
-          trip.status === 'picked_up' ? 'bg-blue-500/30 text-blue-300 border border-blue-500/30' :
-          'bg-gray-500/30 text-gray-300 border border-gray-500/30'
-        }`}>
-          {getStatusText(trip.status)}
-        </span>
-
-        {/* 急單標籤 */}
-        {isUrgent && (
-          <span className="text-xs font-bold px-2.5 py-1 rounded bg-red-500/30 text-red-300 border border-red-500/30 animate-pulse">
-            急單
-          </span>
-        )}
-
-        {/* 加價金額標籤 */}
-        {trip.price_boost && trip.price_boost > 0 && (
-          <span className="text-xs font-bold px-2.5 py-1 rounded bg-[#d4af37]/30 text-[#d4af37] border border-[#d4af37]/30">
-            +${trip.price_boost}
-          </span>
-        )}
+    <div className={`glass-card p-4 transition-all duration-300 hover:shadow-lg relative h-[340px] flex flex-col overflow-hidden ${getBorderGlow()} ${getBgClass()}`}>
+      {/* === 右上角：訂單編號 === */}
+      <div className="absolute top-2 right-2 text-[10px] font-mono text-[#a8a29e] bg-[#0c0a09]/80 px-2 py-1 rounded">
+        {orderNumber}
       </div>
 
-      {/* === 中間區域：左(大)資訊區 + 右(小)執行狀態 === */}
-      <div className="flex-1 flex gap-3 min-h-0 mb-3">
-        {/* 中間左側：資訊區 */}
-        <div className="flex-1 bg-[#1c1917]/50 rounded-lg p-3 overflow-y-auto">
-          <div className="space-y-2 text-xs">
-            {/* 聯絡人 */}
-            <div className="flex">
-              <span className="text-[#a8a29e] w-16 flex-shrink-0">聯絡人：</span>
-              <span className="text-[#fafaf9] font-medium">{trip.contact_name || '-'}</span>
-            </div>
-            
-            {/* 航班編號 */}
-            {trip.flight_number && (
-              <div className="flex">
-                <span className="text-[#a8a29e] w-16 flex-shrink-0">航班：</span>
-                <span className="text-[#fafaf9] font-medium">{trip.flight_number}</span>
-              </div>
+      {/* === 上方區域：金額 + 標籤 === */}
+      <div className="flex items-start justify-between mb-2">
+        {/* 金額 */}
+        <div className="flex flex-col">
+          <span className="text-[10px] text-[#a8a29e]">金額</span>
+          <span className="text-2xl font-bold text-[#d4af37]">
+            ${trip.amount}
+            {trip.price_boost && trip.price_boost > 0 && (
+              <span className="text-sm text-red-400 ml-1">+{trip.price_boost}</span>
             )}
-            
-            {/* 人數/行李 */}
-            <div className="flex">
-              <span className="text-[#a8a29e] w-16 flex-shrink-0">人數：</span>
-              <span className="text-[#fafaf9]">{trip.passenger_count}人 / {trip.luggage_count}件</span>
-            </div>
-
-            {/* 日期時間 */}
-            <div className="flex">
-              <span className="text-[#a8a29e] w-16 flex-shrink-0">時間：</span>
-              <span className="text-[#fafaf9]">{formatDate(trip.service_date)} {formatTime(trip.service_time)}</span>
-            </div>
-
-            {/* 上車地點 */}
-            <div className="flex flex-col">
-              <span className="text-[#a8a29e] text-[10px]">上車：</span>
-              <span className="text-[#fafaf9] truncate">{trip.pickup_area || trip.pickup_address || '-'}</span>
-            </div>
-
-            {/* 下車地點 */}
-            <div className="flex flex-col">
-              <span className="text-[#a8a29e] text-[10px]">下车：</span>
-              <span className="text-[#fafaf9] truncate">{trip.dropoff_area || trip.dropoff_address || '-'}</span>
-            </div>
-
-            {/* 聯絡電話 */}
-            <div className="flex">
-              <span className="text-[#a8a29e] w-16 flex-shrink-0">電話：</span>
-              <span className="text-[#fafaf9]">{trip.contact_phone || '-'}</span>
-            </div>
-
-            {/* 金額 */}
-            <div className="flex pt-1 border-t border-[#292524]">
-              <span className="text-[#a8a29e] w-16 flex-shrink-0">金額：</span>
-              <span className="text-[#d4af37] font-bold text-sm">${trip.amount}</span>
-            </div>
-          </div>
+          </span>
         </div>
 
-        {/* 中間右側：執行狀態 */}
-        <div className="w-24 flex-shrink-0 bg-[#1c1917]/50 rounded-lg p-2 flex flex-col items-center justify-center">
-          <div className={`text-xs font-medium px-2 py-1 rounded text-center ${getExecutionStatusClass(trip.status)}`}>
-            {getExecutionStatus(trip.status)}
-          </div>
-          
-          {/* 司機資訊（如果已接單） */}
-          {trip.driver && (
-            <div className="mt-2 text-center">
-              <div className="text-[10px] text-[#a8a29e]">司機</div>
-              <div className="text-xs text-[#fafaf9] font-medium">{trip.driver.name}</div>
-              <div className="text-[10px] text-[#78716c]">{trip.driver.car_color}</div>
-            </div>
+        {/* 標籤區 */}
+        <div className="flex items-center gap-1 flex-wrap">
+          {/* 接機/送機標籤 */}
+          <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+            isPickup 
+              ? 'bg-blue-500/30 text-blue-300' 
+              : 'bg-orange-500/30 text-orange-300'
+          }`}>
+            {isPickup ? '接機' : '送機'}
+          </span>
+
+          {/* 狀態標籤 */}
+          <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+            isOpen ? 'bg-red-500/30 text-red-300' :
+            isAccepted ? 'bg-green-500/30 text-green-300' :
+            trip.status === 'arrived' ? 'bg-purple-500/30 text-purple-300' :
+            trip.status === 'picked_up' ? 'bg-blue-500/30 text-blue-300' :
+            'bg-gray-500/30 text-gray-300'
+          }`}>
+            {getStatusText(trip.status)}
+          </span>
+
+          {/* 急單標籤 */}
+          {isUrgent && (
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-500/50 text-white animate-pulse">
+              急單
+            </span>
           )}
         </div>
       </div>
 
+      {/* === 中間區域：資訊 === */}
+      <div className="flex-1 overflow-hidden mb-2">
+        <div className="space-y-1.5 text-xs h-full">
+          {/* 聯絡人 + 電話 */}
+          <div className="flex justify-between">
+            <span className="text-[#a8a29e]">聯絡人：</span>
+            <span className="text-[#fafaf9] font-medium">{trip.contact_name || '-'}</span>
+          </div>
+          
+          {/* 航班編號 */}
+          {trip.flight_number && (
+            <div className="flex justify-between">
+              <span className="text-[#a8a29e]">航班：</span>
+              <span className="text-[#fafaf9] font-medium">{trip.flight_number}</span>
+            </div>
+          )}
+          
+          {/* 人數/行李 */}
+          <div className="flex justify-between">
+            <span className="text-[#a8a29e]">人數/行李：</span>
+            <span className="text-[#fafaf9]">{trip.passenger_count}人 / {trip.luggage_count}件</span>
+          </div>
+
+          {/* 日期時間 */}
+          <div className="flex justify-between">
+            <span className="text-[#a8a29e]">時間：</span>
+            <span className="text-[#fafaf9]">{formatDate(trip.service_date)} {formatTime(trip.service_time)}</span>
+          </div>
+
+          {/* 上車地點 */}
+          <div className="flex flex-col">
+            <span className="text-[#a8a29e] text-[10px]">上車：</span>
+            <span className="text-[#fafaf9] truncate">{trip.pickup_area || trip.pickup_address || '-'}</span>
+          </div>
+
+          {/* 下車地點 */}
+          <div className="flex flex-col">
+            <span className="text-[#a8a29e] text-[10px]">下车：</span>
+            <span className="text-[#fafaf9] truncate">{trip.dropoff_area || trip.dropoff_address || '-'}</span>
+          </div>
+
+          {/* 電話 */}
+          <div className="flex justify-between">
+            <span className="text-[#a8a29e]">電話：</span>
+            <span className="text-[#fafaf9]">{trip.contact_phone || '-'}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* === 執行狀態 === */}
+      <div className="mb-2">
+        <div className={`text-[10px] px-2 py-1 rounded text-center ${
+          isAccepted ? 'bg-green-500/20 text-green-400' :
+          isOpen ? 'bg-gray-500/20 text-gray-400' :
+          'bg-blue-500/20 text-blue-400'
+        }`}>
+          {getExecutionStatus(trip.status)}
+        </div>
+        {/* 司機資訊 */}
+        {trip.driver && (
+          <div className="mt-1 text-[10px] text-center text-[#a8a29e]">
+            司機：{trip.driver.name} ({trip.driver.car_color} {trip.driver.car_plate})
+          </div>
+        )}
+      </div>
+
       {/* === 下方區域：功能按鈕 === */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 mt-auto">
         {/* 編輯按鈕 + 選單 */}
         <div className="relative flex-1">
           <button
             onClick={() => { setShowEditMenu(!showEditMenu); setShowPriceMenu(false); setShowChatMenu(false); }}
-            className="w-full py-2 text-xs border border-[#292524] rounded-lg hover:bg-[#292524] transition-colors text-[#a8a29e]"
+            className="w-full py-1.5 text-[10px] border border-[#292524] rounded-lg hover:bg-[#292524] transition-colors text-[#a8a29e]"
           >
             編輯
           </button>
           
-          {/* 編輯選單 */}
           {showEditMenu && (
             <div className="absolute bottom-full left-0 mb-1 w-full bg-[#1c1917] border border-[#292524] rounded-lg shadow-lg overflow-hidden z-20">
               <button
                 onClick={() => handleEditOption('edit')}
-                className="w-full px-3 py-2 text-xs text-[#fafaf9] hover:bg-[#292524] text-left"
+                className="w-full px-2 py-1.5 text-[10px] text-[#fafaf9] hover:bg-[#292524] text-left"
               >
                 修改
               </button>
               <button
                 onClick={() => handleEditOption('cancel')}
-                className="w-full px-3 py-2 text-xs text-red-400 hover:bg-[#292524] text-left"
+                className="w-full px-2 py-1.5 text-[10px] text-red-400 hover:bg-[#292524] text-left"
               >
                 撤單
               </button>
@@ -286,35 +301,34 @@ export default function TripCard({
         <div className="relative flex-1">
           <button
             onClick={() => { setShowPriceMenu(!showPriceMenu); setShowEditMenu(false); setShowChatMenu(false); }}
-            className="w-full py-2 text-xs border border-[#292524] rounded-lg hover:bg-[#292524] transition-colors text-[#a8a29e]"
+            className="w-full py-1.5 text-[10px] border border-[#292524] rounded-lg hover:bg-[#292524] transition-colors text-[#a8a29e]"
           >
             加價
           </button>
           
-          {/* 加價選單 */}
           {showPriceMenu && (
             <div className="absolute bottom-full left-0 mb-1 w-full bg-[#1c1917] border border-[#292524] rounded-lg shadow-lg overflow-hidden z-20">
               {[100, 200, 300, 400].map(amount => (
                 <button
                   key={amount}
                   onClick={() => handlePriceBoost(amount)}
-                  className="w-full px-3 py-2 text-xs text-[#fafaf9] hover:bg-[#292524] text-left"
+                  className="w-full px-2 py-1.5 text-[10px] text-[#fafaf9] hover:bg-[#292524] text-left"
                 >
                   +${amount}
                 </button>
               ))}
-              <div className="px-3 py-2 border-t border-[#292524]">
+              <div className="px-2 py-1.5 border-t border-[#292524]">
                 <div className="flex gap-1">
                   <input
                     type="number"
                     value={customPrice}
                     onChange={(e) => setCustomPrice(e.target.value)}
                     placeholder="自訂"
-                    className="flex-1 px-2 py-1 text-xs bg-[#0c0a09] border border-[#292524] rounded text-[#fafaf9] placeholder-[#78716c]"
+                    className="flex-1 px-2 py-1 text-[10px] bg-[#0c0a09] border border-[#292524] rounded text-[#fafaf9] placeholder-[#78716c]"
                   />
                   <button
                     onClick={handleCustomPrice}
-                    className="px-2 py-1 text-xs bg-[#d4af37] text-[#0c0a09] rounded font-medium"
+                    className="px-2 py-1 text-[10px] bg-[#d4af37] text-[#0c0a09] rounded font-medium"
                   >
                     確定
                   </button>
@@ -328,31 +342,30 @@ export default function TripCard({
         <div className="relative flex-1">
           <button
             onClick={() => { setShowChatMenu(!showChatMenu); setShowEditMenu(false); setShowPriceMenu(false); }}
-            className="w-full py-2 text-xs border border-[#d4af37] rounded-lg hover:bg-[#d4af37] hover:text-[#0c0a09] transition-colors text-[#d4af37]"
+            className="w-full py-1.5 text-[10px] border border-[#d4af37] rounded-lg hover:bg-[#d4af37] hover:text-[#0c0a09] transition-colors text-[#d4af37]"
           >
             聊天室
           </button>
           
-          {/* 聊天室選單 */}
           {showChatMenu && (
             <div className="absolute bottom-full left-0 mb-1 w-full bg-[#1c1917] border border-[#292524] rounded-lg shadow-lg overflow-hidden z-20">
               {trip.driver && (
                 <Link
                   href={`/chat/${trip.id}?mode=driver`}
-                  className="block w-full px-3 py-2 text-xs text-[#fafaf9] hover:bg-[#292524] text-left"
+                  className="block w-full px-2 py-1.5 text-[10px] text-[#fafaf9] hover:bg-[#292524] text-left"
                 >
                   司機對話
                 </Link>
               )}
               <Link
                 href={`/chat/${trip.id}?mode=customer`}
-                className="block w-full px-3 py-2 text-xs text-[#fafaf9] hover:bg-[#292524] text-left"
+                className="block w-full px-2 py-1.5 text-[10px] text-[#fafaf9] hover:bg-[#292524] text-left"
               >
                 客人對話
               </Link>
               <Link
                 href={`/chat/${trip.id}?mode=group`}
-                className="block w-full px-3 py-2 text-xs text-[#d4af37] hover:bg-[#292524] text-left"
+                className="block w-full px-2 py-1.5 text-[10px] text-[#d4af37] hover:bg-[#292524] text-left"
               >
                 三方聊天室
               </Link>
