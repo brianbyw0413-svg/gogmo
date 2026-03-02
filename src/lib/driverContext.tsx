@@ -157,6 +157,7 @@ export function DriverProvider({ children }: { children: ReactNode }) {
             matchType: 'route',
             matchScore: 95,
             reason: `與您 ${formatDate(myTrip.service_date)} 的${myTrip.dropoff_area || ''}${serviceLabel}順路`,
+            relatedTrip: myTrip, // 關聯已接行程
           });
           seen.add(candidate.id);
           continue;
@@ -170,6 +171,7 @@ export function DriverProvider({ children }: { children: ReactNode }) {
               matchType: 'bundle',
               matchScore: 85,
               reason: `可與您的行程成套（同天反向）`,
+              relatedTrip: myTrip,
             });
             seen.add(candidate.id);
             continue;
@@ -183,6 +185,7 @@ export function DriverProvider({ children }: { children: ReactNode }) {
             matchType: 'time',
             matchScore: 60,
             reason: `同天同地區，可安排連續接送`,
+            relatedTrip: myTrip,
           });
           seen.add(candidate.id);
         }

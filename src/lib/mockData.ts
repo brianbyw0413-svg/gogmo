@@ -102,7 +102,7 @@ export const mockTrips: Trip[] =
     "amount": 1503,
     "driver_fee": 1127,
     "note": "請提前抵達",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-3",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
@@ -123,7 +123,7 @@ export const mockTrips: Trip[] =
     "amount": 833,
     "driver_fee": 624,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.069Z",
     "price_boost": 400
   },
@@ -144,7 +144,7 @@ export const mockTrips: Trip[] =
     "amount": 1723,
     "driver_fee": 1292,
     "note": "寵物同行",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
@@ -165,7 +165,7 @@ export const mockTrips: Trip[] =
     "amount": 1544,
     "driver_fee": 1158,
     "note": "行動不便",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
@@ -186,7 +186,7 @@ export const mockTrips: Trip[] =
     "amount": 2888,
     "driver_fee": 2166,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
   {
@@ -227,7 +227,7 @@ export const mockTrips: Trip[] =
     "amount": 2991,
     "driver_fee": 2243,
     "note": "",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
   {
@@ -247,7 +247,7 @@ export const mockTrips: Trip[] =
     "amount": 1045,
     "driver_fee": 783,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
@@ -268,7 +268,7 @@ export const mockTrips: Trip[] =
     "amount": 1514,
     "driver_fee": 1135,
     "note": "行李較多",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
   {
@@ -288,7 +288,7 @@ export const mockTrips: Trip[] =
     "amount": 1211,
     "driver_fee": 908,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
   {
@@ -348,7 +348,7 @@ export const mockTrips: Trip[] =
     "amount": 1861,
     "driver_fee": 1395,
     "note": "請提前抵達",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
@@ -369,7 +369,7 @@ export const mockTrips: Trip[] =
     "amount": 2279,
     "driver_fee": 1709,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
@@ -390,7 +390,7 @@ export const mockTrips: Trip[] =
     "amount": 1828,
     "driver_fee": 1371,
     "note": "寵物同行",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
   {
@@ -410,7 +410,7 @@ export const mockTrips: Trip[] =
     "amount": 3197,
     "driver_fee": 2397,
     "note": "有嬰兒推車",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.069Z",
     "price_boost": 448
@@ -432,7 +432,7 @@ export const mockTrips: Trip[] =
     "amount": 2592,
     "driver_fee": 1944,
     "note": "行動不便",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
@@ -473,7 +473,7 @@ export const mockTrips: Trip[] =
     "amount": 1834,
     "driver_fee": 1375,
     "note": "需要安全座椅",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
   {
@@ -493,7 +493,7 @@ export const mockTrips: Trip[] =
     "amount": 1213,
     "driver_fee": 909,
     "note": "有嬰兒推車",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
@@ -514,7 +514,7 @@ export const mockTrips: Trip[] =
     "amount": 1685,
     "driver_fee": 1263,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
   {
@@ -534,7 +534,7 @@ export const mockTrips: Trip[] =
     "amount": 1966,
     "driver_fee": 1474,
     "note": "有嬰兒推車",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
@@ -555,7 +555,7 @@ export const mockTrips: Trip[] =
     "amount": 1739,
     "driver_fee": 1304,
     "note": "航班延誤勿催",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.069Z",
     "price_boost": 369
   },
@@ -576,7 +576,7 @@ export const mockTrips: Trip[] =
     "amount": 1352,
     "driver_fee": 1014,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
@@ -637,7 +637,7 @@ export const mockTrips: Trip[] =
     "amount": 3487,
     "driver_fee": 2615,
     "note": "",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.069Z",
     "price_boost": 182
@@ -659,7 +659,7 @@ export const mockTrips: Trip[] =
     "amount": 1383,
     "driver_fee": 1037,
     "note": "行動不便",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.069Z"
   },
   {
@@ -679,7 +679,7 @@ export const mockTrips: Trip[] =
     "amount": 1649,
     "driver_fee": 1236,
     "note": "行李較多",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.069Z",
     "price_boost": 425
@@ -721,7 +721,7 @@ export const mockTrips: Trip[] =
     "amount": 3305,
     "driver_fee": 2478,
     "note": "需要安全座椅",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -741,7 +741,7 @@ export const mockTrips: Trip[] =
     "amount": 3026,
     "driver_fee": 2269,
     "note": "行動不便",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -761,7 +761,7 @@ export const mockTrips: Trip[] =
     "amount": 802,
     "driver_fee": 601,
     "note": "行李較多",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -781,7 +781,7 @@ export const mockTrips: Trip[] =
     "amount": 1120,
     "driver_fee": 840,
     "note": "請提前抵達",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -801,7 +801,7 @@ export const mockTrips: Trip[] =
     "amount": 1315,
     "driver_fee": 986,
     "note": "",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -821,7 +821,7 @@ export const mockTrips: Trip[] =
     "amount": 3212,
     "driver_fee": 2409,
     "note": "寵物同行",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -842,7 +842,7 @@ export const mockTrips: Trip[] =
     "amount": 2985,
     "driver_fee": 2238,
     "note": "有嬰兒推車",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -863,7 +863,7 @@ export const mockTrips: Trip[] =
     "amount": 2519,
     "driver_fee": 1889,
     "note": "需要安全座椅",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -884,7 +884,7 @@ export const mockTrips: Trip[] =
     "amount": 1842,
     "driver_fee": 1381,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -904,7 +904,7 @@ export const mockTrips: Trip[] =
     "amount": 2893,
     "driver_fee": 2169,
     "note": "行李較多",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-3",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -925,7 +925,7 @@ export const mockTrips: Trip[] =
     "amount": 3426,
     "driver_fee": 2569,
     "note": "行動不便",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -945,7 +945,7 @@ export const mockTrips: Trip[] =
     "amount": 3187,
     "driver_fee": 2390,
     "note": "有嬰兒推車",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -965,7 +965,7 @@ export const mockTrips: Trip[] =
     "amount": 2263,
     "driver_fee": 1697,
     "note": "航班延誤勿催",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -985,7 +985,7 @@ export const mockTrips: Trip[] =
     "amount": 2409,
     "driver_fee": 1806,
     "note": "航班延誤勿催",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1027,7 +1027,7 @@ export const mockTrips: Trip[] =
     "amount": 2451,
     "driver_fee": 1838,
     "note": "請提前抵達",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.070Z",
     "price_boost": 314
@@ -1069,7 +1069,7 @@ export const mockTrips: Trip[] =
     "amount": 3373,
     "driver_fee": 2529,
     "note": "",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.070Z",
     "price_boost": 148
@@ -1091,7 +1091,7 @@ export const mockTrips: Trip[] =
     "amount": 2187,
     "driver_fee": 1640,
     "note": "需要安全座椅",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1111,7 +1111,7 @@ export const mockTrips: Trip[] =
     "amount": 2264,
     "driver_fee": 1698,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -1132,7 +1132,7 @@ export const mockTrips: Trip[] =
     "amount": 1864,
     "driver_fee": 1398,
     "note": "請提前抵達",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-1",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -1153,7 +1153,7 @@ export const mockTrips: Trip[] =
     "amount": 2494,
     "driver_fee": 1870,
     "note": "",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-1",
     "updated_at": "2026-03-01T03:35:36.070Z",
     "price_boost": 419
@@ -1175,7 +1175,7 @@ export const mockTrips: Trip[] =
     "amount": 2638,
     "driver_fee": 1978,
     "note": "需要安全座椅",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z",
     "price_boost": 447
   },
@@ -1196,7 +1196,7 @@ export const mockTrips: Trip[] =
     "amount": 2011,
     "driver_fee": 1508,
     "note": "寵物同行",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.070Z",
     "price_boost": 187
@@ -1218,7 +1218,7 @@ export const mockTrips: Trip[] =
     "amount": 1626,
     "driver_fee": 1219,
     "note": "有嬰兒推車",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -1239,7 +1239,7 @@ export const mockTrips: Trip[] =
     "amount": 2917,
     "driver_fee": 2187,
     "note": "行李較多",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-1",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -1260,7 +1260,7 @@ export const mockTrips: Trip[] =
     "amount": 1762,
     "driver_fee": 1321,
     "note": "請提前抵達",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -1301,7 +1301,7 @@ export const mockTrips: Trip[] =
     "amount": 2954,
     "driver_fee": 2215,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1343,7 +1343,7 @@ export const mockTrips: Trip[] =
     "amount": 2484,
     "driver_fee": 1863,
     "note": "寵物同行",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1363,7 +1363,7 @@ export const mockTrips: Trip[] =
     "amount": 1181,
     "driver_fee": 885,
     "note": "行李較多",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -1384,7 +1384,7 @@ export const mockTrips: Trip[] =
     "amount": 1112,
     "driver_fee": 834,
     "note": "航班延誤勿催",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.070Z",
     "price_boost": 142
@@ -1406,7 +1406,7 @@ export const mockTrips: Trip[] =
     "amount": 989,
     "driver_fee": 741,
     "note": "行李較多",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -1427,7 +1427,7 @@ export const mockTrips: Trip[] =
     "amount": 1359,
     "driver_fee": 1019,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1447,7 +1447,7 @@ export const mockTrips: Trip[] =
     "amount": 1613,
     "driver_fee": 1209,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z",
     "price_boost": 163
   },
@@ -1468,7 +1468,7 @@ export const mockTrips: Trip[] =
     "amount": 2792,
     "driver_fee": 2094,
     "note": "航班延誤勿催",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1488,7 +1488,7 @@ export const mockTrips: Trip[] =
     "amount": 2997,
     "driver_fee": 2247,
     "note": "需要安全座椅",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1508,7 +1508,7 @@ export const mockTrips: Trip[] =
     "amount": 2847,
     "driver_fee": 2135,
     "note": "請提前抵達",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z",
     "price_boost": 476
   },
@@ -1529,7 +1529,7 @@ export const mockTrips: Trip[] =
     "amount": 3424,
     "driver_fee": 2568,
     "note": "行李較多",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1549,7 +1549,7 @@ export const mockTrips: Trip[] =
     "amount": 3332,
     "driver_fee": 2499,
     "note": "",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1569,7 +1569,7 @@ export const mockTrips: Trip[] =
     "amount": 2064,
     "driver_fee": 1548,
     "note": "",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-1",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -1611,7 +1611,7 @@ export const mockTrips: Trip[] =
     "amount": 2765,
     "driver_fee": 2073,
     "note": "航班延誤勿催",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -1632,7 +1632,7 @@ export const mockTrips: Trip[] =
     "amount": 817,
     "driver_fee": 612,
     "note": "航班延誤勿催",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1652,7 +1652,7 @@ export const mockTrips: Trip[] =
     "amount": 3266,
     "driver_fee": 2449,
     "note": "有嬰兒推車",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1672,7 +1672,7 @@ export const mockTrips: Trip[] =
     "amount": 2320,
     "driver_fee": 1740,
     "note": "行動不便",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1692,7 +1692,7 @@ export const mockTrips: Trip[] =
     "amount": 2890,
     "driver_fee": 2167,
     "note": "有嬰兒推車",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1712,7 +1712,7 @@ export const mockTrips: Trip[] =
     "amount": 2659,
     "driver_fee": 1994,
     "note": "",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -1733,7 +1733,7 @@ export const mockTrips: Trip[] =
     "amount": 2923,
     "driver_fee": 2192,
     "note": "行動不便",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1753,7 +1753,7 @@ export const mockTrips: Trip[] =
     "amount": 1186,
     "driver_fee": 889,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-1",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -1774,7 +1774,7 @@ export const mockTrips: Trip[] =
     "amount": 1984,
     "driver_fee": 1488,
     "note": "寵物同行",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-3",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -1836,7 +1836,7 @@ export const mockTrips: Trip[] =
     "amount": 1527,
     "driver_fee": 1145,
     "note": "",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1856,7 +1856,7 @@ export const mockTrips: Trip[] =
     "amount": 2539,
     "driver_fee": 1904,
     "note": "請提前抵達",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -1877,7 +1877,7 @@ export const mockTrips: Trip[] =
     "amount": 1284,
     "driver_fee": 963,
     "note": "",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z",
     "price_boost": 264
   },
@@ -1898,7 +1898,7 @@ export const mockTrips: Trip[] =
     "amount": 915,
     "driver_fee": 686,
     "note": "需要安全座椅",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1918,7 +1918,7 @@ export const mockTrips: Trip[] =
     "amount": 2599,
     "driver_fee": 1949,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -1959,7 +1959,7 @@ export const mockTrips: Trip[] =
     "amount": 1387,
     "driver_fee": 1040,
     "note": "行李較多",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1979,7 +1979,7 @@ export const mockTrips: Trip[] =
     "amount": 2143,
     "driver_fee": 1607,
     "note": "需要安全座椅",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -1999,7 +1999,7 @@ export const mockTrips: Trip[] =
     "amount": 1494,
     "driver_fee": 1120,
     "note": "航班延誤勿催",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2019,7 +2019,7 @@ export const mockTrips: Trip[] =
     "amount": 2638,
     "driver_fee": 1978,
     "note": "寵物同行",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.070Z",
     "price_boost": 353
@@ -2041,7 +2041,7 @@ export const mockTrips: Trip[] =
     "amount": 2243,
     "driver_fee": 1682,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2061,7 +2061,7 @@ export const mockTrips: Trip[] =
     "amount": 1344,
     "driver_fee": 1008,
     "note": "寵物同行",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -2123,7 +2123,7 @@ export const mockTrips: Trip[] =
     "amount": 1604,
     "driver_fee": 1203,
     "note": "需要安全座椅",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2143,7 +2143,7 @@ export const mockTrips: Trip[] =
     "amount": 3443,
     "driver_fee": 2582,
     "note": "有嬰兒推車",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2163,7 +2163,7 @@ export const mockTrips: Trip[] =
     "amount": 3373,
     "driver_fee": 2529,
     "note": "需要安全座椅",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -2184,7 +2184,7 @@ export const mockTrips: Trip[] =
     "amount": 3074,
     "driver_fee": 2305,
     "note": "請提前抵達",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -2205,7 +2205,7 @@ export const mockTrips: Trip[] =
     "amount": 3159,
     "driver_fee": 2369,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2225,7 +2225,7 @@ export const mockTrips: Trip[] =
     "amount": 2339,
     "driver_fee": 1754,
     "note": "請提前抵達",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2245,7 +2245,7 @@ export const mockTrips: Trip[] =
     "amount": 1328,
     "driver_fee": 996,
     "note": "寵物同行",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -2266,7 +2266,7 @@ export const mockTrips: Trip[] =
     "amount": 2253,
     "driver_fee": 1689,
     "note": "",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -2287,7 +2287,7 @@ export const mockTrips: Trip[] =
     "amount": 1296,
     "driver_fee": 972,
     "note": "有嬰兒推車",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2328,7 +2328,7 @@ export const mockTrips: Trip[] =
     "amount": 2357,
     "driver_fee": 1767,
     "note": "需要安全座椅",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -2349,7 +2349,7 @@ export const mockTrips: Trip[] =
     "amount": 2397,
     "driver_fee": 1797,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.070Z",
     "price_boost": 140
@@ -2371,7 +2371,7 @@ export const mockTrips: Trip[] =
     "amount": 3423,
     "driver_fee": 2567,
     "note": "需要安全座椅",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2391,7 +2391,7 @@ export const mockTrips: Trip[] =
     "amount": 3016,
     "driver_fee": 2262,
     "note": "有嬰兒推車",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2411,7 +2411,7 @@ export const mockTrips: Trip[] =
     "amount": 1770,
     "driver_fee": 1327,
     "note": "航班延誤勿催",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2431,7 +2431,7 @@ export const mockTrips: Trip[] =
     "amount": 2997,
     "driver_fee": 2247,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-3",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -2452,7 +2452,7 @@ export const mockTrips: Trip[] =
     "amount": 1958,
     "driver_fee": 1468,
     "note": "有嬰兒推車",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -2473,7 +2473,7 @@ export const mockTrips: Trip[] =
     "amount": 2111,
     "driver_fee": 1583,
     "note": "有嬰兒推車",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2493,7 +2493,7 @@ export const mockTrips: Trip[] =
     "amount": 2117,
     "driver_fee": 1587,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-3",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -2514,7 +2514,7 @@ export const mockTrips: Trip[] =
     "amount": 2687,
     "driver_fee": 2015,
     "note": "",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2534,7 +2534,7 @@ export const mockTrips: Trip[] =
     "amount": 1485,
     "driver_fee": 1113,
     "note": "需要安全座椅",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2554,7 +2554,7 @@ export const mockTrips: Trip[] =
     "amount": 1295,
     "driver_fee": 971,
     "note": "需要安全座椅",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2574,7 +2574,7 @@ export const mockTrips: Trip[] =
     "amount": 2652,
     "driver_fee": 1989,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2594,7 +2594,7 @@ export const mockTrips: Trip[] =
     "amount": 3099,
     "driver_fee": 2324,
     "note": "有嬰兒推車",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -2615,7 +2615,7 @@ export const mockTrips: Trip[] =
     "amount": 2542,
     "driver_fee": 1906,
     "note": "行動不便",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2635,7 +2635,7 @@ export const mockTrips: Trip[] =
     "amount": 1913,
     "driver_fee": 1434,
     "note": "",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2675,7 +2675,7 @@ export const mockTrips: Trip[] =
     "amount": 1564,
     "driver_fee": 1173,
     "note": "請提前抵達",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2695,7 +2695,7 @@ export const mockTrips: Trip[] =
     "amount": 2791,
     "driver_fee": 2093,
     "note": "",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2715,7 +2715,7 @@ export const mockTrips: Trip[] =
     "amount": 3221,
     "driver_fee": 2415,
     "note": "行李較多",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2756,7 +2756,7 @@ export const mockTrips: Trip[] =
     "amount": 2117,
     "driver_fee": 1587,
     "note": "",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -2777,7 +2777,7 @@ export const mockTrips: Trip[] =
     "amount": 2624,
     "driver_fee": 1968,
     "note": "寵物同行",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -2818,7 +2818,7 @@ export const mockTrips: Trip[] =
     "amount": 1180,
     "driver_fee": 885,
     "note": "需要安全座椅",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -2839,7 +2839,7 @@ export const mockTrips: Trip[] =
     "amount": 2921,
     "driver_fee": 2190,
     "note": "航班延誤勿催",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -2881,7 +2881,7 @@ export const mockTrips: Trip[] =
     "amount": 1100,
     "driver_fee": 825,
     "note": "",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2922,7 +2922,7 @@ export const mockTrips: Trip[] =
     "amount": 2575,
     "driver_fee": 1931,
     "note": "行李較多",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2942,7 +2942,7 @@ export const mockTrips: Trip[] =
     "amount": 3484,
     "driver_fee": 2613,
     "note": "需要安全座椅",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2962,7 +2962,7 @@ export const mockTrips: Trip[] =
     "amount": 2233,
     "driver_fee": 1674,
     "note": "",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -2982,7 +2982,7 @@ export const mockTrips: Trip[] =
     "amount": 2880,
     "driver_fee": 2160,
     "note": "需要安全座椅",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z",
     "price_boost": 459
   },
@@ -3003,7 +3003,7 @@ export const mockTrips: Trip[] =
     "amount": 983,
     "driver_fee": 737,
     "note": "",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-1",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -3024,7 +3024,7 @@ export const mockTrips: Trip[] =
     "amount": 2338,
     "driver_fee": 1753,
     "note": "行動不便",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -3044,7 +3044,7 @@ export const mockTrips: Trip[] =
     "amount": 3183,
     "driver_fee": 2387,
     "note": "航班延誤勿催",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -3065,7 +3065,7 @@ export const mockTrips: Trip[] =
     "amount": 1385,
     "driver_fee": 1038,
     "note": "行動不便",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -3128,7 +3128,7 @@ export const mockTrips: Trip[] =
     "amount": 2631,
     "driver_fee": 1973,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -3148,7 +3148,7 @@ export const mockTrips: Trip[] =
     "amount": 2978,
     "driver_fee": 2233,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -3169,7 +3169,7 @@ export const mockTrips: Trip[] =
     "amount": 1533,
     "driver_fee": 1149,
     "note": "航班延誤勿催",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -3189,7 +3189,7 @@ export const mockTrips: Trip[] =
     "amount": 1666,
     "driver_fee": 1249,
     "note": "寵物同行",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
   {
@@ -3209,7 +3209,7 @@ export const mockTrips: Trip[] =
     "amount": 1912,
     "driver_fee": 1434,
     "note": "行李較多",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.070Z"
   },
@@ -3230,7 +3230,7 @@ export const mockTrips: Trip[] =
     "amount": 2811,
     "driver_fee": 2108,
     "note": "寵物同行",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-3",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -3251,7 +3251,7 @@ export const mockTrips: Trip[] =
     "amount": 1884,
     "driver_fee": 1413,
     "note": "需要安全座椅",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -3271,7 +3271,7 @@ export const mockTrips: Trip[] =
     "amount": 2853,
     "driver_fee": 2139,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -3311,7 +3311,7 @@ export const mockTrips: Trip[] =
     "amount": 1261,
     "driver_fee": 945,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -3331,7 +3331,7 @@ export const mockTrips: Trip[] =
     "amount": 2655,
     "driver_fee": 1991,
     "note": "請提前抵達",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -3352,7 +3352,7 @@ export const mockTrips: Trip[] =
     "amount": 1709,
     "driver_fee": 1281,
     "note": "需要安全座椅",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -3372,7 +3372,7 @@ export const mockTrips: Trip[] =
     "amount": 2788,
     "driver_fee": 2091,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -3392,7 +3392,7 @@ export const mockTrips: Trip[] =
     "amount": 1167,
     "driver_fee": 875,
     "note": "行李較多",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-1",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -3434,7 +3434,7 @@ export const mockTrips: Trip[] =
     "amount": 1402,
     "driver_fee": 1051,
     "note": "航班延誤勿催",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -3454,7 +3454,7 @@ export const mockTrips: Trip[] =
     "amount": 2811,
     "driver_fee": 2108,
     "note": "行李較多",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -3537,7 +3537,7 @@ export const mockTrips: Trip[] =
     "amount": 2689,
     "driver_fee": 2016,
     "note": "請提前抵達",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -3558,7 +3558,7 @@ export const mockTrips: Trip[] =
     "amount": 1447,
     "driver_fee": 1085,
     "note": "航班延誤勿催",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 290
@@ -3580,7 +3580,7 @@ export const mockTrips: Trip[] =
     "amount": 2580,
     "driver_fee": 1935,
     "note": "需要安全座椅",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -3600,7 +3600,7 @@ export const mockTrips: Trip[] =
     "amount": 2027,
     "driver_fee": 1520,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-1",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -3621,7 +3621,7 @@ export const mockTrips: Trip[] =
     "amount": 1027,
     "driver_fee": 770,
     "note": "有嬰兒推車",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -3641,7 +3641,7 @@ export const mockTrips: Trip[] =
     "amount": 992,
     "driver_fee": 744,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-1",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -3662,7 +3662,7 @@ export const mockTrips: Trip[] =
     "amount": 2032,
     "driver_fee": 1524,
     "note": "行動不便",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 463
   },
@@ -3683,7 +3683,7 @@ export const mockTrips: Trip[] =
     "amount": 2655,
     "driver_fee": 1991,
     "note": "需要安全座椅",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -3724,7 +3724,7 @@ export const mockTrips: Trip[] =
     "amount": 2226,
     "driver_fee": 1669,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -3805,7 +3805,7 @@ export const mockTrips: Trip[] =
     "amount": 1642,
     "driver_fee": 1231,
     "note": "航班延誤勿催",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-3",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -3826,7 +3826,7 @@ export const mockTrips: Trip[] =
     "amount": 3109,
     "driver_fee": 2331,
     "note": "寵物同行",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -3847,7 +3847,7 @@ export const mockTrips: Trip[] =
     "amount": 964,
     "driver_fee": 723,
     "note": "航班延誤勿催",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -3868,7 +3868,7 @@ export const mockTrips: Trip[] =
     "amount": 3381,
     "driver_fee": 2535,
     "note": "需要安全座椅",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -3888,7 +3888,7 @@ export const mockTrips: Trip[] =
     "amount": 2006,
     "driver_fee": 1504,
     "note": "",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -3908,7 +3908,7 @@ export const mockTrips: Trip[] =
     "amount": 3260,
     "driver_fee": 2445,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -3929,7 +3929,7 @@ export const mockTrips: Trip[] =
     "amount": 1331,
     "driver_fee": 998,
     "note": "",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 379
   },
@@ -3950,7 +3950,7 @@ export const mockTrips: Trip[] =
     "amount": 1699,
     "driver_fee": 1274,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 213
   },
@@ -3971,7 +3971,7 @@ export const mockTrips: Trip[] =
     "amount": 1839,
     "driver_fee": 1379,
     "note": "",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -3991,7 +3991,7 @@ export const mockTrips: Trip[] =
     "amount": 1476,
     "driver_fee": 1107,
     "note": "航班延誤勿催",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4051,7 +4051,7 @@ export const mockTrips: Trip[] =
     "amount": 3400,
     "driver_fee": 2550,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4071,7 +4071,7 @@ export const mockTrips: Trip[] =
     "amount": 2438,
     "driver_fee": 1828,
     "note": "請提前抵達",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -4092,7 +4092,7 @@ export const mockTrips: Trip[] =
     "amount": 1364,
     "driver_fee": 1023,
     "note": "需要安全座椅",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4112,7 +4112,7 @@ export const mockTrips: Trip[] =
     "amount": 2187,
     "driver_fee": 1640,
     "note": "寵物同行",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4173,7 +4173,7 @@ export const mockTrips: Trip[] =
     "amount": 1288,
     "driver_fee": 966,
     "note": "寵物同行",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 113
   },
@@ -4194,7 +4194,7 @@ export const mockTrips: Trip[] =
     "amount": 2970,
     "driver_fee": 2227,
     "note": "",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-1",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 299
@@ -4216,7 +4216,7 @@ export const mockTrips: Trip[] =
     "amount": 3162,
     "driver_fee": 2371,
     "note": "請提前抵達",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -4237,7 +4237,7 @@ export const mockTrips: Trip[] =
     "amount": 1140,
     "driver_fee": 855,
     "note": "有嬰兒推車",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-1",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -4258,7 +4258,7 @@ export const mockTrips: Trip[] =
     "amount": 2636,
     "driver_fee": 1977,
     "note": "行動不便",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -4279,7 +4279,7 @@ export const mockTrips: Trip[] =
     "amount": 3280,
     "driver_fee": 2460,
     "note": "請提前抵達",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4299,7 +4299,7 @@ export const mockTrips: Trip[] =
     "amount": 988,
     "driver_fee": 741,
     "note": "行動不便",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-3",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -4340,7 +4340,7 @@ export const mockTrips: Trip[] =
     "amount": 1328,
     "driver_fee": 996,
     "note": "行李較多",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -4361,7 +4361,7 @@ export const mockTrips: Trip[] =
     "amount": 3284,
     "driver_fee": 2463,
     "note": "有嬰兒推車",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -4404,7 +4404,7 @@ export const mockTrips: Trip[] =
     "amount": 2035,
     "driver_fee": 1526,
     "note": "需要安全座椅",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4424,7 +4424,7 @@ export const mockTrips: Trip[] =
     "amount": 2893,
     "driver_fee": 2169,
     "note": "請提前抵達",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4444,7 +4444,7 @@ export const mockTrips: Trip[] =
     "amount": 2261,
     "driver_fee": 1695,
     "note": "請提前抵達",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -4465,7 +4465,7 @@ export const mockTrips: Trip[] =
     "amount": 1443,
     "driver_fee": 1082,
     "note": "請提前抵達",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4485,7 +4485,7 @@ export const mockTrips: Trip[] =
     "amount": 2821,
     "driver_fee": 2115,
     "note": "航班延誤勿催",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -4506,7 +4506,7 @@ export const mockTrips: Trip[] =
     "amount": 1448,
     "driver_fee": 1086,
     "note": "寵物同行",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 291
@@ -4528,7 +4528,7 @@ export const mockTrips: Trip[] =
     "amount": 2005,
     "driver_fee": 1503,
     "note": "需要安全座椅",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -4549,7 +4549,7 @@ export const mockTrips: Trip[] =
     "amount": 1368,
     "driver_fee": 1026,
     "note": "航班延誤勿催",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4569,7 +4569,7 @@ export const mockTrips: Trip[] =
     "amount": 2596,
     "driver_fee": 1947,
     "note": "",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4589,7 +4589,7 @@ export const mockTrips: Trip[] =
     "amount": 3092,
     "driver_fee": 2319,
     "note": "有嬰兒推車",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-3",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -4610,7 +4610,7 @@ export const mockTrips: Trip[] =
     "amount": 2805,
     "driver_fee": 2103,
     "note": "請提前抵達",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4630,7 +4630,7 @@ export const mockTrips: Trip[] =
     "amount": 1872,
     "driver_fee": 1404,
     "note": "行李較多",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 225
   },
@@ -4651,7 +4651,7 @@ export const mockTrips: Trip[] =
     "amount": 2504,
     "driver_fee": 1878,
     "note": "航班延誤勿催",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4671,7 +4671,7 @@ export const mockTrips: Trip[] =
     "amount": 1380,
     "driver_fee": 1035,
     "note": "行李較多",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 474
   },
@@ -4692,7 +4692,7 @@ export const mockTrips: Trip[] =
     "amount": 2810,
     "driver_fee": 2107,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4712,7 +4712,7 @@ export const mockTrips: Trip[] =
     "amount": 3490,
     "driver_fee": 2617,
     "note": "寵物同行",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4732,7 +4732,7 @@ export const mockTrips: Trip[] =
     "amount": 3214,
     "driver_fee": 2410,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 192
   },
@@ -4794,7 +4794,7 @@ export const mockTrips: Trip[] =
     "amount": 2925,
     "driver_fee": 2193,
     "note": "航班延誤勿催",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -4815,7 +4815,7 @@ export const mockTrips: Trip[] =
     "amount": 3451,
     "driver_fee": 2588,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-3",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 206
@@ -4837,7 +4837,7 @@ export const mockTrips: Trip[] =
     "amount": 989,
     "driver_fee": 741,
     "note": "需要安全座椅",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -4858,7 +4858,7 @@ export const mockTrips: Trip[] =
     "amount": 1443,
     "driver_fee": 1082,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4878,7 +4878,7 @@ export const mockTrips: Trip[] =
     "amount": 3074,
     "driver_fee": 2305,
     "note": "行動不便",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4898,7 +4898,7 @@ export const mockTrips: Trip[] =
     "amount": 900,
     "driver_fee": 675,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 474
   },
@@ -4919,7 +4919,7 @@ export const mockTrips: Trip[] =
     "amount": 1823,
     "driver_fee": 1367,
     "note": "航班延誤勿催",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4939,7 +4939,7 @@ export const mockTrips: Trip[] =
     "amount": 2890,
     "driver_fee": 2167,
     "note": "有嬰兒推車",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -4960,7 +4960,7 @@ export const mockTrips: Trip[] =
     "amount": 1589,
     "driver_fee": 1191,
     "note": "有嬰兒推車",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -4980,7 +4980,7 @@ export const mockTrips: Trip[] =
     "amount": 1562,
     "driver_fee": 1171,
     "note": "請提前抵達",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-1",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 125
@@ -5002,7 +5002,7 @@ export const mockTrips: Trip[] =
     "amount": 1203,
     "driver_fee": 902,
     "note": "需要安全座椅",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -5023,7 +5023,7 @@ export const mockTrips: Trip[] =
     "amount": 2297,
     "driver_fee": 1722,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5043,7 +5043,7 @@ export const mockTrips: Trip[] =
     "amount": 1788,
     "driver_fee": 1341,
     "note": "寵物同行",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5063,7 +5063,7 @@ export const mockTrips: Trip[] =
     "amount": 951,
     "driver_fee": 713,
     "note": "請提前抵達",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 335
   },
@@ -5084,7 +5084,7 @@ export const mockTrips: Trip[] =
     "amount": 1200,
     "driver_fee": 900,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5104,7 +5104,7 @@ export const mockTrips: Trip[] =
     "amount": 1741,
     "driver_fee": 1305,
     "note": "需要安全座椅",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5145,7 +5145,7 @@ export const mockTrips: Trip[] =
     "amount": 1059,
     "driver_fee": 794,
     "note": "行李較多",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -5166,7 +5166,7 @@ export const mockTrips: Trip[] =
     "amount": 2690,
     "driver_fee": 2017,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -5187,7 +5187,7 @@ export const mockTrips: Trip[] =
     "amount": 889,
     "driver_fee": 666,
     "note": "航班延誤勿催",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5207,7 +5207,7 @@ export const mockTrips: Trip[] =
     "amount": 2748,
     "driver_fee": 2061,
     "note": "請提前抵達",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5247,7 +5247,7 @@ export const mockTrips: Trip[] =
     "amount": 2519,
     "driver_fee": 1889,
     "note": "寵物同行",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-1",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -5268,7 +5268,7 @@ export const mockTrips: Trip[] =
     "amount": 2205,
     "driver_fee": 1653,
     "note": "寵物同行",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -5289,7 +5289,7 @@ export const mockTrips: Trip[] =
     "amount": 1800,
     "driver_fee": 1350,
     "note": "需要安全座椅",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 231
@@ -5311,7 +5311,7 @@ export const mockTrips: Trip[] =
     "amount": 3104,
     "driver_fee": 2328,
     "note": "請提前抵達",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -5332,7 +5332,7 @@ export const mockTrips: Trip[] =
     "amount": 1897,
     "driver_fee": 1422,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5352,7 +5352,7 @@ export const mockTrips: Trip[] =
     "amount": 2255,
     "driver_fee": 1691,
     "note": "請提前抵達",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -5373,7 +5373,7 @@ export const mockTrips: Trip[] =
     "amount": 2005,
     "driver_fee": 1503,
     "note": "",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -5394,7 +5394,7 @@ export const mockTrips: Trip[] =
     "amount": 3320,
     "driver_fee": 2490,
     "note": "需要安全座椅",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5414,7 +5414,7 @@ export const mockTrips: Trip[] =
     "amount": 3030,
     "driver_fee": 2272,
     "note": "有嬰兒推車",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-3",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -5435,7 +5435,7 @@ export const mockTrips: Trip[] =
     "amount": 3213,
     "driver_fee": 2409,
     "note": "寵物同行",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 172
   },
@@ -5498,7 +5498,7 @@ export const mockTrips: Trip[] =
     "amount": 2888,
     "driver_fee": 2166,
     "note": "",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5538,7 +5538,7 @@ export const mockTrips: Trip[] =
     "amount": 956,
     "driver_fee": 717,
     "note": "需要安全座椅",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5558,7 +5558,7 @@ export const mockTrips: Trip[] =
     "amount": 1097,
     "driver_fee": 822,
     "note": "寵物同行",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -5579,7 +5579,7 @@ export const mockTrips: Trip[] =
     "amount": 3435,
     "driver_fee": 2576,
     "note": "有嬰兒推車",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -5600,7 +5600,7 @@ export const mockTrips: Trip[] =
     "amount": 1194,
     "driver_fee": 895,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.071Z",
     "price_boost": 434
@@ -5664,7 +5664,7 @@ export const mockTrips: Trip[] =
     "amount": 2336,
     "driver_fee": 1752,
     "note": "需要安全座椅",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -5685,7 +5685,7 @@ export const mockTrips: Trip[] =
     "amount": 1824,
     "driver_fee": 1368,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-3",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -5706,7 +5706,7 @@ export const mockTrips: Trip[] =
     "amount": 894,
     "driver_fee": 670,
     "note": "航班延誤勿催",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5726,7 +5726,7 @@ export const mockTrips: Trip[] =
     "amount": 2512,
     "driver_fee": 1884,
     "note": "航班延誤勿催",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-3",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -5747,7 +5747,7 @@ export const mockTrips: Trip[] =
     "amount": 1617,
     "driver_fee": 1212,
     "note": "行動不便",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -5768,7 +5768,7 @@ export const mockTrips: Trip[] =
     "amount": 3464,
     "driver_fee": 2598,
     "note": "",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5788,7 +5788,7 @@ export const mockTrips: Trip[] =
     "amount": 2456,
     "driver_fee": 1842,
     "note": "",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-3",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
@@ -5809,7 +5809,7 @@ export const mockTrips: Trip[] =
     "amount": 1937,
     "driver_fee": 1452,
     "note": "有嬰兒推車",
-    "status": "picked_up",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5829,7 +5829,7 @@ export const mockTrips: Trip[] =
     "amount": 2455,
     "driver_fee": 1841,
     "note": "行李較多",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5869,7 +5869,7 @@ export const mockTrips: Trip[] =
     "amount": 3142,
     "driver_fee": 2356,
     "note": "請提前抵達",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5889,7 +5889,7 @@ export const mockTrips: Trip[] =
     "amount": 3464,
     "driver_fee": 2598,
     "note": "有嬰兒推車",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5909,7 +5909,7 @@ export const mockTrips: Trip[] =
     "amount": 2793,
     "driver_fee": 2094,
     "note": "有嬰兒推車",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5929,7 +5929,7 @@ export const mockTrips: Trip[] =
     "amount": 3246,
     "driver_fee": 2434,
     "note": "需要安全座椅",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.071Z"
   },
   {
@@ -5949,7 +5949,7 @@ export const mockTrips: Trip[] =
     "amount": 2770,
     "driver_fee": 2077,
     "note": "有嬰兒推車",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.072Z"
   },
@@ -5970,7 +5970,7 @@ export const mockTrips: Trip[] =
     "amount": 2051,
     "driver_fee": 1538,
     "note": "行動不便",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.072Z"
   },
   {
@@ -5990,7 +5990,7 @@ export const mockTrips: Trip[] =
     "amount": 3196,
     "driver_fee": 2397,
     "note": "寵物同行",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.072Z"
   },
   {
@@ -6010,7 +6010,7 @@ export const mockTrips: Trip[] =
     "amount": 1721,
     "driver_fee": 1290,
     "note": "航班延誤勿催",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-1",
     "updated_at": "2026-03-01T03:35:36.072Z"
   },
@@ -6031,7 +6031,7 @@ export const mockTrips: Trip[] =
     "amount": 1445,
     "driver_fee": 1083,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.072Z"
   },
   {
@@ -6051,7 +6051,7 @@ export const mockTrips: Trip[] =
     "amount": 2998,
     "driver_fee": 2248,
     "note": "航班延誤勿催",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.072Z"
   },
   {
@@ -6071,7 +6071,7 @@ export const mockTrips: Trip[] =
     "amount": 2274,
     "driver_fee": 1705,
     "note": "請提前抵達",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-6",
     "updated_at": "2026-03-01T03:35:36.072Z"
   },
@@ -6092,7 +6092,7 @@ export const mockTrips: Trip[] =
     "amount": 1821,
     "driver_fee": 1365,
     "note": "行動不便",
-    "status": "accepted",
+    "status": "open",
     "driver_id": "driver-5",
     "updated_at": "2026-03-01T03:35:36.072Z"
   },
@@ -6113,7 +6113,7 @@ export const mockTrips: Trip[] =
     "amount": 1549,
     "driver_fee": 1161,
     "note": "",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.072Z"
   },
   {
@@ -6133,7 +6133,7 @@ export const mockTrips: Trip[] =
     "amount": 2529,
     "driver_fee": 1896,
     "note": "",
-    "status": "picked_up",
+    "status": "open",
     "driver_id": "driver-1",
     "updated_at": "2026-03-01T03:35:36.072Z",
     "price_boost": 116
@@ -6175,7 +6175,7 @@ export const mockTrips: Trip[] =
     "amount": 2881,
     "driver_fee": 2160,
     "note": "請提前抵達",
-    "status": "completed",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.072Z"
   },
   {
@@ -6195,7 +6195,7 @@ export const mockTrips: Trip[] =
     "amount": 2963,
     "driver_fee": 2222,
     "note": "行動不便",
-    "status": "accepted",
+    "status": "open",
     "updated_at": "2026-03-01T03:35:36.072Z"
   },
   {
@@ -6215,7 +6215,7 @@ export const mockTrips: Trip[] =
     "amount": 921,
     "driver_fee": 690,
     "note": "需要安全座椅",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.072Z",
     "price_boost": 338
@@ -6237,7 +6237,7 @@ export const mockTrips: Trip[] =
     "amount": 2203,
     "driver_fee": 1652,
     "note": "",
-    "status": "arrived",
+    "status": "open",
     "driver_id": "driver-4",
     "updated_at": "2026-03-01T03:35:36.072Z"
   },
@@ -6258,7 +6258,7 @@ export const mockTrips: Trip[] =
     "amount": 2090,
     "driver_fee": 1567,
     "note": "",
-    "status": "completed",
+    "status": "open",
     "driver_id": "driver-2",
     "updated_at": "2026-03-01T03:35:36.072Z"
   }

@@ -81,55 +81,101 @@ export default function CasesPage() {
 
       {/* 智慧推薦區塊 */}
       {matches.length > 0 && (
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold text-[#fafaf9] mb-3 flex items-center gap-2">
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold text-[#fafaf9] mb-4 flex items-center gap-2">
             <span className="text-[#d4af37]">✨</span> 為你推薦
+            <span className="text-xs text-[#a8a29e] font-normal ml-2">（顯示與您已接行程的關聯）</span>
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          
+          <div className="space-y-4">
             {matches.map((match) => (
-              <div key={match.trip.id} className="glass-card match-card p-4">
-                {/* 配對原因標籤 */}
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-base">
+              <div key={match.trip.id} className="match-group">
+                {/* 配對卡片 - 上半部：已接行程 */}
+                {match.relatedTrip && (
+                  <div className="match-related-card mb-2">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-xs text-[#a8a29e]">📋 您已接的行程</span>
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                        match.relatedTrip.service_type === 'dropoff' 
+                          ? 'bg-orange-500/20 text-orange-400' 
+                          : 'bg-blue-500/20 text-blue-400'
+                      }`}>
+                        {match.relatedTrip.service_type === 'dropoff' ? '送機' : '接機'}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-xs text-[#a8a29e]">
+                        {formatDate(match.relatedTrip.service_date)} {formatTime(match.relatedTrip.service_time)}
+                      </span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <div className="w-2 h-2 rounded-full bg-[#a8a29e] mt-1.5 flex-shrink-0" />
+                      <p className="text-sm text-[#a8a29e] truncate">
+                        {match.relatedTrip.pickup_area || match.relatedTrip.pickup_address}
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <div className="w-2 h-2 rounded-full bg-[#a8a29e] mt-1.5 flex-shrink-0" />
+                      <p className="text-sm text-[#a8a29e] truncate">
+                        {match.relatedTrip.dropoff_area || match.relatedTrip.dropoff_address}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                
+                {/* 連接線視覺 */}
+                <div className="match-connector">
+                  <div className="connector-line"></div>
+                  <div className="connector-icon">
                     {match.matchType === 'route' ? '⚡' : match.matchType === 'bundle' ? '🔗' : '⏰'}
-                  </span>
-                  <span className="text-sm text-[#d4af37] font-medium flex-1">{match.reason}</span>
-                  <span className="text-xs bg-[#d4af37]/20 text-[#d4af37] px-2 py-0.5 rounded-full font-semibold">
-                    {match.matchScore}分
-                  </span>
-                </div>
-
-                {/* 行程卡片內容 */}
-                <div className="flex items-center gap-2 mb-2">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    match.trip.service_type === 'dropoff' ? 'bg-orange-500/20 text-orange-400' : 'bg-blue-500/20 text-blue-400'
-                  }`}>
-                    {match.trip.service_type === 'dropoff' ? '送機' : '接機'}
-                  </span>
-                  <span className="text-xs text-[#a8a29e]">
-                    {formatDate(match.trip.service_date)} {formatTime(match.trip.service_time)}
-                  </span>
-                </div>
-
-                <div className="space-y-1 mb-2">
-                  <div className="flex items-start gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#d4af37] mt-1.5 flex-shrink-0" />
-                    <p className="text-sm text-[#fafaf9] truncate">{match.trip.pickup_area || match.trip.pickup_address}</p>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#d4af37] mt-1.5 flex-shrink-0" />
-                    <p className="text-sm text-[#fafaf9] truncate">{match.trip.dropoff_area || match.trip.dropoff_address}</p>
-                  </div>
+                  <div className="connector-line"></div>
                 </div>
+                
+                {/* 配對卡片 - 下半部：推薦行程 */}
+                <div className="match-card p-4">
+                  {/* 配對原因標籤 */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-sm text-[#d4af37] font-medium flex-1">{match.reason}</span>
+                    <span className="text-xs bg-[#d4af37]/20 text-[#d4af37] px-2 py-0.5 rounded-full font-semibold">
+                      {match.matchScore}分
+                    </span>
+                  </div>
 
-                <div className="flex items-center justify-between mt-3">
-                  <div className="text-sm font-semibold text-[#d4af37]">${match.trip.amount}</div>
-                  <button
-                    onClick={() => handleAccept(match.trip.id)}
-                    className="btn-gold text-sm py-1.5 px-4"
-                  >
-                    接單
-                  </button>
+                  {/* 行程卡片內容 */}
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      match.trip.service_type === 'dropoff' 
+                        ? 'bg-orange-500/20 text-orange-400' 
+                        : 'bg-blue-500/20 text-blue-400'
+                    }`}>
+                      {match.trip.service_type === 'dropoff' ? '送機' : '接機'}
+                    </span>
+                    <span className="text-xs text-[#a8a29e]">
+                      {formatDate(match.trip.service_date)} {formatTime(match.trip.service_time)}
+                    </span>
+                  </div>
+
+                  <div className="space-y-1 mb-2">
+                    <div className="flex items-start gap-2">
+                      <div className="w-2 h-2 rounded-full bg-[#d4af37] mt-1.5 flex-shrink-0" />
+                      <p className="text-sm text-[#fafaf9] truncate">{match.trip.pickup_area || match.trip.pickup_address}</p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <div className="w-2 h-2 rounded-full bg-[#d4af37] mt-1.5 flex-shrink-0" />
+                      <p className="text-sm text-[#fafaf9] truncate">{match.trip.dropoff_area || match.trip.dropoff_address}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between mt-3">
+                    <div className="text-sm font-semibold text-[#d4af37]">${match.trip.amount}</div>
+                    <button
+                      onClick={() => handleAccept(match.trip.id)}
+                      className="btn-gold text-sm py-1.5 px-4"
+                    >
+                      接單
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

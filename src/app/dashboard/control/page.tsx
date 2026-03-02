@@ -4,7 +4,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { Trip, TripStatus, Driver } from '@/types';
-import { getTrips, getDrivers, updateTripStatus, assignDriver } from '@/lib/data';
+import { getTrips, getDrivers, updateTripStatus, assignDriver, updateTripPriceBoost } from '@/lib/data';
 import TripCard from '@/components/TripCard';
 
 export default function ControlPage() {
@@ -65,9 +65,9 @@ export default function ControlPage() {
     }
   };
 
-  // 處理完成
-  const handleComplete = async (tripId: string) => {
-    await updateTripStatus(tripId, 'completed');
+  // 處理加價
+  const handleUpdatePrice = async (tripId: string, boostAmount: number) => {
+    await updateTripPriceBoost(tripId, boostAmount);
     await loadData();
   };
 
@@ -190,6 +190,8 @@ export default function ControlPage() {
                 onAssignDriver={handleAssignDriver}
                 onCancel={handleCancel}
                 onComplete={handleComplete}
+                onUpdatePrice={handleUpdatePrice}
+                showChat={true}
               />
             </div>
           ))}

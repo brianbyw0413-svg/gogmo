@@ -1,5 +1,5 @@
 // 首頁 - 公開展示頁面
-// 動態 Case 卡片展示牆 — 三排無限水平滾動 (hover 暫停)
+// Flipboard 卡片翻轉動態磚效果
 
 'use client';
 
@@ -9,35 +9,104 @@ import { Trip } from '@/types';
 import { getTrips } from '@/lib/data';
 import TripCard from '@/components/TripCard';
 
-/* 將行程分成 N 排，不足時循環填充 */
-function splitIntoRows(trips: Trip[], rowCount: number, minPerRow: number = 6): Trip[][] {
-  const rows: Trip[][] = [];
-  for (let i = 0; i < rowCount; i++) {
-    const row: Trip[] = [];
-    // 從不同偏移量開始取，讓每排內容不同
-    for (let j = 0; j < Math.max(trips.length, minPerRow); j++) {
-      row.push(trips[(j + i * 2) % trips.length]);
-    }
-    rows.push(row);
-  }
-  return rows;
+function FlipTile({ trip, index, totalTrips, allTrips }: { 
+  trip: Trip | null; 
+  index: number; 
+  totalTrips: number;
+  allTrips: Trip[];
+}) {
+  const [currentTrip, setCurrentTrip] = useState<Trip | null>(trip);
+  const [isFlipping, setIsFlipping] = useState(false);
+  const [flipToTrip, setFlipToTrip] = useState<Trip | null>(null);
+  const [flipDirection, setFlipDirection] = useState<'up' | 'down'>('up');
+
+  // 每個格子不同時間翻轉（分散開）+ 隨機 3-6 秒
+  useEffect(() => {
+    const randomDelay = 3000 + Math.random() * 3000; // 3-6 秒
+    const staggerDelay = index * 800; // 每個格子延遲 800ms
+    
+    const startFlip = () => {
+      // 選擇下一個行程
+      const randomTrip = allTrips[Math.floor(Math.random() * allTrips.length)];
+      setFlipToTrip(randomTrip);
+      setFlipDirection(Math.random() > 0.5 ? 'up' : 'down');
+      setIsFlipping(true);
+      
+      // 動畫完成後更新
+      setTimeout(() => {
+        setCurrentTrip(randomTrip);
+        setFlipToTrip(null);
+        setIsFlipping(false);
+      }, 600); // 600ms 動畫時間
+    };
+    
+    // 初始延遲後開始
+    const initialTimeout = setTimeout(startFlip, staggerDelay);
+    
+    // 定期翻轉
+    const interval = setInterval(startFlip, randomDelay + staggerDelay);
+    
+    return () => {
+      clearTimeout(initialTimeout);
+      clearInterval(interval);
+    };
+  }, [index, allTrips]);
+
+  return (
+    <div className="flip-3d-card aspect-square preserve-3d">
+      {/* 當前卡片 */}
+      <div 
+        className={`flip-front ${isFlipping ? (flipDirection === 'up' ? 'rotate-up-out' : 'rotate-down-out') : ''}`}
+      >
+        {currentTrip ? (
+          <TripCard trip={currentTrip} showActions={false} variant="public" />
+        ) : (
+          <div className="glass-card h-full flex items-center justify-center text-[#6b7280] text-xs md:text-sm p-1">
+            等待行程...
+          </div>
+        )}
+      </div>
+      
+      {/* 翻轉後的卡片 */}
+      {flipToTrip && (
+        <div 
+          className={`flip-back ${isFlipping ? (flipDirection === 'up' ? 'rotate-up-in' : 'rotate-down-in') : ''}`}
+        >
+          <TripCard trip={flipToTrip} showActions={false} variant="public" />
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function HomePage() {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // 載入資料 + 每5秒自動更新統計
   useEffect(() => {
-    getTrips().then(data => {
-      setTrips(data);
-      setLoading(false);
-    });
+    const fetchTrips = () => {
+      getTrips().then(data => {
+        const openTrips = data.filter(t => t.status === 'open');
+        setTrips(openTrips);
+        setLoading(false);
+      });
+    };
+    
+    fetchTrips();
+    
+    // 每5秒自動更新統計資料
+    const interval = setInterval(fetchTrips, 5000);
+    return () => clearInterval(interval);
   }, []);
 
-  // 三排卡片資料，每排複製一份實現無縫循環
-  const rows = useMemo(() => {
-    if (trips.length === 0) return [];
-    return splitIntoRows(trips, 3, 7);
+  // 統計資訊
+  const stats = useMemo(() => {
+    const pickup = trips.filter(t => t.service_type === 'pickup').length;
+    const dropoff = trips.filter(t => t.service_type === 'dropoff').length;
+    const total = trips.reduce((sum, t) => sum + t.amount, 0);
+    const drivers = new Set(trips.filter(t => t.driver_id).map(t => t.driver_id)).size;
+    return { pickup, dropoff, total, drivers };
   }, [trips]);
 
   return (
@@ -67,96 +136,100 @@ export default function HomePage() {
 
       {/* 主內容 */}
       <main className="pt-24 pb-12">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4">
           {/* Hero 區域 */}
-          <div className="text-center mb-8 animate-fadeIn">
-            <h1 className="text-4xl md:text-6xl font-bold text-[#fafaf9] mb-3">
+          <div className="text-center mb-4 md:mb-6 animate-fadeIn">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-[#fafaf9] mb-2 md:mb-3">
               <span className="text-[#d4af37]">G</span>ive{' '}
               <span className="text-[#d4af37]">M</span>e{' '}
               <span className="text-[#d4af37]">O</span>rder
             </h1>
-            <p className="text-xl md:text-2xl text-[#fafaf9] tracking-wider font-semibold mb-4 animate-slideIn">
+            <p className="text-lg sm:text-xl md:text-2xl text-[#fafaf9] tracking-wider font-semibold mb-2 md:mb-4 animate-slideIn">
               — <span className="text-[#d4af37]">G</span>et{' '}
               <span className="text-[#d4af37]">M</span>ore{' '}
               <span className="text-[#d4af37]">O</span>ffers —
             </p>
-            <p className="text-sm text-[#78716c] max-w-xl mx-auto">
+            <p className="text-xs sm:text-sm text-[#78716c] max-w-xl mx-auto">
               專業機場接送派單平台｜連接車頭與司機的橋樑
             </p>
           </div>
 
-          {/* 統計資訊 */}
-          <div className="grid grid-cols-3 gap-4 mb-8 max-w-2xl mx-auto">
-            <div className="glass-card p-4 text-center">
-              <div className="text-2xl font-bold text-[#d4af37]">{trips.length}</div>
-              <div className="text-xs text-[#a8a29e]">待執行行程</div>
+          {/* 統計資訊 - 亮黃色 + RWD */}
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-4 md:gap-4 mb-3 md:mb-6 max-w-4xl mx-auto px-1 sm:px-0">
+            <div className="glass-card p-2 sm:p-3 md:p-4 text-center">
+              <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#fde047]">{stats.pickup}</div>
+              <div className="text-xs text-[#a8a29e]">在線接機單</div>
             </div>
-            <div className="glass-card p-4 text-center">
-              <div className="text-2xl font-bold text-[#d4af37]">
-                {trips.filter(t => t.status === 'open').length}
-              </div>
-              <div className="text-xs text-[#a8a29e]">待司機接單</div>
+            <div className="glass-card p-2 sm:p-3 md:p-4 text-center">
+              <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#fde047]">{stats.dropoff}</div>
+              <div className="text-xs text-[#a8a29e]">在線送機單</div>
             </div>
-            <div className="glass-card p-4 text-center">
-              <div className="text-2xl font-bold text-[#d4af37]">
-                {trips.reduce((sum, t) => sum + t.amount, 0).toLocaleString()}
-              </div>
-              <div className="text-xs text-[#a8a29e]">今日總金額</div>
+            <div className="glass-card p-2 sm:p-3 md:p-4 text-center">
+              <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#fde047]">{stats.drivers}</div>
+              <div className="text-xs text-[#a8a29e]">註冊司機</div>
+            </div>
+            <div className="glass-card p-2 sm:p-3 md:p-4 text-center">
+              <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#fde047]">${stats.total.toLocaleString()}</div>
+              <div className="text-xs text-[#a8a29e]">在線單總金額</div>
             </div>
           </div>
         </div>
 
-        {/* 三排無限滾動卡片牆 */}
-        <div className="mb-12 space-y-4">
+        {/* Flipboard 風格 - 卡片翻轉動態磚 */}
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 mb-4">
+          <h2 className="text-lg font-semibold text-[#a8a29e] mb-2 md:mb-4 flex items-center gap-2">
+            <span className="w-2 h-2 bg-[#d4af37] rounded-full animate-pulse"></span>
+            即時行程動態牆
+          </h2>
+          
           {loading ? (
-            <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="glass-card p-4 animate-pulse">
-                  <div className="h-4 bg-[#292524] rounded w-1/2 mb-4"></div>
+            <div className="hidden md:grid grid-cols-4 gap-2 md:gap-4">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="glass-card p-2 md:p-4 aspect-square animate-pulse">
+                  <div className="h-4 bg-[#292524] rounded w-1/2 mb-2 md:mb-4"></div>
                   <div className="h-3 bg-[#292524] rounded w-3/4 mb-2"></div>
                   <div className="h-3 bg-[#292524] rounded w-2/3"></div>
                 </div>
               ))}
             </div>
-          ) : rows.length > 0 ? (
-            rows.map((row, rowIndex) => {
-              const isReverse = rowIndex % 2 === 1; // 第二排反向
-              const duped = [...row, ...row]; // 複製一份無縫循環
-              const speed = 50; // 統一速度，放慢
-              return (
-                <div key={rowIndex} className="marquee-container overflow-hidden w-full">
-                  <div
-                    className={`marquee-track ${isReverse ? 'marquee-reverse' : ''}`}
-                    style={{
-                      '--card-count': row.length,
-                      '--card-width': '300px',
-                      '--gap': '14px',
-                      '--speed': `${speed}s`,
-                    } as React.CSSProperties}
-                  >
-                    {duped.map((trip, index) => (
-                      <div
-                        key={`r${rowIndex}-${trip.id}-${index}`}
-                        className="marquee-card"
-                      >
-                        <TripCard trip={trip} showActions={false} variant="public" />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })
           ) : (
-            <div className="max-w-7xl mx-auto px-4">
-              <div className="glass-card p-8 text-center">
-                <p className="text-[#a8a29e]">目前沒有待執行的行程</p>
+            <>
+              {/* 手機版：只顯示 4 格 - 自動調整間距 */}
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 md:hidden">
+                {[...Array(4)].map((_, i) => {
+                  const trip = trips[i % trips.length] || null;
+                  return (
+                    <FlipTile 
+                      key={`mobile-${i}`} 
+                      trip={trip} 
+                      index={i} 
+                      totalTrips={trips.length}
+                      allTrips={trips}
+                    />
+                  );
+                })}
               </div>
-            </div>
+              {/* 電腦版：顯示 8 格 */}
+              <div className="hidden md:grid grid-cols-4 gap-2 md:gap-4">
+                {[...Array(8)].map((_, i) => {
+                  const trip = trips[i % trips.length] || null;
+                  return (
+                    <FlipTile 
+                      key={`desktop-${i}`} 
+                      trip={trip} 
+                      index={i} 
+                      totalTrips={trips.length}
+                      allTrips={trips}
+                    />
+                  );
+                })}
+              </div>
+            </>
           )}
         </div>
 
         {/* CTA 按鈕 */}
-        <div className="text-center px-4">
+        <div className="text-center px-4 py-4 md:py-8">
           <Link href="/lobby" className="btn-gold-outline inline-flex items-center gap-2 px-6 py-3">
             查看更多行程
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -63,6 +63,138 @@ body {
   border-radius: 12px;
 }
 
+/* 3D 翻轉效果 - 垂直翻轉 */
+.flip-3d-card {
+  position: relative;
+  perspective: 1200px;
+}
+
+.flip-front,
+.flip-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.flip-front {
+  z-index: 2;
+}
+
+.flip-back {
+  z-index: 1;
+}
+
+/* 向上翻轉 - 翻走 */
+.rotate-up-out {
+  animation: rotateUpOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* 向上翻轉 - 翻入 */
+.rotate-up-in {
+  animation: rotateUpIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* 向下翻轉 - 翻走 */
+.rotate-down-out {
+  animation: rotateDownOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* 向下翻轉 - 翻入 */
+.rotate-down-in {
+  animation: rotateDownIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes rotateUpOut {
+  0% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateX(-90deg);
+    opacity: 0;
+  }
+}
+
+@keyframes rotateUpIn {
+  0% {
+    transform: rotateX(90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes rotateDownOut {
+  0% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateX(90deg);
+    opacity: 0;
+  }
+}
+
+@keyframes rotateDownIn {
+  0% {
+    transform: rotateX(-90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+/* 舊的滑動效果（保留） */
+.flipboard-tile {
+  position: relative;
+}
+
+.tile-current,
+.tile-next {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.tile-current {
+  z-index: 1;
+}
+
+.tile-next {
+  z-index: 2;
+  transform: translateY(100%);
+}
+
+.tile-slide-up {
+  animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.tile-slide-in {
+  animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideUp {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-100%); opacity: 0.8; }
+}
+
+@keyframes slideIn {
+  0% { transform: translateY(100%); opacity: 0.8; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
 /* 金色按鈕 */
 .btn-gold {
   background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%);
@@ -217,7 +349,77 @@ body {
   border-color: var(--color-gold);
 }
 
-/* ═══ 無限水平滾動 (Marquee) ═══ */
+/* ═══ Win8 動態磚效果 (Live Tile) - 固定版 ═══ */
+.live-tile {
+  position: relative;
+  border-radius: 12px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 背景光暈效果 - 靜態變化 */
+.live-tile::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.08) 0%,
+    transparent 50%,
+    rgba(212, 175, 55, 0.03) 100%
+  );
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Hover 時放大 + 光暈 */
+.live-tile:hover {
+  transform: scale(1.05) translateY(-8px);
+  z-index: 20;
+  box-shadow: 0 20px 40px rgba(212, 175, 55, 0.3);
+}
+
+.live-tile:hover::before {
+  opacity: 1;
+}
+
+/* 閃爍邊框效果 */
+.live-tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.3),
+    transparent,
+    rgba(212, 175, 55, 0.1)
+  ) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.live-tile:hover::after {
+  opacity: 1;
+}
+
+/* 急單特別效果 */
+.live-tile:has(.price-boost) {
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.live-tile:has(.price-boost):hover {
+  box-shadow: 0 20px 40px rgba(239, 68, 68, 0.3);
+}
+
+/* ═══ 無限水平滾動 (Marquee) - 已停用，改用動態磚 ═══ */
 .marquee-container {
   position: relative;
   width: 100%;
@@ -444,4 +646,719 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .calendar-cell.has-trips {
   background: rgba(212, 175, 55, 0.03);
+}
+
+/* ═══ 航班看板背景 ═══ */
+.flight-board-bg {
+  background: 
+    radial-gradient(ellipse at top, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+    linear-gradient(180deg, #0c0a09 0%, #1a1715 100%);
+  min-height: 100vh;
+}
+
+/* ═══ 航班Header ═══ */
+.flight-header-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: linear-gradient(180deg, rgba(12, 10, 9, 0.98) 0%, rgba(12, 10, 9, 0.9) 100%);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.flight-clock {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.clock-icon {
+  font-size: 14px;
+}
+
+.clock-time {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: bold;
+  color: #d4af37;
+}
+
+/* ═══ 航班看板標題 ═══ */
+.flight-board-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.title-stats {
+  display: flex;
+  gap: 12px;
+}
+
+.stat-box {
+  background: rgba(28, 25, 23, 0.8);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 12px;
+  padding: 12px 20px;
+  text-align: center;
+  min-width: 70px;
+}
+
+.stat-number {
+  display: block;
+  font-size: 28px;
+  font-weight: bold;
+  color: #fafaf9;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: #a8a29e;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.stat-dropoff .stat-number {
+  color: #fb923c;
+}
+
+.stat-pickup .stat-number {
+  color: #60a5fa;
+}
+
+/* ═══ 航班篩選器 ═══ */
+.flight-filter-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.flight-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: rgba(28, 25, 23, 0.8);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 25px;
+  color: #a8a29e;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.flight-filter-btn:hover {
+  border-color: rgba(212, 175, 55, 0.5);
+  color: #fafaf9;
+}
+
+.flight-filter-btn.active {
+  background: linear-gradient(135deg, #d4af37 0%, #b8962f 100%);
+  color: #0c0a09;
+  border-color: #d4af37;
+  font-weight: 600;
+}
+
+.filter-icon {
+  font-size: 16px;
+}
+
+.filter-count {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.flight-filter-btn.active .filter-count {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* ═══ 航班卡片 ═══ */
+.flight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 緊湊型航班卡片 - 讓畫面顯示更多 */
+.flight-card-compact {
+  display: grid;
+  grid-template-columns: 85px 1fr 70px;
+  gap: 10px;
+  background: rgba(28, 25, 23, 0.8);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: 10px;
+  padding: 10px 14px;
+  transition: all 0.2s ease;
+}
+
+.flight-card-compact:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  background: rgba(28, 25, 23, 0.95);
+}
+
+.flight-time-compact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px dashed rgba(212, 175, 55, 0.15);
+  padding-right: 8px;
+}
+
+.flight-time-compact .flight-time-display {
+  transform: scale(0.7);
+  transform-origin: center;
+}
+
+.flight-date-compact {
+  font-size: 10px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.flight-info-compact {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.flight-header-compact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.flight-type-badge-compact {
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.flight-type-orange {
+  background: rgba(251, 146, 60, 0.2);
+  color: #fb923c;
+}
+
+.flight-type-blue {
+  background: rgba(96, 165, 250, 0.2);
+  color: #60a5fa;
+}
+
+.flight-number-compact {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: #4b5563;
+}
+
+.flight-route-compact {
+  font-size: 12px;
+  color: #d1d5db;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.flight-details-compact {
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.flight-price-compact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px dashed rgba(212, 175, 55, 0.15);
+  padding-left: 8px;
+}
+
+.price-amount-compact {
+  font-size: 16px;
+  font-weight: bold;
+  color: #d4af37;
+}
+
+/* 翻頁時鐘效果保持 */
+.flight-card {
+  display: grid;
+  grid-template-columns: 100px 1fr 100px;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(28, 25, 23, 0.95) 0%, rgba(20, 18, 16, 0.95) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 16px;
+  padding: 16px 20px;
+  transition: all 0.3s ease;
+}
+
+.flight-card:hover {
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.15);
+  transform: translateY(-2px);
+}
+
+/* 卡片進場動畫 */
+@keyframes flightEnter {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-flight-enter {
+  animation: flightEnter 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+/* 左側：時間 */
+.flight-time-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px dashed rgba(212, 175, 55, 0.2);
+  padding-right: 16px;
+}
+
+.flight-time-display {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.flight-digit-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.digit-flip {
+  background: linear-gradient(180deg, #1c1917 0%, #0c0a09 100%);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 4px;
+  width: 22px;
+  height: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.digit-top,
+.digit-bottom {
+  font-family: 'Courier New', monospace;
+  font-size: 18px;
+  font-weight: bold;
+  color: #d4af37;
+  line-height: 1;
+}
+
+.digit-top {
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.time-separator {
+  font-size: 24px;
+  font-weight: bold;
+  color: #d4af37;
+  margin: 0 2px;
+}
+
+.flight-date {
+  font-size: 11px;
+  color: #a8a29e;
+  margin-top: 6px;
+}
+
+/* 中間：航班資訊 */
+.flight-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.flight-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.flight-type-badge {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.flight-type-orange {
+  background: rgba(251, 146, 60, 0.2);
+  color: #fb923c;
+  border: 1px solid rgba(251, 146, 60, 0.3);
+}
+
+.flight-type-blue {
+  background: rgba(96, 165, 250, 0.2);
+  color: #60a5fa;
+  border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+.flight-number {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.flight-route {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.route-point {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.point-icon {
+  font-size: 8px;
+  color: #d4af37;
+}
+
+.point-label {
+  font-size: 11px;
+  color: #6b7280;
+  width: 30px;
+}
+
+.point-area {
+  font-size: 14px;
+  color: #fafaf9;
+  font-weight: 500;
+}
+
+.route-line {
+  display: flex;
+  align-items: center;
+  padding-left: 4px;
+  margin: 2px 0;
+}
+
+.route-line-inner {
+  width: 20px;
+  height: 2px;
+  background: linear-gradient(90deg, #d4af37, transparent);
+}
+
+.route-arrow {
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.flight-details {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.detail-item {
+  font-size: 12px;
+  color: #a8a29e;
+}
+
+/* 右側：價格與行動 */
+.flight-action-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px dashed rgba(212, 175, 55, 0.2);
+  padding-left: 16px;
+}
+
+.flight-price {
+  display: flex;
+  align-items: baseline;
+}
+
+.price-currency {
+  font-size: 16px;
+  color: #d4af37;
+  font-weight: 600;
+}
+
+.price-amount {
+  font-size: 28px;
+  font-weight: bold;
+  color: #d4af37;
+  line-height: 1;
+}
+
+.flight-status {
+  font-size: 10px;
+  padding: 4px 12px;
+  border-radius: 10px;
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.status-boarding {
+  background: rgba(212, 175, 55, 0.2);
+  color: #d4af37;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+/* 載入骨架 */
+.flight-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.flight-card-skeleton {
+  display: grid;
+  grid-template-columns: 100px 1fr 100px;
+  gap: 16px;
+  background: rgba(28, 25, 23, 0.5);
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  border-radius: 16px;
+  padding: 16px 20px;
+}
+
+.skeleton-time {
+  display: flex;
+  gap: 2px;
+}
+
+.skeleton-digit {
+  width: 22px;
+  height: 28px;
+  background: linear-gradient(90deg, #1c1917 0%, #292524 50%, #1c1917 100%);
+  border-radius: 4px;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeleton-line {
+  height: 14px;
+  background: linear-gradient(90deg, #1c1917 0%, #292524 50%, #1c1917 100%);
+  border-radius: 4px;
+  width: 70%;
+}
+
+.skeleton-line.short {
+  width: 40%;
+}
+
+.skeleton-price {
+  width: 60px;
+  height: 28px;
+  background: linear-gradient(90deg, #1c1917 0%, #292524 50%, #1c1917 100%);
+  border-radius: 4px;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+/* 空狀態 */
+.flight-empty {
+  text-align: center;
+  padding: 60px 20px;
+  background: rgba(28, 25, 23, 0.5);
+  border: 1px dashed rgba(212, 175, 55, 0.2);
+  border-radius: 20px;
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-title {
+  font-size: 24px;
+  color: #fafaf9;
+  margin-bottom: 8px;
+}
+
+.empty-text {
+  color: #a8a29e;
+  margin-bottom: 4px;
+}
+
+.empty-subtext {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* 底部跑馬燈 */
+.flight-marquee {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 50%, rgba(212, 175, 55, 0.1) 100%);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  padding: 12px 0;
+  overflow: hidden;
+}
+
+.marquee-content {
+  white-space: nowrap;
+  animation: marquee-scroll-text 20s linear infinite;
+  font-size: 14px;
+  color: #d4af37;
+  letter-spacing: 2px;
+}
+
+@keyframes marquee-scroll-text {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* 響應式 */
+@media (max-width: 768px) {
+  .flight-card {
+    grid-template-columns: 80px 1fr;
+    grid-template-rows: auto auto;
+  }
+  
+  .flight-action-section {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: space-between;
+    border-left: none;
+    border-top: 1px dashed rgba(212, 175, 55, 0.2);
+    padding-left: 0;
+    padding-top: 12px;
+    margin-top: 8px;
+  }
+  
+  .flight-board-title {
+    flex-direction: column;
+  }
+  
+  .title-stats {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .stat-box {
+    flex: 1;
+  }
+}
+
+/* ═══ 智慧配對視覺化 (配對組) ═══ */
+.match-group {
+  position: relative;
+  padding: 0;
+}
+
+/* 已接行程卡片 - 淺色樣式 */
+.match-related-card {
+  background: rgba(28, 25, 23, 0.9);
+  border: 1px dashed rgba(168, 162, 158, 0.4);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-left: 8px;
+}
+
+/* 連接線視覺 */
+.match-connector {
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  margin: 2px 0;
+}
+
+.connector-line {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    rgba(168, 162, 158, 0.4) 0%, 
+    rgba(212, 175, 55, 0.6) 50%, 
+    rgba(212, 175, 55, 0.6) 100%
+  );
+}
+
+.connector-icon {
+  width: 28px;
+  height: 28px;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  margin: 0 8px;
+}
+
+/* 配對卡片 - 金色邊框 */
+.match-card {
+  background: rgba(28, 25, 23, 0.95);
+  backdrop-filter: blur(12px);
+  border: 2px solid rgba(212, 175, 55, 0.5);
+  border-radius: 12px;
+  padding: 16px;
+  margin-left: 8px;
+  box-shadow: 
+    0 0 20px rgba(212, 175, 55, 0.15),
+    inset 0 0 30px rgba(212, 175, 55, 0.03);
+  animation: matchGlowPulse 3s ease-in-out infinite;
+}
+
+@keyframes matchGlowPulse {
+  0%, 100% { 
+    box-shadow: 
+      0 0 15px rgba(212, 175, 55, 0.12),
+      inset 0 0 20px rgba(212, 175, 55, 0.02);
+    border-color: rgba(212, 175, 55, 0.4);
+  }
+  50% { 
+    box-shadow: 
+      0 0 30px rgba(212, 175, 55, 0.25),
+      inset 0 0 40px rgba(212, 175, 55, 0.05);
+    border-color: rgba(212, 175, 55, 0.7);
+  }
+}
+
+/* 響應式調整 */
+@media (min-width: 768px) {
+  .match-group {
+    display: flex;
+    flex-direction: column;
+  }
 }

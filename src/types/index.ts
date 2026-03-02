@@ -77,6 +77,7 @@ export interface TripMatch {
   matchType: 'route' | 'bundle' | 'time';
   matchScore: number;
   reason: string; // e.g. "與您 3/5 的桃園送機順路"
+  relatedTrip?: Trip; // 關聯的已接行程
 }
 
 // 司機端登入資料
@@ -107,4 +108,77 @@ export interface FinanceStats {
   totalAmount: number;
   pendingAmount: number;
   completedAmount: number;
+}
+
+// ============================================
+// 聊天室類型定義
+// ============================================
+
+// 參與者類型
+export type ParticipantType = 'dispatcher' | 'driver' | 'customer';
+
+// 訊息類型
+export type MessageType = 'text' | 'system' | 'status_update';
+
+// 聊天室參與者
+export interface ChatParticipant {
+  id: string;
+  chatroom_id: string;
+  participant_type: ParticipantType;
+  participant_id: string;
+  participant_name?: string;
+  participant_phone?: string;
+  joined_at: string;
+  last_read_at?: string;
+  is_active: boolean;
+}
+
+// 聊天訊息
+export interface ChatMessage {
+  id: string;
+  chatroom_id: string;
+  sender_type: ParticipantType | 'system';
+  sender_id: string;
+  sender_name: string;
+  message_type: MessageType;
+  content: string;
+  status_from?: string;
+  status_to?: string;
+  created_at: string;
+  is_read: boolean;
+  read_at?: string;
+}
+
+// 聊天室
+export interface Chatroom {
+  id: string;
+  trip_id: string;
+  created_at: string;
+  updated_at: string;
+  title?: string;
+  last_message?: string;
+  last_message_at?: string;
+  unread_count: number;
+  // 關聯資料
+  participants?: ChatParticipant[];
+  messages?: ChatMessage[];
+  trip?: Trip;
+}
+
+// 聊天室建立請求
+export interface CreateChatroomRequest {
+  tripId: string;
+  customerName?: string;
+  customerPhone?: string;
+}
+
+// 發送訊息請求
+export interface SendMessageRequest {
+  sender_type: ParticipantType | 'system';
+  sender_id: string;
+  sender_name: string;
+  content: string;
+  message_type?: MessageType;
+  status_from?: string;
+  status_to?: string;
 }
