@@ -1,5 +1,5 @@
-// TripCard 元件 - 行程卡片 (行控中心優化版 v2)
-// 根據老闆新設計：金額上方、訂單編號、光暈框線
+// TripCard 元件 - 行程卡片 (行控中心優化版 v3)
+// 支援 default / public 兩種 variant
 
 'use client';
 
@@ -16,7 +16,7 @@ interface TripCardProps {
   showActions?: boolean;
   variant?: 'default' | 'compact' | 'public' | 'driver';
   showChat?: boolean;
-  tripNumber?: number; // 訂單編號數字
+  tripNumber?: number;
 }
 
 // 取得月份縮寫
@@ -82,6 +82,83 @@ function formatDate(date: string) {
   return d.toLocaleDateString('zh-TW', { month: 'short', day: 'numeric' });
 }
 
+// ==================== PUBLIC VARIANT ====================
+function PublicTripCard({ trip }: { trip: Trip }) {
+  const isPickup = trip.service_type === 'pickup';
+  const orderNumber = generateTripNumber(1);
+
+  return (
+    <div className="glass-card p-2 md:p-3 h-full flex flex-col relative overflow-hidden">
+      {/* 急單加價標籤 */}
+      {trip.price_boost && trip.price_boost > 0 && (
+        <span className="absolute top-1 right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full z-10">
+          +${trip.price_boost}
+        </span>
+      )}
+
+      {/* 訂單編號標籤 */}
+      <span className="absolute top-1 left-1 text-[8px] font-bold px-1.5 py-0.5 rounded bg-[#d4af37]/20 text-[#d4af37] z-10">
+        {orderNumber}
+      </span>
+
+      {/* 接機/送機標籤 + 狀態 */}
+      <div className="mb-2 flex items-center justify-between mt-4">
+        <span className={`text-xs md:text-sm font-bold px-2.5 py-1.5 rounded ${
+          isPickup ? 'bg-blue-500/40 text-blue-300' : 'bg-orange-500/40 text-orange-300'
+        }`}>
+          {isPickup ? '接機' : '送機'}
+        </span>
+        <span className="text-[9px] md:text-[10px] px-1.5 py-0.5 rounded-full bg-green-500/20 text-green-400">
+          待接單
+        </span>
+      </div>
+
+      {/* 日期時間 */}
+      <div className="mb-2 text-[10px] md:text-xs text-[#a8a29e]">
+        {formatDate(trip.service_date)} {formatTime(trip.service_time)}
+      </div>
+
+      {/* 路線資訊 */}
+      <div className="flex-1 space-y-1.5 overflow-hidden">
+        <div className="flex items-start gap-1.5">
+          <div className="w-2 h-2 rounded-full bg-[#d4af37] mt-1 flex-shrink-0" />
+          <p className="text-xs md:text-sm font-medium text-[#fafaf9] truncate">
+            {trip.pickup_area || trip.pickup_address}
+          </p>
+        </div>
+        {trip.pickup_address && trip.pickup_address !== trip.pickup_area && (
+          <p className="text-[9px] md:text-[10px] text-[#78716c] truncate ml-3.5">
+            {trip.pickup_address}
+          </p>
+        )}
+        <div className="flex items-start gap-1.5">
+          <div className="w-2 h-2 rounded-full bg-[#d4af37] mt-1 flex-shrink-0" />
+          <p className="text-xs md:text-sm font-medium text-[#fafaf9] truncate">
+            {trip.dropoff_area || trip.dropoff_address}
+          </p>
+        </div>
+        {trip.dropoff_address && trip.dropoff_address !== trip.dropoff_area && (
+          <p className="text-[9px] md:text-[10px] text-[#78716c] truncate ml-3.5">
+            {trip.dropoff_address}
+          </p>
+        )}
+      </div>
+
+      {/* 金額與人數 */}
+      <div className="mt-2 pt-2 border-t border-[#292524] flex items-center justify-between">
+        <div className="text-[9px] md:text-[10px] text-[#a8a29e]">
+          {trip.passenger_count}人 / {trip.luggage_count}件
+          {trip.flight_number && <span className="ml-1">/ {trip.flight_number}</span>}
+        </div>
+        <span className="text-sm md:text-base font-bold text-[#d4af37]">
+          ${trip.amount}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// ==================== DEFAULT VARIANT ====================
 export default function TripCard({ 
   trip, 
   onAssignDriver, 
@@ -93,6 +170,16 @@ export default function TripCard({
   showChat = false,
   tripNumber = 1
 }: TripCardProps) {
+  // 如果是 public variant，渲染公開版卡片
+  if (variant === 'public') {
+    return <PublicTripCard trip={trip} />;
+  }
+
+  // 其他 variant 暫時不處理
+  if (variant !== 'default') {
+    return null;
+  }
+
   const [showEditMenu, setShowEditMenu] = useState(false);
   const [showPriceMenu, setShowPriceMenu] = useState(false);
   const [customPrice, setCustomPrice] = useState('');
@@ -100,11 +187,9 @@ export default function TripCard({
 
   const isPickup = trip.service_type === 'pickup';
   const isUrgent = isUrgentTrip(trip);
-  const isDefault = variant === 'default';
   const isOpen = trip.status === 'open';
   const isAccepted = trip.status === 'accepted';
-
-  // 訂單編號
+  
   const orderNumber = generateTripNumber(tripNumber);
 
   // 處理加價
@@ -133,11 +218,6 @@ export default function TripCard({
     setShowEditMenu(false);
   };
 
-  // 只有 default variant 使用新設計
-  if (!isDefault) {
-    return null;
-  }
-
   // 根據狀態決定框線光暈
   const getBorderGlow = () => {
     if (isAccepted) return 'ring-2 ring-green-500/50 shadow-lg shadow-green-500/20';
@@ -153,23 +233,12 @@ export default function TripCard({
 
   return (
     <div className={`glass-card p-4 transition-all duration-300 hover:shadow-lg relative h-[340px] flex flex-col overflow-hidden ${getBorderGlow()} ${getBgClass()}`}>
-      {/* === 右上角：訂單編號 === */}
-      <div className="absolute top-2 right-2 text-[10px] font-mono text-[#a8a29e] bg-[#0c0a09]/80 px-2 py-1 rounded">
-        {orderNumber}
-      </div>
-
-      {/* === 上方區域：金額 + 標籤 === */}
-      <div className="flex items-start justify-between mb-2">
-        {/* 金額 */}
-        <div className="flex flex-col">
-          <span className="text-[10px] text-[#a8a29e]">金額</span>
-          <span className="text-2xl font-bold text-[#d4af37]">
-            ${trip.amount}
-            {trip.price_boost && trip.price_boost > 0 && (
-              <span className="text-sm text-red-400 ml-1">+{trip.price_boost}</span>
-            )}
-          </span>
-        </div>
+      {/* === 上方區域：訂單編號 + 標籤 === */}
+      <div className="flex items-center justify-between mb-2">
+        {/* 訂單編號標籤 */}
+        <span className="text-[10px] font-bold px-2 py-1 rounded bg-[#d4af37]/20 text-[#d4af37] border border-[#d4af37]/30">
+          {orderNumber}
+        </span>
 
         {/* 標籤區 */}
         <div className="flex items-center gap-1 flex-wrap">
@@ -200,6 +269,16 @@ export default function TripCard({
             </span>
           )}
         </div>
+      </div>
+
+      {/* === 上方區域：金額 === */}
+      <div className="flex items-center mb-2">
+        <span className="text-2xl font-bold text-[#d4af37]">
+          ${trip.amount}
+          {trip.price_boost && trip.price_boost > 0 && (
+            <span className="text-sm text-red-400 ml-1">+{trip.price_boost}</span>
+          )}
+        </span>
       </div>
 
       {/* === 中間區域：資訊 === */}
