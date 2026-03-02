@@ -79,6 +79,12 @@ export default function ControlPage() {
     }
   };
 
+  // 處理完成
+  const handleComplete = async (tripId: string) => {
+    await updateTripStatus(tripId, 'completed');
+    await loadData();
+  };
+
   return (
     <div>
       {/* 頁面標題 */}

@@ -48,6 +48,9 @@ export interface Trip {
   driver_id?: string;
   updated_at: string;
   price_boost?: number;
+  // 聯絡人資料
+  contact_name?: string;
+  contact_phone?: string;
   // 關聯資料
   driver?: Driver;
 }
