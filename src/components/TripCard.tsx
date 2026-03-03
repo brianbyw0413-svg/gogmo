@@ -87,16 +87,13 @@ export default function TripCard({
     return h >= 0 && h <= 24;
   })();
 
-  // 外框光暈 — 只在 active (觸碰/點擊) 時才亮
-  const getActiveGlow = () => {
-    if (isUrgent) return 'active:ring-2 active:ring-red-500/70 active:shadow-[0_0_20px_rgba(239,68,68,0.35)]';
-    if (isAccepted || isArrived || isPickedUp) return 'active:ring-2 active:ring-green-500/50 active:shadow-[0_0_16px_rgba(34,197,94,0.2)]';
-    if (isOpen) return 'active:ring-2 active:ring-red-500/40 active:shadow-[0_0_12px_rgba(239,68,68,0.15)]';
-    return 'active:ring-1 active:ring-[#d4af37]/30';
+  // 常駐外框 — 讓車頭一眼辨識卡片狀態
+  const getBorderStyle = () => {
+    if (isUrgent) return 'ring-2 ring-red-500 shadow-[0_0_16px_rgba(239,68,68,0.3)] animate-pulse';
+    if (isAccepted || isArrived || isPickedUp) return 'ring-2 ring-emerald-500/70 shadow-[0_0_12px_rgba(16,185,129,0.15)]';
+    if (isOpen) return 'ring-2 ring-red-500/60 shadow-[0_0_10px_rgba(239,68,68,0.12)]';
+    return 'ring-1 ring-[#3a3735]';
   };
-
-  // 急單呼吸效果 — 只在急單時有微弱呼吸邊框（不是整圈亮）
-  const urgentPulse = isUrgent ? 'border-red-500/40 animate-pulse' : '';
 
   // 狀態按鈕
   const renderStatusButtons = () => {
@@ -201,10 +198,9 @@ export default function TripCard({
 
   return (
     <div
-      className={`relative rounded-xl overflow-hidden transition-all duration-200 ${getActiveGlow()} ${urgentPulse}`}
+      className={`relative rounded-xl overflow-hidden transition-all duration-200 ${getBorderStyle()}`}
       style={{
         background: 'linear-gradient(180deg, #1a1816 0%, #131110 100%)',
-        border: isUrgent ? undefined : '1px solid #2a2725',
         display: 'flex',
         flexDirection: 'column',
       }}
