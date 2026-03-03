@@ -115,13 +115,13 @@ export default function TripCard({
     return (
       <>
         <button onClick={() => handleStatusUpdate('arrived')}
-          className={`px-2 py-1.5 rounded text-center text-sm font-bold transition-all ${aAct ? on : `${off} active:border-emerald-500/50 active:text-emerald-400`}`}>
+          className={`px-1 py-1.5 rounded text-center text-xs font-bold whitespace-nowrap transition-all ${aAct ? on : `${off} active:border-emerald-500/50 active:text-emerald-400`}`}>
           已抵達</button>
         <button onClick={() => handleStatusUpdate('picked_up')}
-          className={`px-2 py-1.5 rounded text-center text-sm font-bold transition-all ${pAct ? on : `${off} active:border-blue-500/50 active:text-blue-400`}`}>
+          className={`px-1 py-1.5 rounded text-center text-xs font-bold whitespace-nowrap transition-all ${pAct ? on : `${off} active:border-blue-500/50 active:text-blue-400`}`}>
           客上</button>
         <button onClick={() => handleStatusUpdate('completed')}
-          className={`px-2 py-1.5 rounded text-center text-sm font-bold transition-all ${off} active:border-[#d4af37]/50 active:text-[#d4af37]`}>
+          className={`px-1 py-1.5 rounded text-center text-xs font-bold whitespace-nowrap transition-all ${off} active:border-[#d4af37]/50 active:text-[#d4af37]`}>
           客下</button>
       </>
     );
@@ -247,9 +247,9 @@ export default function TripCard({
         </div>
 
         {/* 右面板：狀態 + 異況 */}
-        <div className="w-[72px] rounded-lg flex flex-col gap-1.5 p-1.5" style={{ background: '#1e1c1a', border: '1px solid #3a3735' }}>
+        <div className="w-[82px] rounded-lg flex flex-col gap-1.5 p-1.5" style={{ background: '#1e1c1a', border: '1px solid #3a3735' }}>
           {renderStatusButtons()}
-          <button className="mt-auto px-1 py-1.5 rounded text-center text-xs font-bold bg-red-500 text-white active:bg-red-600 transition-colors">
+          <button className="mt-auto px-1 py-1.5 rounded text-center text-xs font-bold whitespace-nowrap bg-[#2a2725] text-[#8a8580] border border-[#3a3735] active:bg-red-500 active:text-white active:border-red-500 transition-colors">
             異況
           </button>
         </div>
