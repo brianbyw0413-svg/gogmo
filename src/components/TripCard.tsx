@@ -1,6 +1,6 @@
-// TripCard 元件 - 行程卡片 (v5c — 質感配色升級)
-// 暗色漸層底 + 金色標籤 + 層次分明面板
-// 佈局不變：頂部標頭 | 中間左右分區 | 底部四按鈕
+// TripCard 元件 - 行程卡片 (v5d — 新增司機區塊 + 按鈕降噪)
+// 暗色漸層底 + 金色標籤 + 層次面板
+// 佈局：頂部標頭 | 中間左(資訊)+右(狀態+司機) | 底部四按鈕(低調)
 
 'use client';
 
@@ -99,7 +99,7 @@ function PublicTripCard({ trip }: { trip: Trip }) {
   );
 }
 
-// ==================== DEFAULT VARIANT (v5c) ====================
+// ==================== DEFAULT VARIANT (v5d) ====================
 export default function TripCard({ 
   trip, 
   onAssignDriver, 
@@ -158,7 +158,6 @@ export default function TripCard({
 
   const isUrgent = isUrgentTrip(trip);
 
-  // 外框光暈
   const getOuterGlow = () => {
     if (isUrgent) return 'ring-2 ring-red-500/70 shadow-[0_0_20px_rgba(239,68,68,0.35)] animate-pulse';
     if (isAccepted || isArrived || isPickedUp) return 'ring-2 ring-green-500/50 shadow-[0_0_16px_rgba(34,197,94,0.2)]';
@@ -166,17 +165,12 @@ export default function TripCard({
     return '';
   };
 
-  // ── 色彩系統 ──
-  // 卡片底：#141211 (深黑偏暖)
-  // 面板底：#1e1c1a (深棕灰) + 金色細邊框
-  // 標頭分隔線：金色漸層
-  // 狀態按鈕未啟動：#2a2725 + 金色細邊
-
+  // 狀態按鈕
   const renderStatusButtons = () => {
     if (trip.status === 'completed' || trip.status === 'cancelled') {
       return (
-        <div className="flex flex-col gap-2">
-          <div className="px-3 py-2.5 rounded-lg text-center text-sm font-bold bg-[#2a2725] text-[#78716c] border border-[#3a3735]">
+        <div className="flex flex-col gap-1.5">
+          <div className="px-2 py-2 rounded text-center text-xs font-bold bg-[#2a2725] text-[#78716c] border border-[#3a3735]">
             {trip.status === 'completed' ? '已完成' : '已取消'}
           </div>
         </div>
@@ -189,12 +183,12 @@ export default function TripCard({
     const completedActive = statusIs('completed');
 
     return (
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1.5">
         <button
           onClick={() => handleStatusUpdate('arrived')}
-          className={`px-3 py-2.5 rounded-lg text-center text-sm font-bold transition-all ${
+          className={`px-2 py-2 rounded text-center text-xs font-bold transition-all ${
             arrivedActive
-              ? 'bg-emerald-500 text-white shadow-[0_0_10px_rgba(16,185,129,0.3)]'
+              ? 'bg-emerald-500 text-white shadow-[0_0_8px_rgba(16,185,129,0.3)]'
               : 'bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:border-emerald-500/50 hover:text-emerald-400'
           }`}
         >
@@ -202,9 +196,9 @@ export default function TripCard({
         </button>
         <button
           onClick={() => handleStatusUpdate('picked_up')}
-          className={`px-3 py-2.5 rounded-lg text-center text-sm font-bold transition-all ${
+          className={`px-2 py-2 rounded text-center text-xs font-bold transition-all ${
             pickedUpActive
-              ? 'bg-emerald-500 text-white shadow-[0_0_10px_rgba(16,185,129,0.3)]'
+              ? 'bg-emerald-500 text-white shadow-[0_0_8px_rgba(16,185,129,0.3)]'
               : 'bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:border-blue-500/50 hover:text-blue-400'
           }`}
         >
@@ -212,14 +206,52 @@ export default function TripCard({
         </button>
         <button
           onClick={() => handleStatusUpdate('completed')}
-          className={`px-3 py-2.5 rounded-lg text-center text-sm font-bold transition-all ${
+          className={`px-2 py-2 rounded text-center text-xs font-bold transition-all ${
             completedActive
-              ? 'bg-emerald-500 text-white shadow-[0_0_10px_rgba(16,185,129,0.3)]'
+              ? 'bg-emerald-500 text-white shadow-[0_0_8px_rgba(16,185,129,0.3)]'
               : 'bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:border-[#d4af37]/50 hover:text-[#d4af37]'
           }`}
         >
           客下
         </button>
+      </div>
+    );
+  };
+
+  // 司機資訊區塊
+  const renderDriverInfo = () => {
+    if (trip.driver) {
+      return (
+        <div className="flex flex-col gap-1.5">
+          <div className="px-2 py-1.5 rounded bg-[#2a2725] border border-[#3a3735] text-center">
+            <p className="text-[10px] text-[#c8c0b8] font-medium truncate">{trip.driver.name}</p>
+            {trip.driver.car_plate && (
+              <p className="text-[9px] text-[#6a6560] truncate">{trip.driver.car_plate}</p>
+            )}
+          </div>
+          <div className="px-2 py-1.5 rounded bg-[#2a2725] border border-[#3a3735] text-center">
+            <p className="text-[10px] text-[#c8c0b8] truncate">{trip.driver.phone || '-'}</p>
+          </div>
+          <div className="px-2 py-1.5 rounded bg-[#2a2725] border border-[#3a3735] text-center">
+            <p className="text-[10px] text-[#c8c0b8] truncate">
+              {trip.driver.car_type === 'large' ? '九人座' : '休旅'}{trip.driver.car_color ? ` / ${trip.driver.car_color}` : ''}
+            </p>
+          </div>
+        </div>
+      );
+    }
+    // 未派司機時顯示佔位
+    return (
+      <div className="flex flex-col gap-1.5">
+        <div className="px-2 py-1.5 rounded bg-[#2a2725] border border-dashed border-[#3a3735] text-center">
+          <p className="text-[10px] text-[#5a5550]">未派司機</p>
+        </div>
+        <div className="px-2 py-1.5 rounded bg-[#2a2725] border border-dashed border-[#3a3735] text-center">
+          <p className="text-[10px] text-[#5a5550]">-</p>
+        </div>
+        <div className="px-2 py-1.5 rounded bg-[#2a2725] border border-dashed border-[#3a3735] text-center">
+          <p className="text-[10px] text-[#5a5550]">-</p>
+        </div>
       </div>
     );
   };
@@ -433,7 +465,7 @@ export default function TripCard({
       style={{
         background: 'linear-gradient(180deg, #1a1816 0%, #131110 100%)',
         border: '1px solid #2a2725',
-        height: '320px',
+        height: '380px',
         display: 'flex',
         flexDirection: 'column',
       }}
@@ -443,19 +475,16 @@ export default function TripCard({
         className="flex items-center gap-2 px-3 py-2.5 flex-shrink-0"
         style={{ borderBottom: '1px solid rgba(212, 175, 55, 0.25)' }}
       >
-        {/* 訂單編號 */}
         <span className="text-[11px] font-bold px-2.5 py-1 rounded bg-[#d4af37] text-[#0c0a09] tracking-wide">
           {orderNumber}
         </span>
 
-        {/* 急單標籤 */}
         {isUrgent && (
           <span className="text-[11px] font-bold px-2 py-1 rounded bg-red-500 text-white">
             急
           </span>
         )}
 
-        {/* 接/送標籤 */}
         <span className={`text-[11px] font-bold px-2 py-1 rounded ${
           isPickup
             ? 'bg-blue-500/25 text-blue-400 border border-blue-500/40'
@@ -464,7 +493,6 @@ export default function TripCard({
           {isPickup ? '接' : '送'}
         </span>
 
-        {/* 金額 — 靠右 */}
         <span className="ml-auto text-xl font-extrabold text-[#d4af37] drop-shadow-[0_0_6px_rgba(212,175,55,0.3)]">
           ${trip.amount}元
           {trip.price_boost && trip.price_boost > 0 && (
@@ -473,15 +501,12 @@ export default function TripCard({
         </span>
       </div>
 
-      {/* ═══ 中間主體：左(資訊) + 右(狀態按鈕) ═══ */}
+      {/* ═══ 中間主體：左(資訊) + 右(狀態+司機) ═══ */}
       <div className="flex gap-2 p-2 flex-1 min-h-0">
         {/* 左邊面板：行程資訊 */}
         <div
           className="flex-1 rounded-lg p-3 flex flex-col justify-center gap-1.5"
-          style={{
-            background: '#1e1c1a',
-            border: '1px solid #3a3735',
-          }}
+          style={{ background: '#1e1c1a', border: '1px solid #3a3735' }}
         >
           <p className="text-[13px] font-bold text-[#e8e6e3]">
             {formatDate(trip.service_date)} {formatTime(trip.service_time)}
@@ -508,33 +533,36 @@ export default function TripCard({
           )}
         </div>
 
-        {/* 右邊面板：狀態按鈕 */}
-        <div
-          className="w-[100px] rounded-lg p-2 flex flex-col justify-center"
-          style={{
-            background: '#1e1c1a',
-            border: '1px solid #3a3735',
-          }}
-        >
-          {renderStatusButtons()}
-          {trip.driver && (
-            <p className="mt-2 text-[9px] text-center text-[#6a6560] truncate">
-              {trip.driver.name}
-            </p>
-          )}
+        {/* 右邊面板：狀態按鈕 + 司機資訊 */}
+        <div className="w-[120px] flex flex-col gap-2">
+          {/* 上半：狀態按鈕 */}
+          <div
+            className="rounded-lg p-2 flex flex-col justify-center"
+            style={{ background: '#1e1c1a', border: '1px solid #3a3735' }}
+          >
+            {renderStatusButtons()}
+          </div>
+
+          {/* 下半：司機資訊 */}
+          <div
+            className="rounded-lg p-2 flex-1"
+            style={{ background: '#1e1c1a', border: '1px solid #3a3735' }}
+          >
+            {renderDriverInfo()}
+          </div>
         </div>
       </div>
 
-      {/* ═══ 底部功能列：詳 改 $ 聊 ═══ */}
-      <div className="flex gap-2 px-2 pb-2 flex-shrink-0">
+      {/* ═══ 底部功能列：詳 改 $ 聊 (低調暗色+金邊) ═══ */}
+      <div className="flex gap-2 px-2 pb-2 flex-shrink-0" style={{ borderTop: '1px solid #2a2725' }}>
         {['詳', '改', '$', '聊'].map(label => (
           <button
             key={label}
             onClick={() => setExpandedAction(expandedAction === label ? null : label)}
             className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
               expandedAction === label 
-                ? 'bg-[#b8962f] text-[#0c0a09] shadow-inner' 
-                : 'bg-gradient-to-b from-[#e0be42] to-[#c9a432] text-[#0c0a09] hover:from-[#eaca50] hover:to-[#d4af37] shadow-[0_2px_4px_rgba(0,0,0,0.3)]'
+                ? 'bg-[#d4af37] text-[#0c0a09]' 
+                : 'bg-[#1e1c1a] text-[#d4af37] border border-[#d4af37]/40 hover:border-[#d4af37] hover:bg-[#d4af37]/10'
             }`}
           >
             {label}
