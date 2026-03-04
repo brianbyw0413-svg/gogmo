@@ -72,9 +72,9 @@ export default function FinancePage() {
   return (
     <div>
       {/* 頁面標題 */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[#fafaf9] mb-2">帳務中心</h1>
-        <p className="text-[#a8a29e]">管理收付款項與司機結算</p>
+      <div className="mb-4 sm:mb-8">
+        <h1 className="text-xl sm:text-2xl font-bold text-[#fafaf9] mb-1 sm:mb-2">帳務中心</h1>
+        <p className="text-sm text-[#a8a29e]">管理收付款項與司機結算</p>
       </div>
 
       {/* TAB 切換 */}
@@ -102,22 +102,22 @@ export default function FinancePage() {
       </div>
 
       {/* 統計卡片 */}
-      <div className="grid grid-cols-4 gap-4 mb-8">
-        <div className="glass-card p-4">
-          <div className="text-xs text-[#a8a29e] mb-1">總筆數</div>
-          <div className="text-2xl font-bold text-[#fafaf9]">{filteredTrips.length}</div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-6 sm:mb-8">
+        <div className="glass-card p-3 sm:p-4">
+          <div className="text-[10px] sm:text-xs text-[#a8a29e] mb-1">總筆數</div>
+          <div className="text-xl sm:text-2xl font-bold text-[#fafaf9]">{filteredTrips.length}</div>
         </div>
-        <div className="glass-card p-4">
-          <div className="text-xs text-[#a8a29e] mb-1">總金額</div>
-          <div className="text-2xl font-bold text-[#d4af37]">${formatAmount(filteredTrips.reduce((sum, t) => sum + t.amount, 0))}</div>
+        <div className="glass-card p-3 sm:p-4">
+          <div className="text-[10px] sm:text-xs text-[#a8a29e] mb-1">總金額</div>
+          <div className="text-xl sm:text-2xl font-bold text-[#d4af37]">${formatAmount(filteredTrips.reduce((sum, t) => sum + t.amount, 0))}</div>
         </div>
-        <div className="glass-card p-4">
-          <div className="text-xs text-[#a8a29e] mb-1">待確認</div>
-          <div className="text-2xl font-bold text-orange-400">${formatAmount(pendingTrips.reduce((sum, t) => sum + t.amount, 0))}</div>
+        <div className="glass-card p-3 sm:p-4">
+          <div className="text-[10px] sm:text-xs text-[#a8a29e] mb-1">待確認</div>
+          <div className="text-xl sm:text-2xl font-bold text-orange-400">${formatAmount(pendingTrips.reduce((sum, t) => sum + t.amount, 0))}</div>
         </div>
-        <div className="glass-card p-4">
-          <div className="text-xs text-[#a8a29e] mb-1">已完成</div>
-          <div className="text-2xl font-bold text-green-400">${formatAmount(completedTrips.reduce((sum, t) => sum + t.amount, 0))}</div>
+        <div className="glass-card p-3 sm:p-4">
+          <div className="text-[10px] sm:text-xs text-[#a8a29e] mb-1">已完成</div>
+          <div className="text-xl sm:text-2xl font-bold text-green-400">${formatAmount(completedTrips.reduce((sum, t) => sum + t.amount, 0))}</div>
         </div>
       </div>
 

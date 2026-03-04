@@ -1362,3 +1362,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     flex-direction: column;
   }
 }
+
+/* 底部安全區域（iPhone 瀏海/底部手勢列） */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}

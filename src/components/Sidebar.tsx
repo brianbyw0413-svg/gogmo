@@ -1,4 +1,4 @@
-// Sidebar 元件 - 車頭端側邊欄導航
+// Sidebar 元件 - 車頭端側邊欄導航 (RWD 版 — 手機用底部導航列)
 
 'use client';
 
@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 
 interface NavItem {
   label: string;
+  shortLabel: string;
   href: string;
   icon: React.ReactNode;
 }
@@ -14,6 +15,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   {
     label: '快速派單',
+    shortLabel: '派單',
     href: '/dashboard/dispatch',
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -23,6 +25,7 @@ const navItems: NavItem[] = [
   },
   {
     label: '行控中心',
+    shortLabel: '行控',
     href: '/dashboard/control',
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -32,6 +35,7 @@ const navItems: NavItem[] = [
   },
   {
     label: '帳務中心',
+    shortLabel: '帳務',
     href: '/dashboard/finance',
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -45,54 +49,66 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="sidebar w-64 h-screen fixed left-0 top-0 flex flex-col z-50">
-      {/* Logo 區域 */}
-      <div className="p-6 border-b border-[#292524]">
-        <Link href="/dashboard" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#d4af37] to-[#b8962f] flex items-center justify-center">
-            <span className="text-xl font-bold text-[#0c0a09]">P</span>
-          </div>
-          <div>
-            <h1 className="text-lg font-bold text-[#fafaf9]">GMO</h1>
-            <p className="text-xs text-[#a8a29e]">車頭端管理系統</p>
-          </div>
-        </Link>
-      </div>
+    <>
+      {/* ── 桌面版：左側邊欄 ── */}
+      <aside className="hidden lg:flex sidebar w-64 h-screen fixed left-0 top-0 flex-col z-50">
+        {/* Logo */}
+        <div className="p-6 border-b border-[#292524]">
+          <Link href="/dashboard" className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#d4af37] to-[#b8962f] flex items-center justify-center">
+              <span className="text-xl font-bold text-[#0c0a09]">P</span>
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-[#fafaf9]">GMO</h1>
+              <p className="text-xs text-[#a8a29e]">車頭端管理系統</p>
+            </div>
+          </Link>
+        </div>
 
-      {/* 導航選單 */}
-      <nav className="flex-1 p-4">
-        <ul className="space-y-2">
+        {/* 導航選單 */}
+        <nav className="flex-1 p-4">
+          <ul className="space-y-2">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+              return (
+                <li key={item.href}>
+                  <Link href={item.href}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
+                      ${isActive ? 'bg-[#d4af37] text-[#0c0a09] font-medium' : 'text-[#a8a29e] hover:bg-[#292524] hover:text-[#fafaf9]'}`}>
+                    {item.icon}
+                    <span>{item.label}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        {/* 底部 */}
+        <div className="p-4 border-t border-[#292524]">
+          <div className="text-xs text-[#a8a29e] text-center">
+            <p>GMO v1.0.0</p>
+            <p className="mt-1">MVP 版本</p>
+          </div>
+        </div>
+      </aside>
+
+      {/* ── 手機/平板版：底部導航列 ── */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0c0a09]/95 backdrop-blur-md border-t border-[#292524] safe-area-bottom">
+        <div className="flex items-stretch justify-around">
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-            
             return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={`
-                    flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
-                    ${isActive 
-                      ? 'bg-[#d4af37] text-[#0c0a09] font-medium' 
-                      : 'text-[#a8a29e] hover:bg-[#292524] hover:text-[#fafaf9]'
-                    }
-                  `}
-                >
-                  {item.icon}
-                  <span>{item.label}</span>
-                </Link>
-              </li>
+              <Link key={item.href} href={item.href}
+                className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 transition-colors
+                  ${isActive ? 'text-[#d4af37]' : 'text-[#78716c] active:text-[#a8a29e]'}`}>
+                {item.icon}
+                <span className="text-[10px] font-medium">{item.shortLabel}</span>
+              </Link>
             );
           })}
-        </ul>
-      </nav>
-
-      {/* 底部資訊 */}
-      <div className="p-4 border-t border-[#292524]">
-        <div className="text-xs text-[#a8a29e] text-center">
-          <p>GMO v1.0.0</p>
-          <p className="mt-1">MVP 版本</p>
         </div>
-      </div>
-    </aside>
+      </nav>
+    </>
   );
 }

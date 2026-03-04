@@ -1,6 +1,6 @@
 // 全域 Layout
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_TC } from "next/font/google";
 import "./globals.css";
 
@@ -14,6 +14,12 @@ const notoSansTC = Noto_Sans_TC({
   weight: ['400', '500', '600', '700'],
   variable: '--font-noto-tc'
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "GMO — Give Me Order | 派單平台",

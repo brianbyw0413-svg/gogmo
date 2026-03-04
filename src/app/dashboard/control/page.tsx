@@ -88,93 +88,63 @@ export default function ControlPage() {
   return (
     <div>
       {/* 頁面標題 */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[#fafaf9] mb-2 flex items-center gap-2">
+      <div className="mb-4 sm:mb-8">
+        <h1 className="text-xl sm:text-2xl font-bold text-[#fafaf9] mb-1 sm:mb-2 flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
           行控中心
         </h1>
-        <p className="text-[#a8a29e]">即時監控所有行程狀態</p>
+        <p className="text-sm text-[#a8a29e]">即時監控所有行程狀態</p>
       </div>
 
       {/* 統計儀表板 */}
-      <div className="grid grid-cols-5 gap-4 mb-8">
-        <div className="glass-card p-4 text-center">
-          <div className="text-2xl font-bold text-[#fafaf9]">{stats.total}</div>
-          <div className="text-xs text-[#a8a29e]">總行程</div>
+      <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-4 mb-6 sm:mb-8">
+        <div className="glass-card p-3 sm:p-4 text-center">
+          <div className="text-xl sm:text-2xl font-bold text-[#fafaf9]">{stats.total}</div>
+          <div className="text-[10px] sm:text-xs text-[#a8a29e]">總行程</div>
         </div>
-        <div className="glass-card p-4 text-center border border-red-500/30">
-          <div className="text-2xl font-bold text-red-400">{stats.open}</div>
-          <div className="text-xs text-[#a8a29e]">待接單</div>
+        <div className="glass-card p-3 sm:p-4 text-center border border-red-500/30">
+          <div className="text-xl sm:text-2xl font-bold text-red-400">{stats.open}</div>
+          <div className="text-[10px] sm:text-xs text-[#a8a29e]">待接單</div>
         </div>
-        <div className="glass-card p-4 text-center border border-green-500/30">
-          <div className="text-2xl font-bold text-green-400">{stats.accepted}</div>
-          <div className="text-xs text-[#a8a29e]">已接單</div>
+        <div className="glass-card p-3 sm:p-4 text-center border border-green-500/30">
+          <div className="text-xl sm:text-2xl font-bold text-green-400">{stats.accepted}</div>
+          <div className="text-[10px] sm:text-xs text-[#a8a29e]">已接單</div>
         </div>
-        <div className="glass-card p-4 text-center border border-blue-500/30">
-          <div className="text-2xl font-bold text-blue-400">{stats.inProgress}</div>
-          <div className="text-xs text-[#a8a29e]">服務中</div>
+        <div className="glass-card p-3 sm:p-4 text-center border border-blue-500/30">
+          <div className="text-xl sm:text-2xl font-bold text-blue-400">{stats.inProgress}</div>
+          <div className="text-[10px] sm:text-xs text-[#a8a29e]">服務中</div>
         </div>
-        <div className="glass-card p-4 text-center border border-gray-500/30">
-          <div className="text-2xl font-bold text-gray-400">{stats.completed}</div>
-          <div className="text-xs text-[#a8a29e]">已完成</div>
+        <div className="glass-card p-3 sm:p-4 text-center border border-gray-500/30">
+          <div className="text-xl sm:text-2xl font-bold text-gray-400">{stats.completed}</div>
+          <div className="text-[10px] sm:text-xs text-[#a8a29e]">已完成</div>
         </div>
       </div>
 
       {/* 篩選器 */}
-      <div className="flex gap-2 mb-6 flex-wrap">
-        <button
-          onClick={() => setStatusFilter('all')}
-          className={`px-3 py-1.5 rounded-lg text-xs transition-all ${
-            statusFilter === 'all' ? 'bg-[#d4af37] text-[#0c0a09]' : 'bg-[#1c1917] text-[#a8a29e] border border-[#292524]'
-          }`}
-        >
-          全部
-        </button>
-        <button
-          onClick={() => setStatusFilter('open')}
-          className={`px-3 py-1.5 rounded-lg text-xs transition-all ${
-            statusFilter === 'open' ? 'bg-red-500 text-white' : 'bg-[#1c1917] text-[#a8a29e] border border-[#292524]'
-          }`}
-        >
-          待接單
-        </button>
-        <button
-          onClick={() => setStatusFilter('accepted')}
-          className={`px-3 py-1.5 rounded-lg text-xs transition-all ${
-            statusFilter === 'accepted' ? 'bg-green-500 text-white' : 'bg-[#1c1917] text-[#a8a29e] border border-[#292524]'
-          }`}
-        >
-          已接單
-        </button>
-        <button
-          onClick={() => setStatusFilter('arrived')}
-          className={`px-3 py-1.5 rounded-lg text-xs transition-all ${
-            statusFilter === 'arrived' ? 'bg-blue-500 text-white' : 'bg-[#1c1917] text-[#a8a29e] border border-[#292524]'
-          }`}
-        >
-          已抵達
-        </button>
-        <button
-          onClick={() => setStatusFilter('picked_up')}
-          className={`px-3 py-1.5 rounded-lg text-xs transition-all ${
-            statusFilter === 'picked_up' ? 'bg-purple-500 text-white' : 'bg-[#1c1917] text-[#a8a29e] border border-[#292524]'
-          }`}
-        >
-          已上車
-        </button>
-        <button
-          onClick={() => setStatusFilter('completed')}
-          className={`px-3 py-1.5 rounded-lg text-xs transition-all ${
-            statusFilter === 'completed' ? 'bg-gray-500 text-white' : 'bg-[#1c1917] text-[#a8a29e] border border-[#292524]'
-          }`}
-        >
-          已完成
-        </button>
+      <div className="flex gap-1.5 sm:gap-2 mb-4 sm:mb-6 flex-wrap">
+        <button onClick={() => setStatusFilter('all')}
+          className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs transition-all ${statusFilter === 'all' ? 'bg-[#d4af37] text-[#0c0a09]' : 'bg-[#1c1917] text-[#a8a29e] border border-[#292524]'}`}>
+          全部</button>
+        <button onClick={() => setStatusFilter('open')}
+          className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs transition-all ${statusFilter === 'open' ? 'bg-red-500 text-white' : 'bg-[#1c1917] text-[#a8a29e] border border-[#292524]'}`}>
+          待接單</button>
+        <button onClick={() => setStatusFilter('accepted')}
+          className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs transition-all ${statusFilter === 'accepted' ? 'bg-green-500 text-white' : 'bg-[#1c1917] text-[#a8a29e] border border-[#292524]'}`}>
+          已接單</button>
+        <button onClick={() => setStatusFilter('arrived')}
+          className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs transition-all ${statusFilter === 'arrived' ? 'bg-blue-500 text-white' : 'bg-[#1c1917] text-[#a8a29e] border border-[#292524]'}`}>
+          已抵達</button>
+        <button onClick={() => setStatusFilter('picked_up')}
+          className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs transition-all ${statusFilter === 'picked_up' ? 'bg-purple-500 text-white' : 'bg-[#1c1917] text-[#a8a29e] border border-[#292524]'}`}>
+          已上車</button>
+        <button onClick={() => setStatusFilter('completed')}
+          className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs transition-all ${statusFilter === 'completed' ? 'bg-gray-500 text-white' : 'bg-[#1c1917] text-[#a8a29e] border border-[#292524]'}`}>
+          已完成</button>
       </div>
 
       {/* 行程卡片牆 */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="glass-card p-4 animate-pulse">
               <div className="h-4 bg-[#292524] rounded w-1/2 mb-4"></div>
@@ -184,7 +154,7 @@ export default function ControlPage() {
           ))}
         </div>
       ) : filteredTrips.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
           {filteredTrips.map((trip, index) => (
             <div 
               key={trip.id}
