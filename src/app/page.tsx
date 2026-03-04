@@ -16,48 +16,69 @@ function FlipTile({ trip, index, totalTrips, allTrips }: {
   allTrips: Trip[];
 }) {
   const [currentTrip, setCurrentTrip] = useState<Trip | null>(trip);
-  const [isFlipping, setIsFlipping] = useState(false);
-  const [flipToTrip, setFlipToTrip] = useState<Trip | null>(null);
-  const [flipDirection, setFlipDirection] = useState<'up' | 'down'>('up');
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [newTrip, setNewTrip] = useState<Trip | null>(null);
+  const [slideDirection, setSlideDirection] = useState<'up' | 'down' | 'left' | 'right'>('up');
 
-  // 每個格子不同時間翻轉（分散開）+ 隨機 3-6 秒
+  // 每個格子不同時間滑動（分散開）+ 隨機 2-4 秒
   useEffect(() => {
-    const randomDelay = 3000 + Math.random() * 3000; // 3-6 秒
-    const staggerDelay = index * 800; // 每個格子延遲 800ms
+    const randomDelay = 2000 + Math.random() * 2000; // 2-4 秒
+    const staggerDelay = index * 600; // 每個格子延遲 600ms
     
-    const startFlip = () => {
+    const startSlide = () => {
       // 選擇下一個行程
       const randomTrip = allTrips[Math.floor(Math.random() * allTrips.length)];
-      setFlipToTrip(randomTrip);
-      setFlipDirection(Math.random() > 0.5 ? 'up' : 'down');
-      setIsFlipping(true);
+      if (randomTrip?.id === currentTrip?.id) return; // 不要滑同一張
+      
+      // 隨機方向：上、下、左、右
+      const dirs: ('up' | 'down' | 'left' | 'right')[] = ['up', 'down', 'left', 'right'];
+      const dir = dirs[Math.floor(Math.random() * dirs.length)];
+      setSlideDirection(dir);
+      setNewTrip(randomTrip);
+      setIsAnimating(true);
       
       // 動畫完成後更新
       setTimeout(() => {
         setCurrentTrip(randomTrip);
-        setFlipToTrip(null);
-        setIsFlipping(false);
-      }, 600); // 600ms 動畫時間
+        setNewTrip(null);
+        setIsAnimating(false);
+      }, 400); // 400ms 動畫時間
     };
     
     // 初始延遲後開始
-    const initialTimeout = setTimeout(startFlip, staggerDelay);
+    const initialTimeout = setTimeout(startSlide, staggerDelay);
     
-    // 定期翻轉
-    const interval = setInterval(startFlip, randomDelay + staggerDelay);
+    // 定期滑動
+    const interval = setInterval(startSlide, randomDelay + staggerDelay);
     
     return () => {
       clearTimeout(initialTimeout);
       clearInterval(interval);
     };
-  }, [index, allTrips]);
+  }, [index, allTrips, currentTrip?.id]);
+
+  // 滑動動畫 class
+  const getSlideOutClass = () => {
+    switch (slideDirection) {
+      case 'up': return 'animate-slide-out-up';
+      case 'down': return 'animate-slide-out-down';
+      case 'left': return 'animate-slide-out-left';
+      case 'right': return 'animate-slide-out-right';
+    }
+  };
+  const getSlideInClass = () => {
+    switch (slideDirection) {
+      case 'up': return 'animate-slide-in-down';
+      case 'down': return 'animate-slide-in-up';
+      case 'left': return 'animate-slide-in-right';
+      case 'right': return 'animate-slide-in-left';
+    }
+  };
 
   return (
-    <div className="flip-3d-card aspect-square preserve-3d">
-      {/* 當前卡片 */}
-      <div 
-        className={`flip-front ${isFlipping ? (flipDirection === 'up' ? 'rotate-up-out' : 'rotate-down-out') : ''}`}
-      >
+    <div className="aspect-square overflow-hidden rounded-xl">
+      {/* 當前卡片 - 滑出 */}
+      <div className={`w-full h-full ${isAnimating ? getSlideOutClass() : ''}`}>
         {currentTrip ? (
           <TripCard trip={currentTrip} showActions={false} variant="public" />
         ) : (
@@ -67,12 +88,10 @@ function FlipTile({ trip, index, totalTrips, allTrips }: {
         )}
       </div>
       
-      {/* 翻轉後的卡片 */}
-      {flipToTrip && (
-        <div 
-          className={`flip-back ${isFlipping ? (flipDirection === 'up' ? 'rotate-up-in' : 'rotate-down-in') : ''}`}
-        >
-          <TripCard trip={flipToTrip} showActions={false} variant="public" />
+      {/* 新卡片 - 滑入 */}
+      {newTrip && isAnimating && (
+        <div className={`absolute inset-0 w-full h-full ${getSlideInClass()}`}>
+          <TripCard trip={newTrip} showActions={false} variant="public" />
         </div>
       )}
     </div>

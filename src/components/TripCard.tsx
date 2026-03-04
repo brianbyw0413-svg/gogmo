@@ -28,27 +28,79 @@ function generateTripNumber(n: number) { return `${getMonthCode(new Date().toISO
 function formatTime(t: string) { if (!t) return ''; const [h,m] = t.split(':'); return `${h}:${m}`; }
 function formatDate(d: string) { if (!d) return ''; return new Date(d).toLocaleDateString('zh-TW',{month:'short',day:'numeric'}); }
 
-// ==================== PUBLIC VARIANT ====================
+// ==================== PUBLIC VARIANT (首頁/大廳用) ====================
+// 顯眼設計：接機/送機、金額、起點、終點
 function PublicTripCard({ trip }: { trip: Trip }) {
   const isPickup = trip.service_type === 'pickup';
-  const orderNumber = generateTripNumber(1);
+  const totalAmount = trip.amount + (trip.price_boost || 0);
+  
   return (
-    <div className="glass-card p-2 md:p-3 h-full flex flex-col relative overflow-hidden">
-      {trip.price_boost && trip.price_boost > 0 && (
-        <span className="absolute top-1 right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full z-10">+${trip.price_boost}</span>
-      )}
-      <span className="absolute top-1 left-1 text-[8px] font-bold px-1.5 py-0.5 rounded bg-[#d4af37]/20 text-[#d4af37] z-10">{orderNumber}</span>
-      <div className="mb-2 flex items-center justify-between mt-4">
-        <span className={`text-xs md:text-sm font-bold px-2.5 py-1.5 rounded ${isPickup ? 'bg-blue-500/40 text-blue-300' : 'bg-orange-500/40 text-orange-300'}`}>{isPickup ? '接機' : '送機'}</span>
+    <div className="h-full flex flex-col relative overflow-hidden" 
+      style={{
+        background: 'linear-gradient(145deg, #1a1816 0%, #0f0e0d 100%)',
+        border: '1px solid #2a2725',
+        borderRadius: '12px',
+      }}>
+      
+      {/* 頂部標籤列 */}
+      <div className="flex items-center gap-1.5 px-3 py-2" style={{ borderBottom: '1px solid rgba(212,175,55,0.3)' }}>
+        {/* 接機/送機 — 大標籤 */}
+        <span className={`text-xs font-bold px-3 py-1.5 rounded-lg ${
+          isPickup 
+            ? 'bg-blue-500 text-white shadow-[0_0_12px_rgba(59,130,246,0.4)]' 
+            : 'bg-orange-500 text-white shadow-[0_0_12px_rgba(249,115,22,0.4)]'
+        }`}>
+          {isPickup ? '接機' : '送機'}
+        </span>
+        
+        {/* 航班編號 */}
+        {trip.flight_number && (
+          <span className="text-xs font-bold text-[#d4af37] px-2 py-1 rounded bg-[#d4af37]/15">
+            {trip.flight_number}
+          </span>
+        )}
+        
+        {/* 金額 — 右側大字 */}
+        <span className="ml-auto text-lg font-extrabold text-[#d4af37] drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]">
+          ${totalAmount}
+          {trip.price_boost && trip.price_boost > 0 && (
+            <span className="text-xs text-red-400 ml-1">+{trip.price_boost}</span>
+          )}
+        </span>
       </div>
-      <div className="mb-2 text-[10px] md:text-xs text-[#a8a29e]">{formatDate(trip.service_date)} {formatTime(trip.service_time)}</div>
-      <div className="flex-1 space-y-1.5 overflow-hidden">
-        <div className="flex items-start gap-1.5"><div className="w-2 h-2 rounded-full bg-[#d4af37] mt-1 flex-shrink-0" /><p className="text-xs md:text-sm font-medium text-[#fafaf9] truncate">{trip.pickup_area || trip.pickup_address}</p></div>
-        <div className="flex items-start gap-1.5"><div className="w-2 h-2 rounded-full bg-[#d4af37] mt-1 flex-shrink-0" /><p className="text-xs md:text-sm font-medium text-[#fafaf9] truncate">{trip.dropoff_area || trip.dropoff_address}</p></div>
+
+      {/* 中間：起點 → 終點 */}
+      <div className="flex-1 p-3 flex flex-col justify-center gap-2">
+        {/* 起點 */}
+        <div className="flex items-start gap-2">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#d4af37] mt-1.5 flex-shrink-0 shadow-[0_0_6px_rgba(212,175,55,0.5)]" />
+          <div>
+            <p className="text-[10px] text-[#8a8580] uppercase tracking-wider">起點</p>
+            <p className="text-sm font-bold text-[#fafaf9] truncate leading-tight">{trip.pickup_area || trip.pickup_address}</p>
+          </div>
+        </div>
+        
+        {/* 連接線 */}
+        <div className="ml-1 w-0.5 h-4 bg-gradient-to-b from-[#d4af37] to-transparent" />
+        
+        {/* 終點 */}
+        <div className="flex items-start gap-2">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#d4af37] mt-1.5 flex-shrink-0 shadow-[0_0_6px_rgba(212,175,55,0.5)]" />
+          <div>
+            <p className="text-[10px] text-[#8a8580] uppercase tracking-wider">終點</p>
+            <p className="text-sm font-bold text-[#fafaf9] truncate leading-tight">{trip.dropoff_area || trip.dropoff_address}</p>
+          </div>
+        </div>
       </div>
-      <div className="mt-2 pt-2 border-t border-[#292524] flex items-center justify-between">
-        <div className="text-[9px] md:text-[10px] text-[#a8a29e]">{trip.passenger_count}人 / {trip.luggage_count}件{trip.flight_number && <span className="ml-1">/ {trip.flight_number}</span>}</div>
-        <span className="text-sm md:text-base font-bold text-[#d4af37]">${trip.amount}</span>
+
+      {/* 底部：時間 + 人數 */}
+      <div className="px-3 py-2 flex items-center justify-between" style={{ borderTop: '1px solid #2a2725' }}>
+        <span className="text-xs font-medium text-[#c8c0b8]">
+          {formatDate(trip.service_date)} {formatTime(trip.service_time)}
+        </span>
+        <span className="text-xs text-[#8a8580]">
+          {trip.passenger_count}人 / {trip.luggage_count}件
+        </span>
       </div>
     </div>
   );

@@ -1367,3 +1367,56 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .safe-area-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
+
+/* ========== 滑入滑出动畫 ========== */
+/* 向下滑出 */
+@keyframes slide-out-up {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-100%); opacity: 0; }
+}
+/* 向上滑出 */
+@keyframes slide-out-down {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+/* 向右滑出 */
+@keyframes slide-out-left {
+  0% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(-100%); opacity: 0; }
+}
+/* 向左滑出 */
+@keyframes slide-out-right {
+  0% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+/* 從下方滑入 */
+@keyframes slide-in-up {
+  0% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+/* 從上方滑入 */
+@keyframes slide-in-down {
+  0% { transform: translateY(-100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+/* 從右方滑入 */
+@keyframes slide-in-left {
+  0% { transform: translateX(100%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+/* 從左方滑入 */
+@keyframes slide-in-right {
+  0% { transform: translateX(-100%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+.animate-slide-out-up { animation: slide-out-up 0.4s ease-in forwards; }
+.animate-slide-out-down { animation: slide-out-down 0.4s ease-in forwards; }
+.animate-slide-out-left { animation: slide-out-left 0.4s ease-in forwards; }
+.animate-slide-out-right { animation: slide-out-right 0.4s ease-in forwards; }
+
+.animate-slide-in-up { animation: slide-in-up 0.4s ease-out forwards; }
+.animate-slide-in-down { animation: slide-in-down 0.4s ease-out forwards; }
+.animate-slide-in-left { animation: slide-in-left 0.4s ease-out forwards; }
+.animate-slide-in-right { animation: slide-in-right 0.4s ease-out forwards; }
