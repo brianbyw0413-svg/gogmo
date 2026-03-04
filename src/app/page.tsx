@@ -20,77 +20,76 @@ function FlipTile({ trip, index, totalTrips, allTrips }: {
   const [newTrip, setNewTrip] = useState<Trip | null>(null);
   const [slideDirection, setSlideDirection] = useState<'up' | 'down' | 'left' | 'right'>('up');
 
-  // 每個格子不同時間滑動（分散開）+ 隨機 2-4 秒
   useEffect(() => {
-    const randomDelay = 2000 + Math.random() * 2000; // 2-4 秒
-    const staggerDelay = index * 600; // 每個格子延遲 600ms
+    if (!allTrips.length) return;
+    const randomDelay = 2000 + Math.random() * 2000;
+    const staggerDelay = index * 600;
     
     const startSlide = () => {
-      // 選擇下一個行程
+      if (isAnimating) return;
       const randomTrip = allTrips[Math.floor(Math.random() * allTrips.length)];
-      if (randomTrip?.id === currentTrip?.id) return; // 不要滑同一張
       
-      // 隨機方向：上、下、左、右
       const dirs: ('up' | 'down' | 'left' | 'right')[] = ['up', 'down', 'left', 'right'];
       const dir = dirs[Math.floor(Math.random() * dirs.length)];
       setSlideDirection(dir);
       setNewTrip(randomTrip);
       setIsAnimating(true);
       
-      // 動畫完成後更新
       setTimeout(() => {
         setCurrentTrip(randomTrip);
         setNewTrip(null);
         setIsAnimating(false);
-      }, 400); // 400ms 動畫時間
+      }, 400);
     };
     
-    // 初始延遲後開始
-    const initialTimeout = setTimeout(startSlide, staggerDelay);
-    
-    // 定期滑動
+    const initialTimeout = setTimeout(startSlide, staggerDelay + 1000);
     const interval = setInterval(startSlide, randomDelay + staggerDelay);
     
     return () => {
       clearTimeout(initialTimeout);
       clearInterval(interval);
     };
-  }, [index, allTrips, currentTrip?.id]);
+  }, [index, allTrips, isAnimating]);
 
-  // 滑動動畫 class
-  const getSlideOutClass = () => {
+  // 舊卡片滑出方向
+  const getOutStyle = (): React.CSSProperties => {
+    if (!isAnimating) return {};
+    const base: React.CSSProperties = { animation: '0.4s ease-in forwards' };
     switch (slideDirection) {
-      case 'up': return 'animate-slide-out-up';
-      case 'down': return 'animate-slide-out-down';
-      case 'left': return 'animate-slide-out-left';
-      case 'right': return 'animate-slide-out-right';
+      case 'up':    return { ...base, animationName: 'slideOutUp' };
+      case 'down':  return { ...base, animationName: 'slideOutDown' };
+      case 'left':  return { ...base, animationName: 'slideOutLeft' };
+      case 'right': return { ...base, animationName: 'slideOutRight' };
     }
   };
-  const getSlideInClass = () => {
+
+  // 新卡片滑入方向（從反方向進來）
+  const getInStyle = (): React.CSSProperties => {
+    const base: React.CSSProperties = { animation: '0.4s ease-out forwards' };
     switch (slideDirection) {
-      case 'up': return 'animate-slide-in-down';
-      case 'down': return 'animate-slide-in-up';
-      case 'left': return 'animate-slide-in-right';
-      case 'right': return 'animate-slide-in-left';
+      case 'up':    return { ...base, animationName: 'slideInFromBottom' };
+      case 'down':  return { ...base, animationName: 'slideInFromTop' };
+      case 'left':  return { ...base, animationName: 'slideInFromRight' };
+      case 'right': return { ...base, animationName: 'slideInFromLeft' };
     }
   };
 
   return (
-    <div className="aspect-square overflow-hidden rounded-xl">
-      {/* 當前卡片 - 滑出 */}
-      <div className={`w-full h-full ${isAnimating ? getSlideOutClass() : ''}`}>
+    <div className="relative aspect-square overflow-hidden rounded-xl">
+      {/* 舊卡片 — 滑出 */}
+      <div className="absolute inset-0" style={getOutStyle()}>
         {currentTrip ? (
           <TripCard trip={currentTrip} showActions={false} variant="public" />
         ) : (
-          <div className="glass-card h-full flex items-center justify-center text-[#6b7280] text-xs md:text-sm p-1">
+          <div className="glass-card h-full flex items-center justify-center text-[#6b7280] text-xs p-1">
             等待行程...
           </div>
         )}
       </div>
       
-      {/* 新卡片 - 滑入 */}
+      {/* 新卡片 — 滑入 */}
       {newTrip && isAnimating && (
-        <div className={`absolute inset-0 w-full h-full ${getSlideInClass()}`}>
+        <div className="absolute inset-0" style={getInStyle()}>
           <TripCard trip={newTrip} showActions={false} variant="public" />
         </div>
       )}
