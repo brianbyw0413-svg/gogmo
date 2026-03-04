@@ -51,172 +51,90 @@ export default function ControlPage() {
   const handleComplete = async (tripId: string) => { await updateTripStatus(tripId, 'completed'); await loadData(); };
   const handleStatusUpdate = async (tripId: string, status: TripStatus) => { await updateTripStatus(tripId, status); await loadData(); };
 
-  // 狀態標籤
+  // 狀態標籤 - 綠色風格
   const statusBadge = (status: string) => {
     const map: Record<string,{bg:string;text:string;label:string}> = {
       open:      { bg:'bg-red-500/20',    text:'text-red-400',    label:'待接單' },
       accepted:  { bg:'bg-green-500/20',  text:'text-green-400',  label:'已接單' },
-      arrived:   { bg:'bg-blue-500/20',   text:'text-blue-400',   label:'已抵達' },
-      picked_up: { bg:'bg-purple-500/20', text:'text-purple-400', label:'客上' },
+      arrived:   { bg:'bg-green-500/30',  text:'text-green-300',  label:'已抵達' },
+      picked_up: { bg:'bg-green-500/40',  text:'text-green-200',  label:'已上車' },
       completed: { bg:'bg-gray-500/20',   text:'text-gray-400',   label:'已完成' },
       cancelled: { bg:'bg-gray-500/10',   text:'text-gray-500',   label:'已取消' },
     };
     const s = map[status] || map.open;
-    return <span className={`text-[10px] px-1.5 py-0.5 rounded ${s.bg} ${s.text} font-bold`}>{s.label}</span>;
+    return <span className={`text-[10px] px-2 py-1 rounded ${s.bg} ${s.text} font-bold`}>{s.label}</span>;
   };
 
   // 條列式行
   const renderListRow = (trip: Trip, index: number) => {
     const isPickup = trip.service_type === 'pickup';
-    const isUrgent = trip.status === 'open' && (() => {
-      const now = new Date();
-      const sdt = new Date(`${trip.service_date}T${trip.service_time}`);
-      return (sdt.getTime() - now.getTime()) / 3600000 <= 24 && (sdt.getTime() - now.getTime()) >= 0;
-    })();
+    const orderNum = `PYU-${(trip.service_date || '').replace(/-/g,'').slice(2)}-${String(index+1).padStart(4,'0')}`;
 
     return (
-      <tr key={trip.id}
-        className={`border-b border-[#292524] hover:bg-[#1c1917]/60 transition-colors ${
-          isUrgent ? 'bg-red-500/5' : ''
-        }`}>
-        {/* 接/送 */}
-        <td className="px-2 py-2.5 whitespace-nowrap">
-          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
-            isPickup ? 'bg-blue-500/25 text-blue-400' : 'bg-orange-500/25 text-orange-400'
-          }`}>{isPickup ? '接' : '送'}</span>
-          {isUrgent && <span className="ml-1 text-[10px] font-bold px-1 py-0.5 rounded bg-red-500 text-white animate-pulse">急</span>}
+      <tr key={trip.id} className="border-b border-[#292524] hover:bg-[#1c1917]/50 transition-colors">
+        {/* 單號 */}
+        <td className="px-3 py-3 text-xs font-mono text-[#d4af37] whitespace-nowrap">{orderNum}</td>
+        {/* 日期 */}
+        <td className="px-3 py-3 text-xs text-[#e8e6e3] whitespace-nowrap">{formatDate(trip.service_date)}</td>
+        {/* 接送 */}
+        <td className="px-3 py-3 whitespace-nowrap">
+          <span className={`text-[10px] font-bold px-2 py-1 rounded ${
+            isPickup ? 'bg-blue-500/30 text-blue-300' : 'bg-orange-500/30 text-orange-300'
+          }`}>{isPickup ? '接機' : '送機'}</span>
         </td>
-        {/* 日期/時間 */}
-        <td className="px-2 py-2.5 text-xs text-[#e8e6e3] whitespace-nowrap">
-          {formatDate(trip.service_date)}<br/>
-          <span className="text-[#8a8580]">{formatTime(trip.service_time)}</span>
-        </td>
-        {/* 航班 */}
-        <td className="px-2 py-2.5 text-xs font-bold text-[#d4af37] whitespace-nowrap">{trip.flight_number || '-'}</td>
-        {/* 起點 */}
-        <td className="px-2 py-2.5 text-xs text-[#c8c0b8] max-w-[120px] truncate hidden sm:table-cell">{trip.pickup_area || '-'}</td>
-        {/* 終點 */}
-        <td className="px-2 py-2.5 text-xs text-[#c8c0b8] max-w-[120px] truncate hidden sm:table-cell">{trip.dropoff_area || '-'}</td>
-        {/* 人/行李 */}
-        <td className="px-2 py-2.5 text-xs text-[#8a8580] whitespace-nowrap hidden md:table-cell">{trip.passenger_count}人/{trip.luggage_count}件</td>
         {/* 金額 */}
-        <td className="px-2 py-2.5 text-xs font-bold text-[#d4af37] text-right whitespace-nowrap">
+        <td className="px-3 py-3 text-xs font-bold text-[#d4af37] text-right whitespace-nowrap">
           ${trip.amount.toLocaleString()}
-          {trip.price_boost && trip.price_boost > 0 && <span className="text-red-400 ml-0.5">+{trip.price_boost}</span>}
+          {trip.price_boost && trip.price_boost > 0 && <span className="text-red-400 ml-1">+{trip.price_boost}</span>}
         </td>
         {/* 司機 */}
-        <td className="px-2 py-2.5 text-xs whitespace-nowrap hidden lg:table-cell">
-          {trip.driver ? (
-            <div>
-              <span className="text-[#e8e6e3]">{trip.driver.name}</span>
-              <br/><span className="text-[10px] text-[#5a5550]">{trip.driver.car_plate}</span>
-            </div>
-          ) : (
-            <button onClick={() => handleAssignDriver(trip.id)}
-              className="text-[10px] px-2 py-1 rounded bg-[#d4af37]/10 text-[#d4af37] border border-[#d4af37]/30 hover:bg-[#d4af37]/20">
-              派單
-            </button>
-          )}
+        <td className="px-3 py-3 text-xs text-[#c8c0b8] whitespace-nowrap">
+          {trip.driver ? trip.driver.name : <span className="text-[#5a5550]">-</span>}
         </td>
-        {/* 執行狀態 */}
-        <td className="px-2 py-2.5 whitespace-nowrap">{statusBadge(trip.status)}</td>
-        {/* 操作 */}
-        <td className="px-2 py-2.5 whitespace-nowrap">
+        {/* 狀態 */}
+        <td className="px-3 py-3 whitespace-nowrap">{statusBadge(trip.status)}</td>
+        {/* 操作 - 5 個按鈕 */}
+        <td className="px-3 py-3 whitespace-nowrap">
           <div className="flex gap-1">
-            {trip.status === 'accepted' && (
-              <button onClick={() => handleStatusUpdate(trip.id, 'arrived')}
-                className="text-[10px] px-1.5 py-1 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25">
-                抵達
-              </button>
-            )}
-            {trip.status === 'arrived' && (
-              <button onClick={() => handleStatusUpdate(trip.id, 'picked_up')}
-                className="text-[10px] px-1.5 py-1 rounded bg-blue-500/15 text-blue-400 border border-blue-500/30 hover:bg-blue-500/25">
-                客上
-              </button>
-            )}
-            {trip.status === 'picked_up' && (
-              <button onClick={() => handleStatusUpdate(trip.id, 'completed')}
-                className="text-[10px] px-1.5 py-1 rounded bg-[#d4af37]/15 text-[#d4af37] border border-[#d4af37]/30 hover:bg-[#d4af37]/25">
-                客下
-              </button>
-            )}
-            {trip.status === 'open' && (
-              <>
-                <button onClick={() => handleAssignDriver(trip.id)}
-                  className="text-[10px] px-1.5 py-1 rounded bg-[#d4af37]/15 text-[#d4af37] border border-[#d4af37]/30 hover:bg-[#d4af37]/25 lg:hidden">
-                  派
-                </button>
-                <button onClick={() => handleUpdatePrice(trip.id, 100)}
-                  className="text-[10px] px-1.5 py-1 rounded bg-red-500/15 text-red-400 border border-red-500/30 hover:bg-red-500/25">
-                  +$
-                </button>
-              </>
-            )}
-            <button onClick={() => handleCancel(trip.id)}
-              className="text-[10px] px-1.5 py-1 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:text-red-400 hover:border-red-500/30">
-              撤
-            </button>
+            <button className="text-[10px] px-2 py-1 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:text-[#fafaf9] hover:border-[#d4af37]/50">詳情</button>
+            <button className="text-[10px] px-2 py-1 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:text-[#fafaf9] hover:border-[#d4af37]/50">修改</button>
+            <button onClick={() => handleUpdatePrice(trip.id, 100)} className="text-[10px] px-2 py-1 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:text-red-400 hover:border-red-500/50">加價</button>
+            <button onClick={() => handleAssignDriver(trip.id)} className="text-[10px] px-2 py-1 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:text-[#fafaf9] hover:border-[#d4af37]/50">司機</button>
+            <button className="text-[10px] px-2 py-1 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:text-[#d4af37] hover:border-[#d4af37]/50">聊天</button>
           </div>
         </td>
       </tr>
     );
   };
 
-  // 手機版條列卡片
+  // 手機版條列卡片 - 精簡版
   const renderListMobileCard = (trip: Trip, index: number) => {
     const isPickup = trip.service_type === 'pickup';
-    const isUrgent = trip.status === 'open' && (() => {
-      const now = new Date();
-      const sdt = new Date(`${trip.service_date}T${trip.service_time}`);
-      return (sdt.getTime() - now.getTime()) / 3600000 <= 24 && (sdt.getTime() - now.getTime()) >= 0;
-    })();
+    const orderNum = `PYU-${(trip.service_date || '').replace(/-/g,'').slice(2)}-${String(index+1).padStart(4,'0')}`;
 
     return (
-      <div key={trip.id} className={`glass-card p-2.5 space-y-1.5 ${isUrgent ? 'ring-1 ring-red-500/50' : ''}`}>
-        {/* 第一行：接送 + 航班 + 金額 + 狀態 */}
-        <div className="flex items-center gap-1.5">
-          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${isPickup ? 'bg-blue-500/25 text-blue-400' : 'bg-orange-500/25 text-orange-400'}`}>
+      <div key={trip.id} className="glass-card p-3 space-y-2">
+        {/* 第一行：單號 + 接送 + 金額 + 狀態 */}
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-mono text-[#d4af37]">{orderNum}</span>
+          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${isPickup ? 'bg-blue-500/30 text-blue-300' : 'bg-orange-500/30 text-orange-300'}`}>
             {isPickup ? '接' : '送'}
           </span>
-          {isUrgent && <span className="text-[10px] font-bold px-1 py-0.5 rounded bg-red-500 text-white animate-pulse">急</span>}
-          <span className="text-xs font-bold text-[#d4af37]">{trip.flight_number}</span>
-          <span className="ml-auto text-sm font-bold text-[#d4af37]">
-            ${trip.amount.toLocaleString()}
-            {trip.price_boost && trip.price_boost > 0 && <span className="text-xs text-red-400">+{trip.price_boost}</span>}
-          </span>
+          <span className="text-sm font-bold text-[#d4af37] ml-auto">${trip.amount.toLocaleString()}</span>
           {statusBadge(trip.status)}
         </div>
-        {/* 第二行：日期 + 起終點 */}
-        <div className="flex items-center gap-2 text-xs text-[#c8c0b8]">
-          <span className="text-[#8a8580]">{formatDate(trip.service_date)} {formatTime(trip.service_time)}</span>
-          <span className="truncate">{trip.pickup_area}</span>
-          <span className="text-[#5a5550]">→</span>
-          <span className="truncate">{trip.dropoff_area}</span>
+        {/* 第二行：日期 + 司機 */}
+        <div className="flex items-center justify-between text-xs text-[#8a8580]">
+          <span>{formatDate(trip.service_date)}</span>
+          <span>{trip.driver?.name || '未派單'}</span>
         </div>
-        {/* 第三行：司機 + 操作 */}
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-[#8a8580]">
-            {trip.driver ? `${trip.driver.name} ${trip.driver.car_plate}` : '未派單'}
-          </span>
-          <div className="flex gap-1">
-            {trip.status === 'open' && (
-              <button onClick={() => handleAssignDriver(trip.id)}
-                className="text-[10px] px-2 py-1 rounded bg-[#d4af37]/15 text-[#d4af37] border border-[#d4af37]/30">派單</button>
-            )}
-            {trip.status === 'accepted' && (
-              <button onClick={() => handleStatusUpdate(trip.id, 'arrived')}
-                className="text-[10px] px-2 py-1 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">抵達</button>
-            )}
-            {trip.status === 'arrived' && (
-              <button onClick={() => handleStatusUpdate(trip.id, 'picked_up')}
-                className="text-[10px] px-2 py-1 rounded bg-blue-500/15 text-blue-400 border border-blue-500/30">客上</button>
-            )}
-            {trip.status === 'picked_up' && (
-              <button onClick={() => handleStatusUpdate(trip.id, 'completed')}
-                className="text-[10px] px-2 py-1 rounded bg-[#d4af37]/15 text-[#d4af37] border border-[#d4af37]/30">客下</button>
-            )}
-          </div>
+        {/* 第三行：5 個操作按鈕 */}
+        <div className="flex gap-1">
+          <button className="flex-1 text-[10px] py-1.5 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735]">詳情</button>
+          <button className="flex-1 text-[10px] py-1.5 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735]">修改</button>
+          <button onClick={() => handleUpdatePrice(trip.id, 100)} className="flex-1 text-[10px] py-1.5 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735]">加價</button>
+          <button onClick={() => handleAssignDriver(trip.id)} className="flex-1 text-[10px] py-1.5 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735]">司機</button>
+          <button className="flex-1 text-[10px] py-1.5 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735]">聊天</button>
         </div>
       </div>
     );
@@ -354,16 +272,13 @@ export default function ControlPage() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-[#292524] bg-[#1c1917]">
-                      <th className="px-2 py-2.5 text-left text-[10px] font-medium text-[#a8a29e] uppercase">接/送</th>
-                      <th className="px-2 py-2.5 text-left text-[10px] font-medium text-[#a8a29e] uppercase">日期</th>
-                      <th className="px-2 py-2.5 text-left text-[10px] font-medium text-[#a8a29e] uppercase">航班</th>
-                      <th className="px-2 py-2.5 text-left text-[10px] font-medium text-[#a8a29e] uppercase hidden sm:table-cell">起點</th>
-                      <th className="px-2 py-2.5 text-left text-[10px] font-medium text-[#a8a29e] uppercase hidden sm:table-cell">終點</th>
-                      <th className="px-2 py-2.5 text-left text-[10px] font-medium text-[#a8a29e] uppercase hidden md:table-cell">人/件</th>
-                      <th className="px-2 py-2.5 text-right text-[10px] font-medium text-[#a8a29e] uppercase">金額</th>
-                      <th className="px-2 py-2.5 text-left text-[10px] font-medium text-[#a8a29e] uppercase hidden lg:table-cell">司機</th>
-                      <th className="px-2 py-2.5 text-left text-[10px] font-medium text-[#a8a29e] uppercase">狀態</th>
-                      <th className="px-2 py-2.5 text-left text-[10px] font-medium text-[#a8a29e] uppercase">操作</th>
+                      <th className="px-3 py-2.5 text-left text-[10px] font-medium text-[#a8a29e] uppercase">單號</th>
+                      <th className="px-3 py-2.5 text-left text-[10px] font-medium text-[#a8a29e] uppercase">日期</th>
+                      <th className="px-3 py-2.5 text-left text-[10px] font-medium text-[#a8a29e] uppercase">接送</th>
+                      <th className="px-3 py-2.5 text-right text-[10px] font-medium text-[#a8a29e] uppercase">金額</th>
+                      <th className="px-3 py-2.5 text-left text-[10px] font-medium text-[#a8a29e] uppercase">司機</th>
+                      <th className="px-3 py-2.5 text-left text-[10px] font-medium text-[#a8a29e] uppercase">狀態</th>
+                      <th className="px-3 py-2.5 text-left text-[10px] font-medium text-[#a8a29e] uppercase">操作</th>
                     </tr>
                   </thead>
                   <tbody>
