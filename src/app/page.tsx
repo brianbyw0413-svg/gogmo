@@ -94,9 +94,9 @@ function AnimatedTripCard({ trip, index, allTrips }: { trip: Trip | null; index:
               <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${isPickup ? 'bg-blue-500 text-white' : 'bg-orange-500 text-white'}`}>
                 {isPickup ? '接機' : '送機'}
               </span>
-              <span className="text-[9px] text-[#a8a29e]">{currentTrip?.flight_number || '-'}</span>
+              <span className="text-[9px] text-[#a8a29e] hidden md:inline">{currentTrip?.flight_number || '-'}</span>
             </div>
-            <span className="text-lg font-bold text-[#d4af37]">${totalAmount}</span>
+            <span className="text-lg font-bold text-[#fde047]">${totalAmount}</span>
           </div>
           {/* 中間 - 深灰區塊 */}
           <div className="flex-1 px-1.5 py-1 flex flex-col justify-center gap-0 bg-[#1c1a18]">
@@ -141,9 +141,9 @@ function AnimatedTripCard({ trip, index, allTrips }: { trip: Trip | null; index:
                     <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${nIsPickup ? 'bg-blue-500 text-white' : 'bg-orange-500 text-white'}`}>
                       {nIsPickup ? '接機' : '送機'}
                     </span>
-                    <span className="text-[9px] text-[#a8a29e]">{nTrip.flight_number || '-'}</span>
+                    <span className="text-[9px] text-[#a8a29e] hidden md:inline">{nTrip.flight_number || '-'}</span>
                   </div>
-                  <span className="text-lg font-bold text-[#d4af37]">${nTotalAmount}</span>
+                  <span className="text-lg font-bold text-[#fde047]">${nTotalAmount}</span>
                 </div>
                 {/* 中間 - 深灰區塊 */}
                 <div className="flex-1 px-1.5 py-1 flex flex-col justify-center gap-0 bg-[#1c1a18]">
