@@ -227,10 +227,10 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-2">
           {/* 標題 */}
           <div className="text-center mb-3">
-            <h1 className="text-2xl md:text-4xl font-bold text-[#fafaf9] mb-1">
+            <h1 className="text-3xl md:text-5xl font-bold text-[#fafaf9] mb-2">
               <span className="text-[#d4af37]">G</span>iveMeOrders
             </h1>
-            <p className="text-[10px] md:text-sm text-[#78716c]">一起接單，做個自由的司機</p>
+            <p className="text-sm md:text-lg text-[#78716c]">一起接單，做個自由的司機</p>
           </div>
 
           {/* 統計 */}
