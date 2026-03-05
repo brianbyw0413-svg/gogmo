@@ -24,6 +24,10 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "GMO — Give Me Order | 派單平台",
   description: "GMO 專業機場接送派單平台 by PickYouUP",
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({

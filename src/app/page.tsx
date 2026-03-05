@@ -209,10 +209,7 @@ export default function HomePage() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#0c0a09]/80 backdrop-blur-sm border-b border-[#292524]">
         <div className="max-w-7xl mx-auto px-3 py-3 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#d4af37] to-[#b8962f] flex items-center justify-center">
-              <span className="text-lg font-bold text-[#0c0a09]">G</span>
-            </div>
-            <span className="text-lg font-bold text-[#fafaf9]">GMO</span>
+            <img src="/logo.png" alt="GMO" className="w-10 h-10" />
           </Link>
           <div className="flex items-center gap-3 text-xs">
             <Link href="/lobby" className="text-[#a8a29e] hover:text-[#d4af37]">接單大廳</Link>
