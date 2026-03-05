@@ -88,8 +88,8 @@ function AnimatedTripCard({ trip, index, allTrips }: { trip: Trip | null; index:
             background: 'linear-gradient(145deg, #1a1816 0%, #0f0e0d 100%)',
             borderRadius: '8px',
           }}>
-          {/* 頂部 */}
-          <div className="flex items-center gap-1 px-1.5 py-1">
+          {/* 頂部 - 深灰區塊 */}
+          <div className="bg-[#252320] px-1.5 py-1">
             <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${isPickup ? 'bg-blue-500 text-white' : 'bg-orange-500 text-white'}`}>
               {isPickup ? '接' : '送'}
             </span>
@@ -97,8 +97,8 @@ function AnimatedTripCard({ trip, index, allTrips }: { trip: Trip | null; index:
               ${totalAmount}
             </span>
           </div>
-          {/* 中間 - 地址加大 */}
-          <div className="flex-1 px-1.5 flex flex-col justify-center gap-0">
+          {/* 中間 - 深灰區塊 */}
+          <div className="flex-1 px-1.5 py-1 flex flex-col justify-center gap-0 bg-[#1c1a18]">
             <div className="flex items-start gap-1">
               <div className="w-1 h-1 rounded-full bg-[#d4af37] mt-1.5 flex-shrink-0" />
               <p className="text-xs font-medium text-[#fafaf9] truncate">{currentTrip.pickup_area || currentTrip.pickup_address}</p>
@@ -109,8 +109,8 @@ function AnimatedTripCard({ trip, index, allTrips }: { trip: Trip | null; index:
               <p className="text-xs font-medium text-[#fafaf9] truncate">{currentTrip.dropoff_area || currentTrip.dropoff_address}</p>
             </div>
           </div>
-          {/* 底部 */}
-          <div className="px-1.5 py-1 flex items-center justify-between">
+          {/* 底部 - 深灰區塊 */}
+          <div className="bg-[#252320] px-1.5 py-1 flex items-center justify-between">
             <span className="text-[9px] font-medium text-[#c8c0b8]">
               {formatDate(currentTrip.service_date)} {formatTime(currentTrip.service_time)}
             </span>
@@ -134,7 +134,8 @@ function AnimatedTripCard({ trip, index, allTrips }: { trip: Trip | null; index:
                   background: 'linear-gradient(145deg, #1a1816 0%, #0f0e0d 100%)',
                   borderRadius: '8px',
                 }}>
-                <div className="flex items-center gap-1 px-1.5 py-1">
+                {/* 頂部 - 深灰區塊 */}
+                <div className="bg-[#252320] px-1.5 py-1">
                   <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${nIsPickup ? 'bg-blue-500 text-white' : 'bg-orange-500 text-white'}`}>
                     {nIsPickup ? '接' : '送'}
                   </span>
@@ -142,7 +143,8 @@ function AnimatedTripCard({ trip, index, allTrips }: { trip: Trip | null; index:
                     ${nTotalAmount}
                   </span>
                 </div>
-                <div className="flex-1 px-1.5 flex flex-col justify-center gap-0">
+                {/* 中間 - 深灰區塊 */}
+                <div className="flex-1 px-1.5 py-1 flex flex-col justify-center gap-0 bg-[#1c1a18]">
                   <div className="flex items-start gap-1">
                     <div className="w-1 h-1 rounded-full bg-[#d4af37] mt-1.5 flex-shrink-0" />
                     <p className="text-xs font-medium text-[#fafaf9] truncate">{nTrip.pickup_area || nTrip.pickup_address}</p>
@@ -153,7 +155,8 @@ function AnimatedTripCard({ trip, index, allTrips }: { trip: Trip | null; index:
                     <p className="text-xs font-medium text-[#fafaf9] truncate">{nTrip.dropoff_area || nTrip.dropoff_address}</p>
                   </div>
                 </div>
-                <div className="px-1.5 py-1 flex items-center justify-between">
+                {/* 底部 - 深灰區塊 */}
+                <div className="bg-[#252320] px-1.5 py-1 flex items-center justify-between">
                   <span className="text-[9px] font-medium text-[#c8c0b8]">
                     {formatDate(nTrip.service_date)} {formatTime(nTrip.service_time)}
                   </span>
@@ -225,9 +228,9 @@ export default function HomePage() {
           {/* 標題 */}
           <div className="text-center mb-3">
             <h1 className="text-2xl md:text-4xl font-bold text-[#fafaf9] mb-1">
-              <span className="text-[#d4af37]">G</span>iveMe<span className="text-[#d4af37]">Orders</span>
+              <span className="text-[#d4af37]">G</span>iveMeOrders
             </h1>
-            <p className="text-[10px] md:text-sm text-[#78716c]">專業機場接送派單平台</p>
+            <p className="text-[10px] md:text-sm text-[#78716c]">一起接單，做個自由的司機</p>
           </div>
 
           {/* 統計 */}
