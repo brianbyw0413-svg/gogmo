@@ -16,7 +16,7 @@ export default function ControlPage() {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<TripStatus | 'all'>('all');
-  const [viewMode, setViewMode] = useState<'card' | 'list'>('card');
+  const [viewMode, setViewMode] = useState<'card' | 'list'>('list');
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [selectedTripId, setSelectedTripId] = useState<string>('');
   const [detailModalTrip, setDetailModalTrip] = useState<Trip | null>(null);
