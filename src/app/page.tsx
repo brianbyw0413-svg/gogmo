@@ -225,7 +225,7 @@ export default function HomePage() {
           {/* 標題 */}
           <div className="text-center mb-3">
             <h1 className="text-3xl md:text-5xl font-bold text-[#fafaf9] mb-2">
-              <span className="text-[#d4af37]">G</span>iveMeOrders
+              <span className="text-[#d4af37]">G</span>iveMe<span className="text-[#d4af37]">O</span>rders
             </h1>
             <p className="text-sm md:text-lg text-[#78716c]">一起接單，做個自由的司機</p>
           </div>
