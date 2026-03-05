@@ -225,7 +225,7 @@ export default function HomePage() {
           {/* 標題 */}
           <div className="text-center mb-3">
             <h1 className="text-2xl md:text-4xl font-bold text-[#fafaf9] mb-1">
-              <span className="text-[#d4af37]">G</span>ive <span className="text-[#d4af37]">M</span>e <span className="text-[#d4af37]">O</span>rder
+              <span className="text-[#d4af37]">G</span>iveMe<span className="text-[#d4af37]">Orders</span>
             </h1>
             <p className="text-[10px] md:text-sm text-[#78716c]">專業機場接送派單平台</p>
           </div>
@@ -253,7 +253,7 @@ export default function HomePage() {
           {/* 行程網格 */}
           <div className="mb-3">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-sm font-semibold text-[#a8a29e]">即時行程 <span className="text-[#d4af37]">{displayTrips.length}</span> 筆</h2>
+              <h2 className="text-sm font-semibold text-[#a8a29e]">即時行程動態牆</h2>
               <Link href="/lobby" className="text-xs text-[#d4af37] hover:underline">查看更多</Link>
             </div>
             
