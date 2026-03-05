@@ -78,51 +78,44 @@ function AnimatedTripCard({ trip, index, allTrips }: { trip: Trip | null; index:
 
   const isPickup = currentTrip.service_type === 'pickup';
   const totalAmount = currentTrip.amount + (currentTrip.price_boost || 0);
-  const isUrgent = currentTrip.price_boost && currentTrip.price_boost > 0;
   
   return (
-    <div className="relative h-full overflow-hidden rounded-xl">
+    <div className="relative h-full overflow-hidden">
       {/* 舊卡片 — 滑出 */}
       <div className="absolute inset-0" style={getOutStyle()}>
         <div className="h-full flex flex-col relative" 
           style={{
             background: 'linear-gradient(145deg, #1a1816 0%, #0f0e0d 100%)',
-            border: isUrgent ? '2px solid #ef4444' : '1px solid #2a2725',
-            borderRadius: '10px',
+            borderRadius: '8px',
           }}>
           {/* 頂部 */}
-          <div className="flex items-center gap-1.5 px-2 py-1.5" style={{ borderBottom: '1px solid rgba(212,175,55,0.25)' }}>
-            <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${isPickup ? 'bg-blue-500 text-white' : 'bg-orange-500 text-white'}`}>
-              {isPickup ? '接機' : '送機'}
+          <div className="flex items-center gap-1 px-1.5 py-1">
+            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${isPickup ? 'bg-blue-500 text-white' : 'bg-orange-500 text-white'}`}>
+              {isPickup ? '接' : '送'}
             </span>
-            {currentTrip.flight_number && (
-              <span className="text-[10px] font-bold text-[#d4af37] px-1.5 py-0.5 rounded bg-[#d4af37]/15">
-                {currentTrip.flight_number}
-              </span>
-            )}
-            <span className="ml-auto text-base font-extrabold text-[#d4af37] drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]">
+            <span className="ml-auto text-sm font-bold text-[#d4af37]">
               ${totalAmount}
             </span>
           </div>
-          {/* 中間 */}
-          <div className="flex-1 p-2 flex flex-col justify-center gap-0.5">
-            <div className="flex items-start gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] mt-1 flex-shrink-0" />
-              <p className="text-[11px] font-medium text-[#fafaf9] truncate leading-tight">{currentTrip.pickup_area || currentTrip.pickup_address}</p>
+          {/* 中間 - 地址加大 */}
+          <div className="flex-1 px-1.5 flex flex-col justify-center gap-0">
+            <div className="flex items-start gap-1">
+              <div className="w-1 h-1 rounded-full bg-[#d4af37] mt-1.5 flex-shrink-0" />
+              <p className="text-xs font-medium text-[#fafaf9] truncate">{currentTrip.pickup_area || currentTrip.pickup_address}</p>
             </div>
-            <div className="ml-0.5 w-0.5 h-2 bg-gradient-to-b from-[#d4af37] to-transparent" />
-            <div className="flex items-start gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] mt-1 flex-shrink-0" />
-              <p className="text-[11px] font-medium text-[#fafaf9] truncate leading-tight">{currentTrip.dropoff_area || currentTrip.dropoff_address}</p>
+            <div className="ml-0.5 w-0.5 h-1.5 bg-gradient-to-b from-[#d4af37] to-transparent" />
+            <div className="flex items-start gap-1">
+              <div className="w-1 h-1 rounded-full bg-[#d4af37] mt-1.5 flex-shrink-0" />
+              <p className="text-xs font-medium text-[#fafaf9] truncate">{currentTrip.dropoff_area || currentTrip.dropoff_address}</p>
             </div>
           </div>
           {/* 底部 */}
-          <div className="px-2 py-1.5 flex items-center justify-between" style={{ borderTop: '1px solid #2a2725' }}>
-            <span className="text-[10px] font-medium text-[#c8c0b8]">
+          <div className="px-1.5 py-1 flex items-center justify-between">
+            <span className="text-[9px] font-medium text-[#c8c0b8]">
               {formatDate(currentTrip.service_date)} {formatTime(currentTrip.service_time)}
             </span>
-            <span className="text-[10px] text-[#8a8580]">
-              {currentTrip.passenger_count}人 {currentTrip.luggage_count}件
+            <span className="text-[9px] text-[#8a8580]">
+              {currentTrip.passenger_count}人/{currentTrip.luggage_count}件
             </span>
           </div>
         </div>
@@ -135,44 +128,37 @@ function AnimatedTripCard({ trip, index, allTrips }: { trip: Trip | null; index:
             const nTrip = newTrip;
             const nIsPickup = nTrip.service_type === 'pickup';
             const nTotalAmount = nTrip.amount + (nTrip.price_boost || 0);
-            const nIsUrgent = nTrip.price_boost && nTrip.price_boost > 0;
             return (
               <div className="h-full flex flex-col relative" 
                 style={{
                   background: 'linear-gradient(145deg, #1a1816 0%, #0f0e0d 100%)',
-                  border: nIsUrgent ? '2px solid #ef4444' : '1px solid #2a2725',
-                  borderRadius: '10px',
+                  borderRadius: '8px',
                 }}>
-                <div className="flex items-center gap-1.5 px-2 py-1.5" style={{ borderBottom: '1px solid rgba(212,175,55,0.25)' }}>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${nIsPickup ? 'bg-blue-500 text-white' : 'bg-orange-500 text-white'}`}>
-                    {nIsPickup ? '接機' : '送機'}
+                <div className="flex items-center gap-1 px-1.5 py-1">
+                  <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${nIsPickup ? 'bg-blue-500 text-white' : 'bg-orange-500 text-white'}`}>
+                    {nIsPickup ? '接' : '送'}
                   </span>
-                  {nTrip.flight_number && (
-                    <span className="text-[10px] font-bold text-[#d4af37] px-1.5 py-0.5 rounded bg-[#d4af37]/15">
-                      {nTrip.flight_number}
-                    </span>
-                  )}
-                  <span className="ml-auto text-base font-extrabold text-[#d4af37] drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]">
+                  <span className="ml-auto text-sm font-bold text-[#d4af37]">
                     ${nTotalAmount}
                   </span>
                 </div>
-                <div className="flex-1 p-2 flex flex-col justify-center gap-0.5">
-                  <div className="flex items-start gap-1.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] mt-1 flex-shrink-0" />
-                    <p className="text-[11px] font-medium text-[#fafaf9] truncate leading-tight">{nTrip.pickup_area || nTrip.pickup_address}</p>
+                <div className="flex-1 px-1.5 flex flex-col justify-center gap-0">
+                  <div className="flex items-start gap-1">
+                    <div className="w-1 h-1 rounded-full bg-[#d4af37] mt-1.5 flex-shrink-0" />
+                    <p className="text-xs font-medium text-[#fafaf9] truncate">{nTrip.pickup_area || nTrip.pickup_address}</p>
                   </div>
-                  <div className="ml-0.5 w-0.5 h-2 bg-gradient-to-b from-[#d4af37] to-transparent" />
-                  <div className="flex items-start gap-1.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] mt-1 flex-shrink-0" />
-                    <p className="text-[11px] font-medium text-[#fafaf9] truncate leading-tight">{nTrip.dropoff_area || nTrip.dropoff_address}</p>
+                  <div className="ml-0.5 w-0.5 h-1.5 bg-gradient-to-b from-[#d4af37] to-transparent" />
+                  <div className="flex items-start gap-1">
+                    <div className="w-1 h-1 rounded-full bg-[#d4af37] mt-1.5 flex-shrink-0" />
+                    <p className="text-xs font-medium text-[#fafaf9] truncate">{nTrip.dropoff_area || nTrip.dropoff_address}</p>
                   </div>
                 </div>
-                <div className="px-2 py-1.5 flex items-center justify-between" style={{ borderTop: '1px solid #2a2725' }}>
-                  <span className="text-[10px] font-medium text-[#c8c0b8]">
+                <div className="px-1.5 py-1 flex items-center justify-between">
+                  <span className="text-[9px] font-medium text-[#c8c0b8]">
                     {formatDate(nTrip.service_date)} {formatTime(nTrip.service_time)}
                   </span>
-                  <span className="text-[10px] text-[#8a8580]">
-                    {nTrip.passenger_count}人 {nTrip.luggage_count}件
+                  <span className="text-[9px] text-[#8a8580]">
+                    {nTrip.passenger_count}人/{nTrip.luggage_count}件
                   </span>
                 </div>
               </div>
@@ -272,19 +258,18 @@ export default function HomePage() {
             </div>
             
             {loading ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                {[...Array(8)].map((_, i) => (
-                  <div key={i} className="glass-card p-2 aspect-[4/3] animate-pulse">
-                    <div className="h-3 bg-[#292524] rounded w-1/2 mb-2"></div>
-                    <div className="h-2 bg-[#292524] rounded w-3/4 mb-1"></div>
-                    <div className="h-2 bg-[#292524] rounded w-1/2"></div>
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-1.5">
+                {[...Array(10)].map((_, i) => (
+                  <div key={i} className="glass-card p-1.5 aspect-[3/2] animate-pulse">
+                    <div className="h-2 bg-[#292524] rounded w-1/2 mb-1"></div>
+                    <div className="h-2 bg-[#292524] rounded w-3/4"></div>
                   </div>
                 ))}
               </div>
             ) : displayTrips.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-1.5">
                 {displayTrips.map((trip, i) => (
-                  <div key={trip.id} className="aspect-[4/3]">
+                  <div key={trip.id} className="aspect-[3/2]">
                     <AnimatedTripCard trip={trip} index={i} allTrips={displayTrips} />
                   </div>
                 ))}
