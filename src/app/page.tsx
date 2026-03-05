@@ -89,13 +89,14 @@ function AnimatedTripCard({ trip, index, allTrips }: { trip: Trip | null; index:
             borderRadius: '8px',
           }}>
           {/* 頂部 - 深灰區塊 */}
-          <div className="bg-[#252320] px-1.5 py-1">
-            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${isPickup ? 'bg-blue-500 text-white' : 'bg-orange-500 text-white'}`}>
-              {isPickup ? '接' : '送'}
-            </span>
-            <span className="ml-auto text-sm font-bold text-[#d4af37]">
-              ${totalAmount}
-            </span>
+          <div className="bg-[#252320] px-1.5 py-1 flex items-center justify-between">
+            <div className="flex items-center gap-1">
+              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${isPickup ? 'bg-blue-500 text-white' : 'bg-orange-500 text-white'}`}>
+                {isPickup ? '接機' : '送機'}
+              </span>
+              <span className="text-[9px] text-[#a8a29e]">{currentTrip?.flight_number || '-'}</span>
+            </div>
+            <span className="text-lg font-bold text-[#d4af37]">${totalAmount}</span>
           </div>
           {/* 中間 - 深灰區塊 */}
           <div className="flex-1 px-1.5 py-1 flex flex-col justify-center gap-0 bg-[#1c1a18]">
@@ -135,13 +136,14 @@ function AnimatedTripCard({ trip, index, allTrips }: { trip: Trip | null; index:
                   borderRadius: '8px',
                 }}>
                 {/* 頂部 - 深灰區塊 */}
-                <div className="bg-[#252320] px-1.5 py-1">
-                  <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${nIsPickup ? 'bg-blue-500 text-white' : 'bg-orange-500 text-white'}`}>
-                    {nIsPickup ? '接' : '送'}
-                  </span>
-                  <span className="ml-auto text-sm font-bold text-[#d4af37]">
-                    ${nTotalAmount}
-                  </span>
+                <div className="bg-[#252320] px-1.5 py-1 flex items-center justify-between">
+                  <div className="flex items-center gap-1">
+                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${nIsPickup ? 'bg-blue-500 text-white' : 'bg-orange-500 text-white'}`}>
+                      {nIsPickup ? '接機' : '送機'}
+                    </span>
+                    <span className="text-[9px] text-[#a8a29e]">{nTrip.flight_number || '-'}</span>
+                  </div>
+                  <span className="text-lg font-bold text-[#d4af37]">${nTotalAmount}</span>
                 </div>
                 {/* 中間 - 深灰區塊 */}
                 <div className="flex-1 px-1.5 py-1 flex flex-col justify-center gap-0 bg-[#1c1a18]">
@@ -224,10 +226,10 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-2">
           {/* 標題 */}
           <div className="text-center mb-3">
-            <h1 className="text-3xl md:text-5xl font-bold text-[#fafaf9] mb-2">
+            <h1 className="text-4xl md:text-6xl font-bold text-[#fafaf9] mb-2">
               <span className="text-[#d4af37]">G</span>iveMe<span className="text-[#d4af37]">O</span>rders
             </h1>
-            <p className="text-sm md:text-lg text-[#78716c]">一起接單，做個自由的司機</p>
+            <p className="text-sm md:text-lg text-[#78716c]">一起接單，做個自由的司機。</p>
           </div>
 
           {/* 統計 */}
