@@ -199,6 +199,40 @@ export async function updateTripPriceBoost(id: string, boostAmount: number): Pro
   return true;
 }
 
+// 更新行程資料
+interface UpdateTripData {
+  flight_number?: string;
+  passenger_count?: number;
+  luggage_count?: number;
+  pickup_address?: string;
+  dropoff_address?: string;
+  note?: string;
+}
+
+export async function updateTrip(id: string, data: UpdateTripData): Promise<boolean> {
+  if (useMockData) {
+    const trip = mockTrips.find(t => t.id === id);
+    if (trip) {
+      Object.assign(trip, data);
+      trip.updated_at = new Date().toISOString();
+      return true;
+    }
+    return false;
+  }
+
+  const { error } = await supabase
+    .from('trips')
+    .update({ ...data, updated_at: new Date().toISOString() })
+    .eq('id', id);
+
+  if (error) {
+    console.error('更新行程失敗:', error);
+    return false;
+  }
+
+  return true;
+}
+
 // 分配司機
 export async function assignDriver(tripId: string, driverId: string): Promise<boolean> {
   if (useMockData) {

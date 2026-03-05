@@ -4,8 +4,9 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { Trip, TripStatus, Driver } from '@/types';
-import { getTrips, getDrivers, updateTripStatus, assignDriver, updateTripPriceBoost } from '@/lib/data';
+import { getTrips, getDrivers, updateTripStatus, assignDriver, updateTripPriceBoost, updateTrip } from '@/lib/data';
 import TripCard from '@/components/TripCard';
+import Link from 'next/link';
 
 function formatDate(d: string) { if (!d) return ''; return new Date(d).toLocaleDateString('zh-TW',{month:'short',day:'numeric'}); }
 function formatTime(t: string) { if (!t) return ''; const [h,m] = t.split(':'); return `${h}:${m}`; }
@@ -18,6 +19,18 @@ export default function ControlPage() {
   const [viewMode, setViewMode] = useState<'card' | 'list'>('card');
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [selectedTripId, setSelectedTripId] = useState<string>('');
+  const [detailModalTrip, setDetailModalTrip] = useState<Trip | null>(null);
+  const [editModalTrip, setEditModalTrip] = useState<Trip | null>(null);
+  const [editForm, setEditForm] = useState({
+    flight_number: '',
+    passenger_count: 1,
+    luggage_count: 0,
+    pickup_address: '',
+    dropoff_address: '',
+    note: '',
+  });
+  const [priceBoostModalTrip, setPriceBoostModalTrip] = useState<Trip | null>(null);
+  const [customBoostAmount, setCustomBoostAmount] = useState('');
 
   const loadData = useCallback(async () => {
     const [tripsData, driversData] = await Promise.all([getTrips(), getDrivers()]);
@@ -50,6 +63,40 @@ export default function ControlPage() {
   const handleCancel = async (tripId: string) => { if (confirm('確定要撤銷這張訂單嗎？')) { await updateTripStatus(tripId, 'cancelled'); await loadData(); } };
   const handleComplete = async (tripId: string) => { await updateTripStatus(tripId, 'completed'); await loadData(); };
   const handleStatusUpdate = async (tripId: string, status: TripStatus) => { await updateTripStatus(tripId, status); await loadData(); };
+
+  // 條列視圖 - 開啟詳情 Modal
+  const handleOpenDetail = (trip: Trip) => setDetailModalTrip(trip);
+  // 條列視圖 - 開啟編輯 Modal
+  const handleOpenEdit = (trip: Trip) => {
+    setEditForm({
+      flight_number: trip.flight_number || '',
+      passenger_count: trip.passenger_count || 1,
+      luggage_count: trip.luggage_count || 0,
+      pickup_address: trip.pickup_address || '',
+      dropoff_address: trip.dropoff_address || '',
+      note: trip.note || '',
+    });
+    setEditModalTrip(trip);
+  };
+  // 條列視圖 - 儲存編輯
+  const handleSaveEdit = async () => {
+    if (!editModalTrip) return;
+    await updateTrip(editModalTrip.id, editForm);
+    await loadData();
+    setEditModalTrip(null);
+  };
+  // 條列視圖 - 開啟加價 Modal
+  const handleOpenPriceBoost = (trip: Trip) => {
+    setCustomBoostAmount('');
+    setPriceBoostModalTrip(trip);
+  };
+  // 條列視圖 - 執行加價
+  const handleDoPriceBoost = async (amount: number) => {
+    if (!priceBoostModalTrip) return;
+    await updateTripPriceBoost(priceBoostModalTrip.id, amount);
+    await loadData();
+    setPriceBoostModalTrip(null);
+  };
 
   // 狀態標籤 - 綠色風格
   const statusBadge = (status: string) => {
@@ -96,11 +143,11 @@ export default function ControlPage() {
         {/* 操作 - 5 個按鈕 */}
         <td className="px-3 py-3 whitespace-nowrap">
           <div className="flex gap-1">
-            <button className="text-[10px] px-2 py-1 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:text-[#fafaf9] hover:border-[#d4af37]/50">詳情</button>
-            <button className="text-[10px] px-2 py-1 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:text-[#fafaf9] hover:border-[#d4af37]/50">修改</button>
-            <button onClick={() => handleUpdatePrice(trip.id, 100)} className="text-[10px] px-2 py-1 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:text-red-400 hover:border-red-500/50">加價</button>
+            <button onClick={() => handleOpenDetail(trip)} className="text-[10px] px-2 py-1 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:text-[#fafaf9] hover:border-[#d4af37]/50">詳情</button>
+            <button onClick={() => handleOpenEdit(trip)} className="text-[10px] px-2 py-1 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:text-[#fafaf9] hover:border-[#d4af37]/50">修改</button>
+            <button onClick={() => handleOpenPriceBoost(trip)} className="text-[10px] px-2 py-1 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:text-red-400 hover:border-red-500/50">加價</button>
             <button onClick={() => handleAssignDriver(trip.id)} className="text-[10px] px-2 py-1 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:text-[#fafaf9] hover:border-[#d4af37]/50">司機</button>
-            <button className="text-[10px] px-2 py-1 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:text-[#d4af37] hover:border-[#d4af37]/50">聊天</button>
+            <Link href={`/chat/${trip.id}?mode=group`} className="text-[10px] px-2 py-1 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735] hover:text-[#d4af37] hover:border-[#d4af37]/50 inline-block text-center">聊天</Link>
           </div>
         </td>
       </tr>
@@ -130,11 +177,11 @@ export default function ControlPage() {
         </div>
         {/* 第三行：5 個操作按鈕 */}
         <div className="flex gap-1">
-          <button className="flex-1 text-[10px] py-1.5 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735]">詳情</button>
-          <button className="flex-1 text-[10px] py-1.5 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735]">修改</button>
-          <button onClick={() => handleUpdatePrice(trip.id, 100)} className="flex-1 text-[10px] py-1.5 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735]">加價</button>
+          <button onClick={() => handleOpenDetail(trip)} className="flex-1 text-[10px] py-1.5 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735]">詳情</button>
+          <button onClick={() => handleOpenEdit(trip)} className="flex-1 text-[10px] py-1.5 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735]">修改</button>
+          <button onClick={() => handleOpenPriceBoost(trip)} className="flex-1 text-[10px] py-1.5 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735]">加價</button>
           <button onClick={() => handleAssignDriver(trip.id)} className="flex-1 text-[10px] py-1.5 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735]">司機</button>
-          <button className="flex-1 text-[10px] py-1.5 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735]">聊天</button>
+          <Link href={`/chat/${trip.id}?mode=group`} className="flex-1 text-[10px] py-1.5 rounded bg-[#2a2725] text-[#8a8580] border border-[#3a3735] text-center">聊天</Link>
         </div>
       </div>
     );
@@ -297,6 +344,187 @@ export default function ControlPage() {
             <p className="text-[#a8a29e]">沒有符合條件的行程</p>
           </div>
         )
+      )}
+
+      {/* 詳情 Modal */}
+      {detailModalTrip && (() => {
+        const tripOrderNum = `PYU-${(detailModalTrip.service_date || '').replace(/-/g,'').slice(2)}-0001`;
+        return (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="glass-card p-6 w-full max-w-lg mx-4 max-h-[80vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-[#d4af37]">訂單詳情</h3>
+              <button onClick={() => setDetailModalTrip(null)} className="text-[#a8a29e] hover:text-[#fafaf9] text-xl">✕</button>
+            </div>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between border-b border-[#292524] pb-2">
+                <span className="text-[#8a8580]">訂單編號：</span>
+                <span className="text-[#e8e6e3] font-mono">{tripOrderNum}</span>
+              </div>
+              <div className="flex justify-between border-b border-[#292524] pb-2">
+                <span className="text-[#8a8580]">服務類型：</span>
+                <span className="text-[#e8e6e3]">{detailModalTrip.service_type === 'pickup' ? '接機' : '送機'}</span>
+              </div>
+              <div className="flex justify-between border-b border-[#292524] pb-2">
+                <span className="text-[#8a8580]">聯絡人：</span>
+                <span className="text-[#e8e6e3]">{detailModalTrip.contact_name || '-'}</span>
+              </div>
+              <div className="flex justify-between border-b border-[#292524] pb-2">
+                <span className="text-[#8a8580]">聯絡電話：</span>
+                <span className="text-[#e8e6e3]">{detailModalTrip.contact_phone || '-'}</span>
+              </div>
+              <div className="flex justify-between border-b border-[#292524] pb-2">
+                <span className="text-[#8a8580]">航班編號：</span>
+                <span className="text-[#e8e6e3]">{detailModalTrip.flight_number || '-'}</span>
+              </div>
+              <div className="flex justify-between border-b border-[#292524] pb-2">
+                <span className="text-[#8a8580]">乘客人數：</span>
+                <span className="text-[#e8e6e3]">{detailModalTrip.passenger_count}人</span>
+              </div>
+              <div className="flex justify-between border-b border-[#292524] pb-2">
+                <span className="text-[#8a8580]">行李件數：</span>
+                <span className="text-[#e8e6e3]">{detailModalTrip.luggage_count}件</span>
+              </div>
+              <div className="flex justify-between border-b border-[#292524] pb-2">
+                <span className="text-[#8a8580]">服務日期：</span>
+                <span className="text-[#e8e6e3]">{formatDate(detailModalTrip.service_date)} {formatTime(detailModalTrip.service_time)}</span>
+              </div>
+              <div className="flex flex-col border-b border-[#292524] pb-2">
+                <span className="text-[#8a8580]">上車地址：</span>
+                <span className="text-[#e8e6e3]">{detailModalTrip.pickup_address || detailModalTrip.pickup_area || '-'}</span>
+              </div>
+              <div className="flex flex-col border-b border-[#292524] pb-2">
+                <span className="text-[#8a8580]">下车地址：</span>
+                <span className="text-[#e8e6e3]">{detailModalTrip.dropoff_address || detailModalTrip.dropoff_area || '-'}</span>
+              </div>
+              <div className="flex justify-between border-b border-[#292524] pb-2">
+                <span className="text-[#8a8580]">應收金額：</span>
+                <span className="text-[#d4af37] font-bold">${detailModalTrip.amount}</span>
+              </div>
+              {detailModalTrip.price_boost && detailModalTrip.price_boost > 0 && (
+                <div className="flex justify-between border-b border-[#292524] pb-2">
+                  <span className="text-[#8a8580]">加價金額：</span>
+                  <span className="text-red-400 font-bold">+${detailModalTrip.price_boost}</span>
+                </div>
+              )}
+              {detailModalTrip.note && (
+                <div className="flex flex-col pt-1">
+                  <span className="text-[#8a8580]">備註：</span>
+                  <span className="text-[#e8e6e3]">{detailModalTrip.note}</span>
+                </div>
+              )}
+              {detailModalTrip.driver && (
+                <>
+                  <div className="flex justify-between border-t border-[#292524] pt-3 mt-2">
+                    <span className="text-[#8a8580]">司機：</span>
+                    <span className="text-[#e8e6e3]">{detailModalTrip.driver.name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#8a8580]">車輛：</span>
+                    <span className="text-[#e8e6e3]">{detailModalTrip.driver.car_color} {detailModalTrip.driver.car_plate}</span>
+                  </div>
+                </>
+              )}
+            </div>
+            <button onClick={() => setDetailModalTrip(null)}
+              className="mt-6 w-full py-2 bg-[#2a2725] text-[#a8a29e] rounded-lg border border-[#3a3735] hover:text-[#fafaf9] transition-colors">
+              關閉
+            </button>
+          </div>
+        </div>
+        );
+      })()}
+
+      {/* 編輯 Modal */}
+      {editModalTrip && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="glass-card p-6 w-full max-w-lg mx-4 max-h-[80vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-[#d4af37]">修改訂單</h3>
+              <button onClick={() => setEditModalTrip(null)} className="text-[#a8a29e] hover:text-[#fafaf9] text-xl">✕</button>
+            </div>
+            <div className="space-y-3 text-sm">
+              <div>
+                <label className="text-[#8a8580] block mb-1">航班編號</label>
+                <input type="text" value={editForm.flight_number} onChange={e => setEditForm({...editForm, flight_number: e.target.value})}
+                  className="w-full px-3 py-2 bg-[#1e1c1a] border border-[#3a3735] rounded text-[#e8e6e3] focus:border-[#d4af37]/50 focus:outline-none" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[#8a8580] block mb-1">乘客人數</label>
+                  <input type="number" value={editForm.passenger_count} onChange={e => setEditForm({...editForm, passenger_count: parseInt(e.target.value) || 1})}
+                    className="w-full px-3 py-2 bg-[#1e1c1a] border border-[#3a3735] rounded text-[#e8e6e3] focus:border-[#d4af37]/50 focus:outline-none" />
+                </div>
+                <div>
+                  <label className="text-[#8a8580] block mb-1">行李件數</label>
+                  <input type="number" value={editForm.luggage_count} onChange={e => setEditForm({...editForm, luggage_count: parseInt(e.target.value) || 0})}
+                    className="w-full px-3 py-2 bg-[#1e1c1a] border border-[#3a3735] rounded text-[#e8e6e3] focus:border-[#d4af37]/50 focus:outline-none" />
+                </div>
+              </div>
+              <div>
+                <label className="text-[#8a8580] block mb-1">上車地址</label>
+                <input type="text" value={editForm.pickup_address} onChange={e => setEditForm({...editForm, pickup_address: e.target.value})}
+                  className="w-full px-3 py-2 bg-[#1e1c1a] border border-[#3a3735] rounded text-[#e8e6e3] focus:border-[#d4af37]/50 focus:outline-none" />
+              </div>
+              <div>
+                <label className="text-[#8a8580] block mb-1">下车地址</label>
+                <input type="text" value={editForm.dropoff_address} onChange={e => setEditForm({...editForm, dropoff_address: e.target.value})}
+                  className="w-full px-3 py-2 bg-[#1e1c1a] border border-[#3a3735] rounded text-[#e8e6e3] focus:border-[#d4af37]/50 focus:outline-none" />
+              </div>
+              <div>
+                <label className="text-[#8a8580] block mb-1">備註</label>
+                <textarea value={editForm.note} onChange={e => setEditForm({...editForm, note: e.target.value})} rows={3}
+                  className="w-full px-3 py-2 bg-[#1e1c1a] border border-[#3a3735] rounded text-[#e8e6e3] focus:border-[#d4af37]/50 focus:outline-none resize-none" />
+              </div>
+            </div>
+            <div className="flex gap-3 mt-6">
+              <button onClick={() => setEditModalTrip(null)}
+                className="flex-1 py-2 bg-[#2a2725] text-[#a8a29e] rounded-lg border border-[#3a3735] hover:text-[#fafaf9] transition-colors">
+                取消
+              </button>
+              <button onClick={handleSaveEdit}
+                className="flex-1 py-2 bg-[#d4af37] text-[#0c0a09] rounded-lg font-bold hover:bg-[#e8c44a] transition-colors">
+                儲存修改
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 加價 Modal */}
+      {priceBoostModalTrip && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="glass-card p-6 w-full max-w-md mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-[#d4af37]">加價功能</h3>
+              <button onClick={() => setPriceBoostModalTrip(null)} className="text-[#a8a29e] hover:text-[#fafaf9] text-xl">✕</button>
+            </div>
+            <div className="grid grid-cols-4 gap-2 mb-4">
+              {[100, 200, 300, 400, 500, 600, 800, 1000].map(amount => (
+                <button key={amount} onClick={() => handleDoPriceBoost(amount)}
+                  className="py-2 text-sm bg-[#2a2725] text-[#c8c0b8] rounded border border-[#3a3735] hover:bg-[#d4af37] hover:text-[#0c0a09] transition-all font-medium">
+                  +${amount}
+                </button>
+              ))}
+            </div>
+            <div className="border-t border-[#292524] pt-4">
+              <label className="text-[#8a8580] text-sm block mb-2">自訂金額</label>
+              <div className="flex gap-2">
+                <input type="number" value={customBoostAmount} onChange={e => setCustomBoostAmount(e.target.value)} placeholder="輸入金額"
+                  className="flex-1 px-3 py-2 bg-[#1e1c1a] border border-[#3a3735] rounded text-[#e8e6e3] placeholder-[#5a5550] focus:border-[#d4af37]/50 focus:outline-none" />
+                <button onClick={() => handleDoPriceBoost(parseInt(customBoostAmount) || 0)}
+                  className="px-4 py-2 bg-[#d4af37] text-[#0c0a09] rounded font-bold text-sm hover:bg-[#e8c44a]">
+                  確定
+                </button>
+              </div>
+            </div>
+            {priceBoostModalTrip.price_boost && priceBoostModalTrip.price_boost > 0 && (
+              <div className="mt-4 pt-3 border-t border-[#292524] text-center">
+                <span className="text-red-400 text-sm font-medium">目前加價：${priceBoostModalTrip.price_boost}</span>
+              </div>
+            )}
+          </div>
+        </div>
       )}
 
       {/* 派單 Modal */}
