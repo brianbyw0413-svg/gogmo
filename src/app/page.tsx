@@ -239,8 +239,8 @@ export default function HomePage() {
           </Link>
           <div className="flex items-center gap-2 text-xs">
             <Link href="/lobby" className="text-[#a8a29e] hover:text-[#d4af37]">接單大廳</Link>
-            <a href="https://auth.line.me/oauth/authorize?response_type=code&client_id=2009340718&redirect_uri=https%3A%2F%2Fgmo.zeabur.app%2Fdriver%2Fline-callback&state=gmo_login" className="px-3 py-1.5 bg-[#d4af37] text-[#0c0a09] rounded font-bold">司機登入</a>
-            <a href="https://auth.line.me/oauth/authorize?response_type=code&client_id=2009340718&redirect_uri=https%3A%2F%2Fgmo.zeabur.app%2Fdriver%2Fline-callback&state=dispatcher" className="px-3 py-1.5 bg-[#d4af37] text-[#0c0a09] rounded font-bold">調度登入</a>
+            <Link href="/driver" className="px-3 py-1.5 bg-[#d4af37] text-[#0c0a09] rounded font-bold">司機登入</Link>
+            <Link href="/dashboard" className="px-3 py-1.5 bg-[#d4af37] text-[#0c0a09] rounded font-bold">調度登入</Link>
             <Link href="/admin/login" className="text-xs text-[#5a5550] hover:text-[#a8a29e]">管理</Link>
           </div>
         </div>
