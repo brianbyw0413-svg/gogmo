@@ -21,7 +21,14 @@ function LineCallbackContent() {
     const state = searchParams.get('state') || 'driver';
 
     if (!code) {
-      setError('無法取得授權碼');
+      // 檢查是否有錯誤
+      const error = searchParams.get('error');
+      const errorMessage = searchParams.get('error_message');
+      if (error) {
+        setError(`${error}: ${errorMessage || 'LINE 登入失敗'}`);
+      } else {
+        setError('無法取得授權碼');
+      }
       setLoading(false);
       return;
     }
@@ -48,6 +55,7 @@ function LineCallbackContent() {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log('Token response:', data);
         if (data.access_token) {
           // Get user profile
           return fetch('https://api.line.me/v2/profile', {
@@ -56,7 +64,7 @@ function LineCallbackContent() {
             },
           });
         } else {
-          throw new Error(data.error_description || '取得 access token 失敗');
+          throw new Error(data.error_description || '取得 access token 失敗: ' + JSON.stringify(data));
         }
       })
       .then((res) => res.json())
