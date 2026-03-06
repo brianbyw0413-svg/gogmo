@@ -207,10 +207,10 @@ export default function HomePage() {
 
   // 副標題列表 - 隨機顯示（僅刷新時變化）
   const subtitles = [
-    'Come to GMO ， be a free driver！',
-    '來GMO接單，做個自由的司機。',
-    '來GMO，訂單不寂寞！',
-    'Come to GMO ，find a good driver！',
+    '-Come to GMO，be a free driver！',
+    '-來GMO接單 做個自由的司機-',
+    '-來GMO 開車不寂寞-',
+    '-Come to GMO，find your driver-',
   ];
   const [subtitleIndex] = useState(() => Math.floor(Math.random() * subtitles.length));
 
