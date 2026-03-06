@@ -56,7 +56,12 @@ function RegisterContent() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    // 車號和車型自動轉大寫
+    let newValue = value;
+    if (name === 'licensePlate' || name === 'carModel') {
+      newValue = value.toUpperCase();
+    }
+    setFormData(prev => ({ ...prev, [name]: newValue }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof typeof files) => {
