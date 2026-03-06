@@ -1,8 +1,9 @@
 // 司機端首頁 — 登入 / Dashboard
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useDriver } from '@/lib/driverContext';
 
 export default function DriverPage() {
@@ -15,9 +16,27 @@ export default function DriverPage() {
     getSmartMatches,
   } = useDriver();
 
+  const searchParams = useSearchParams();
+  const lineLogin = searchParams.get('line_login') === 'true';
+
   const [name, setName] = useState('');
   const [plate, setPlate] = useState('');
   const [error, setError] = useState('');
+
+  // LINE Login 回來時自動帶入 LINE 名稱
+  useEffect(() => {
+    if (lineLogin) {
+      const lineUser = localStorage.getItem('gmo_line_user');
+      if (lineUser) {
+        try {
+          const profile = JSON.parse(lineUser);
+          setName(profile.displayName || '');
+        } catch (e) {
+          console.error('Failed to parse LINE user:', e);
+        }
+      }
+    }
+  }, [lineLogin]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,6 +63,11 @@ export default function DriverPage() {
 
           {/* 登入表單 */}
           <form onSubmit={handleLogin} className="space-y-4">
+            {lineLogin && (
+              <div className="bg-[#d4af37]/10 border border-[#d4af37]/30 rounded-lg p-3 text-sm text-[#d4af37]">
+                ✨ 已透過 LINE 登入，請輸入車牌號碼完成绑定
+              </div>
+            )}
             <div>
               <label className="block text-sm text-[#a8a29e] mb-2">LINE 名稱</label>
               <input
