@@ -175,6 +175,83 @@ function AnimatedTripCard({ trip, index, allTrips }: { trip: Trip | null; index:
   );
 }
 
+// 逐字滑出動畫副標題組件
+function TypewriterSubtitle({ text }: { text: string }) {
+  const [displayedChars, setDisplayedChars] = useState<string[]>([]);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  // 解析文字，標記 GMO 位置
+  const parseText = (str: string) => {
+    const parts: { text: string; isGMO: boolean }[] = [];
+    const gmoRegex = /GMO/g;
+    let lastIndex = 0;
+    let match;
+    
+    while ((match = gmoRegex.exec(str)) !== null) {
+      if (match.index > lastIndex) {
+        parts.push({ text: str.slice(lastIndex, match.index), isGMO: false });
+      }
+      parts.push({ text: 'GMO', isGMO: true });
+      lastIndex = match.index + 3;
+    }
+    if (lastIndex < str.length) {
+      parts.push({ text: str.slice(lastIndex), isGMO: false });
+    }
+    return parts;
+  };
+
+  const parsedParts = parseText(text);
+
+  useEffect(() => {
+    // 重置
+    setDisplayedChars([]);
+    setIsAnimating(true);
+
+    // 逐字顯示
+    let charIndex = 0;
+    const totalChars = text.length;
+    
+    const interval = setInterval(() => {
+      if (charIndex < totalChars) {
+        setDisplayedChars(text.slice(0, charIndex + 1));
+        charIndex++;
+      } else {
+        clearInterval(interval);
+        setIsAnimating(false);
+      }
+    }, 80); // 每個字 80ms
+
+    return () => clearInterval(interval);
+  }, [text]);
+
+  // 渲染結果
+  const renderTypedText = () => {
+    const typed = displayedChars;
+    const result: JSX.Element[] = [];
+    let keyIdx = 0;
+
+    // 對每個顯示的字元檢查是否為 GMO 的一部分
+    let i = 0;
+    while (i < typed.length) {
+      if (typed.slice(i, i + 3) === 'GMO') {
+        result.push(<span key={keyIdx++} className="text-[#fde047]">GMO</span>);
+        i += 3;
+      } else {
+        result.push(<span key={keyIdx++}>{typed[i]}</span>);
+        i++;
+      }
+    }
+    return result;
+  };
+
+  return (
+    <span className="inline-block min-h-[1.5em]">
+      {renderTypedText()}
+      {isAnimating && <span className="animate-pulse">|</span>}
+    </span>
+  );
+}
+
 export default function HomePage() {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
@@ -263,9 +340,7 @@ export default function HomePage() {
               <span className="text-[#fde047]">G</span>O！<span className="text-[#fde047]">G</span>et<span className="text-[#fde047]">M</span>ore<span className="text-[#fde047]">O</span>rders！
             </h1>
             <p className="text-sm md:text-lg text-[#fafaf9] h-6">
-              <span className="transition-opacity duration-500">
-                {renderSubtitle(subtitles[subtitleIndex].text)}
-              </span>
+              <TypewriterSubtitle text={subtitles[subtitleIndex].text} />
             </p>
           </div>
 
