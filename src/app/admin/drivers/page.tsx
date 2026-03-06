@@ -6,7 +6,9 @@ import { supabase } from '@/lib/supabase';
 
 interface Driver {
   id: string;
+  driver_number: string;
   line_name: string;
+  line_picture_url: string;
   name: string;
   phone: string;
   license_plate: string;
@@ -19,6 +21,11 @@ interface Driver {
   vehicle_reg_expiry: string;
   insurance_url: string;
   insurance_expiry: string;
+  good_conduct_url: string;
+  no_accident_url: string;
+  bank_name: string;
+  bank_code: string;
+  bank_account: string;
   status: string;
   created_at: string;
 }
@@ -140,6 +147,9 @@ export default function AdminDriversPage() {
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-[#fafaf9]">{driver.name}</span>
+                      {driver.driver_number && (
+                        <span className="text-xs text-[#d4af37]">{driver.driver_number}</span>
+                      )}
                       {getStatusBadge(driver.status)}
                     </div>
                     <div className="text-sm text-[#a8a29e]">
@@ -172,6 +182,10 @@ export default function AdminDriversPage() {
                   <h3 className="text-sm font-medium text-[#a8a29e] mb-3">基本資料</h3>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
+                      <span className="text-[#78716c]">司機編號：</span>
+                      <span className="text-[#d4af37] font-bold">{selectedDriver.driver_number || '尚未編號'}</span>
+                    </div>
+                    <div>
                       <span className="text-[#78716c]">LINE 名稱：</span>
                       <span className="text-[#fafaf9]">{selectedDriver.line_name}</span>
                     </div>
@@ -182,6 +196,25 @@ export default function AdminDriversPage() {
                     <div>
                       <span className="text-[#78716c]">電話：</span>
                       <span className="text-[#fafaf9]">{selectedDriver.phone}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 銀行資料 */}
+                <div>
+                  <h3 className="text-sm font-medium text-[#a8a29e] mb-3">銀行資料</h3>
+                  <div className="grid grid-cols-3 gap-4 text-sm">
+                    <div>
+                      <span className="text-[#78716c]">銀行：</span>
+                      <span className="text-[#fafaf9]">{selectedDriver.bank_name || '-'}</span>
+                    </div>
+                    <div>
+                      <span className="text-[#78716c]">代碼：</span>
+                      <span className="text-[#fafaf9]">{selectedDriver.bank_code || '-'}</span>
+                    </div>
+                    <div>
+                      <span className="text-[#78716c]">帳號：</span>
+                      <span className="text-[#fafaf9]">{selectedDriver.bank_account || '-'}</span>
                     </div>
                   </div>
                 </div>
@@ -278,6 +311,42 @@ export default function AdminDriversPage() {
                         </a>
                       )}
                     </div>
+
+                    {/* 良民證 */}
+                    <div className="flex items-center justify-between p-3 bg-[#292524] rounded-lg">
+                      <div>
+                        <p className="text-[#fafaf9]">良民證 <span className="text-xs text-[#78716c]">（選傳）</span></p>
+                      </div>
+                      {selectedDriver.good_conduct_url ? (
+                        <a
+                          href={selectedDriver.good_conduct_url}
+                          target="_blank"
+                          className="text-[#d4af37] text-sm hover:underline"
+                        >
+                          查看
+                        </a>
+                      ) : (
+                        <span className="text-xs text-[#78716c]">未上傳</span>
+                      )}
+                    </div>
+
+                    {/* 無肇事紀錄 */}
+                    <div className="flex items-center justify-between p-3 bg-[#292524] rounded-lg">
+                      <div>
+                        <p className="text-[#fafaf9]">無肇事紀錄 <span className="text-xs text-[#78716c]">（選傳）</span></p>
+                      </div>
+                      {selectedDriver.no_accident_url ? (
+                        <a
+                          href={selectedDriver.no_accident_url}
+                          target="_blank"
+                          className="text-[#d4af37] text-sm hover:underline"
+                        >
+                          查看
+                        </a>
+                      ) : (
+                        <span className="text-xs text-[#78716c]">未上傳</span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -288,26 +357,35 @@ export default function AdminDriversPage() {
                   {action ? (
                     <div className="space-y-4">
                       {action === 'reject' && (
-                        <textarea
-                          value={reason}
-                          onChange={(e) => setReason(e.target.value)}
-                          placeholder="請輸入駁回原因..."
-                          className="input-dark w-full h-24"
-                        />
+                        <div>
+                          <label className="block text-sm text-[#a8a29e] mb-2">駁回原因</label>
+                          <select
+                            value={reason}
+                            onChange={(e) => setReason(e.target.value)}
+                            className="input-dark w-full"
+                          >
+                            <option value="">請選擇駁回原因</option>
+                            <option value="證件不符">證件不符</option>
+                            <option value="證件過期">證件過期</option>
+                            <option value="資料填寫錯誤">資料填寫錯誤</option>
+                            <option value="其他">其他</option>
+                          </select>
+                        </div>
                       )}
                       <div className="flex gap-3">
                         <button
                           onClick={handleAction}
+                          disabled={action === 'reject' && !reason}
                           className={`flex-1 py-3 rounded-lg font-medium ${
                             action === 'approve'
                               ? 'bg-green-500 text-white'
                               : 'bg-red-500 text-white'
-                          }`}
+                          } disabled:opacity-50`}
                         >
                           確認{action === 'approve' ? '核准' : '駁回'}
                         </button>
                         <button
-                          onClick={() => setAction(null)}
+                          onClick={() => { setAction(null); setReason(''); }}
                           className="flex-1 py-3 bg-[#292524] text-[#a8a29e] rounded-lg"
                         >
                           取消

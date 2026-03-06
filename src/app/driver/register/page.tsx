@@ -22,11 +22,14 @@ function RegisterContent() {
     phone: '',
     licensePlate: '',
     carModel: '',
-    seats: 4,
+    seats: 5,
     carColor: '',
     driverLicenseExpiry: '',
     vehicleRegExpiry: '',
     insuranceExpiry: '',
+    bankName: '',
+    bankCode: '',
+    bankAccount: '',
   });
   
   // 檔案
@@ -34,12 +37,16 @@ function RegisterContent() {
     driverLicense: null as File | null,
     vehicleReg: null as File | null,
     insurance: null as File | null,
+    goodConduct: null as File | null,    // 良民證
+    noAccident: null as File | null,    // 無肇事紀錄
   });
   
   const [uploadProgress, setUploadProgress] = useState({
     driverLicense: false,
     vehicleReg: false,
     insurance: false,
+    goodConduct: false,
+    noAccident: false,
   });
 
   useEffect(() => {
@@ -120,9 +127,26 @@ function RegisterContent() {
         setUploadProgress(prev => ({ ...prev, insurance: false }));
       }
 
+      // 選傳證件
+      if (files.goodConduct) {
+        setUploadProgress(prev => ({ ...prev, goodConduct: true }));
+        urls.good_conduct_url = await uploadFile(files.goodConduct, driverId, 'good_conduct');
+        setUploadProgress(prev => ({ ...prev, goodConduct: false }));
+      }
+      
+      if (files.noAccident) {
+        setUploadProgress(prev => ({ ...prev, noAccident: true }));
+        urls.no_accident_url = await uploadFile(files.noAccident, driverId, 'no_accident');
+        setUploadProgress(prev => ({ ...prev, noAccident: false }));
+      }
+
+      // 產生司機編號 FDXXXX
+      const driverNumber = 'FD' + Math.floor(1000 + Math.random() * 9000);
+
       // 儲存司機資料
       const { error: insertError } = await supabase.from('drivers').insert({
         id: driverId,
+        driver_number: driverNumber,
         line_id: lineUser?.userId,
         line_name: lineUser?.displayName,
         line_picture_url: lineUser?.pictureUrl,
@@ -138,6 +162,11 @@ function RegisterContent() {
         vehicle_reg_expiry: formData.vehicleRegExpiry || null,
         insurance_url: urls.insurance_url,
         insurance_expiry: formData.insuranceExpiry || null,
+        good_conduct_url: urls.good_conduct_url || null,
+        no_accident_url: urls.no_accident_url || null,
+        bank_name: formData.bankName,
+        bank_code: formData.bankCode,
+        bank_account: formData.bankAccount,
         status: 'pending',
       });
 
@@ -270,11 +299,9 @@ function RegisterContent() {
                     onChange={handleInputChange}
                     className="input-dark w-full"
                   >
-                    <option value={4}>4 人座</option>
                     <option value={5}>5 人座</option>
                     <option value={6}>6 人座</option>
                     <option value={7}>7 人座</option>
-                    <option value={8}>8 人座</option>
                     <option value={9}>9 人座</option>
                   </select>
                 </div>
@@ -354,6 +381,84 @@ function RegisterContent() {
                   onChange={handleInputChange}
                   className="input-dark w-full mt-2"
                   placeholder="到期日（選填）"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* 銀行資料 */}
+          <div className="glass-card p-6">
+            <h2 className="text-lg font-semibold text-[#fafaf9] mb-4">銀行資料</h2>
+            <div className="grid gap-4">
+              <div>
+                <label className="block text-sm text-[#a8a29e] mb-2">銀行名稱 *</label>
+                <input
+                  type="text"
+                  name="bankName"
+                  value={formData.bankName}
+                  onChange={handleInputChange}
+                  required
+                  className="input-dark w-full"
+                  placeholder="例如：玉山銀行"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-[#a8a29e] mb-2">銀行代碼 *</label>
+                <input
+                  type="text"
+                  name="bankCode"
+                  value={formData.bankCode}
+                  onChange={handleInputChange}
+                  required
+                  className="input-dark w-full"
+                  placeholder="例如：808"
+                  maxLength={3}
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-[#a8a29e] mb-2">銀行帳號 *</label>
+                <input
+                  type="text"
+                  name="bankAccount"
+                  value={formData.bankAccount}
+                  onChange={handleInputChange}
+                  required
+                  className="input-dark w-full"
+                  placeholder="帳號"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* 選傳證件（提升派單優先權） */}
+          <div className="glass-card p-6">
+            <h2 className="text-lg font-semibold text-[#fafaf9] mb-4">
+              選傳證件 <span className="text-sm text-[#d4af37]">（非強制，有助提升派單優先權）</span>
+            </h2>
+            <div className="space-y-6">
+              {/* 良民證 */}
+              <div>
+                <label className="block text-sm text-[#a8a29e] mb-2">
+                  良民證 <span className="text-xs text-[#78716c]">（非強制）</span>
+                </label>
+                <input
+                  type="file"
+                  accept="image/*,.pdf"
+                  onChange={(e) => handleFileChange(e, 'goodConduct')}
+                  className="input-dark w-full file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#292524] file:text-[#a8a29e] file:font-medium"
+                />
+              </div>
+
+              {/* 無肇事紀錄 */}
+              <div>
+                <label className="block text-sm text-[#a8a29e] mb-2">
+                  無肇事紀錄 <span className="text-xs text-[#78716c]">（非強制）</span>
+                </label>
+                <input
+                  type="file"
+                  accept="image/*,.pdf"
+                  onChange={(e) => handleFileChange(e, 'noAccident')}
+                  className="input-dark w-full file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#292524] file:text-[#a8a29e] file:font-medium"
                 />
               </div>
             </div>
