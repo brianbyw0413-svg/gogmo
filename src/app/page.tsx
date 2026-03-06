@@ -255,7 +255,7 @@ export default function HomePage() {
               <span className="text-[#fde047]">Go</span>！<span className="text-[#fde047]">G</span>et<span className="text-[#fde047]">M</span>ore<span className="text-[#fde047]">O</span>rders！
             </h1>
             <p className="text-sm md:text-lg text-[#a8a29e] h-6">
-              「{renderSubtitle(subtitles[subtitleIndex])}」
+              {renderSubtitle(subtitles[subtitleIndex])}
             </p>
           </div>
 
