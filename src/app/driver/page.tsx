@@ -3,10 +3,12 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useDriver } from '@/lib/driverContext';
+import { supabase } from '@/lib/supabase';
 
 function DriverPageContent() {
+  const router = useRouter();
   const {
     driver,
     isLoggedIn,
@@ -23,7 +25,7 @@ function DriverPageContent() {
   const [plate, setPlate] = useState('');
   const [error, setError] = useState('');
 
-  // LINE Login 回來時自動帶入 LINE 名稱
+  // LINE Login 回來時自動帶入 LINE 名稱，並檢查是否已註冊
   useEffect(() => {
     if (lineLogin) {
       const lineUser = localStorage.getItem('gmo_line_user');
@@ -31,12 +33,37 @@ function DriverPageContent() {
         try {
           const profile = JSON.parse(lineUser);
           setName(profile.displayName || '');
+          // 檢查是否已註冊
+          checkRegistration(profile.userId);
         } catch (e) {
           console.error('Failed to parse LINE user:', e);
         }
       }
     }
   }, [lineLogin]);
+
+  const checkRegistration = async (lineId: string) => {
+    // 檢查此 LINE ID 是否已註冊
+    const { data } = await supabase
+      .from('drivers')
+      .select('id, status')
+      .eq('line_id', lineId)
+      .single();
+    
+    if (data) {
+      if (data.status === 'approved') {
+        // 已核准，正常登入
+        return;
+      } else if (data.status === 'pending') {
+        setError('您的資料已提交審核，請耐心等待管理員確認。');
+      } else if (data.status === 'rejected') {
+        setError('您的申請已被駁回，請重新註冊。');
+      }
+    } else {
+      // 未註冊，導向註冊頁面
+      router.push('/driver/register?line_login=true');
+    }
+  };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,10 +124,16 @@ function DriverPageContent() {
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <Link href="/" className="text-sm text-[#a8a29e] hover:text-[#d4af37]">
-              ← 返回首頁
+          <div className="mt-6 text-center space-y-2">
+            <p className="text-sm text-[#a8a29e]">還沒註冊嗎？</p>
+            <Link href="/driver/register" className="text-sm text-[#d4af37] hover:underline">
+              立即註冊 →
             </Link>
+            <div>
+              <Link href="/" className="text-sm text-[#a8a29e] hover:text-[#d4af37]">
+                ← 返回首頁
+              </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -241,6 +241,7 @@ export default function HomePage() {
             <Link href="/lobby" className="text-[#a8a29e] hover:text-[#d4af37]">接單大廳</Link>
             <Link href="https://auth.line.me/oauth/authorize?response_type=code&client_id=2009340718&redirect_uri=https%3A%2F%2Fgmo.zeabur.app%2Fdriver%2Fline-callback&state=gmo_login" className="text-[#a8a29e] hover:text-[#d4af37]">司機登入</Link>
             <Link href="/dashboard" className="px-3 py-1.5 bg-[#d4af37] text-[#0c0a09] rounded font-bold text-xs">車頭登入</Link>
+            <Link href="/admin/login" className="text-xs text-[#5a5550] hover:text-[#a8a29e]">管理</Link>
           </div>
         </div>
       </header>
