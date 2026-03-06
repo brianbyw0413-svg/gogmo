@@ -310,9 +310,9 @@ export default function HomePage() {
 
           {/* CTA */}
           <div className="text-center">
-            <Link href="/driver/register" className="inline-block px-6 py-3 bg-gradient-to-r from-[#d4af37] to-[#e8c44a] text-[#0c0a09] rounded-xl font-bold text-sm md:text-base shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all">
+            <a href="https://line.me/R/@627exwrq" className="inline-block px-6 py-3 bg-gradient-to-r from-[#d4af37] to-[#e8c44a] text-[#0c0a09] rounded-xl font-bold text-sm md:text-base shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all">
               加入GMO，一起開車
-            </Link>
+            </a>
           </div>
         </div>
       </main>
