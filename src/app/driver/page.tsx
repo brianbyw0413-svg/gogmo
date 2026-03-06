@@ -1,12 +1,12 @@
 // 司機端首頁 — 登入 / Dashboard
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useDriver } from '@/lib/driverContext';
 
-export default function DriverPage() {
+function DriverPageContent() {
   const {
     driver,
     isLoggedIn,
@@ -204,5 +204,14 @@ export default function DriverPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+// 包裹 Suspense boundary
+export default function DriverPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#0c0a09]"><div className="text-[#a8a29e]">載入中...</div></div>}>
+      <DriverPageContent />
+    </Suspense>
   );
 }
