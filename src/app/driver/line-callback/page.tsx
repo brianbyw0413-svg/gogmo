@@ -4,8 +4,11 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-const CHANNEL_ID = '2009340718';
-const CHANNEL_SECRET = '96edf72369f40752fdbf3b03b4aca7a7';
+// Channel IDs
+const DRIVER_CHANNEL_ID = '2009340718';
+const DISPATCHER_CHANNEL_ID = '2009277112';
+// 請填入 GMO-Dispatcher 的 Channel Secret
+const DISPATCHER_CHANNEL_SECRET = 'YOUR_DISPATCHER_CHANNEL_SECRET';
 
 function LineCallbackContent() {
   const searchParams = useSearchParams();
@@ -15,13 +18,19 @@ function LineCallbackContent() {
 
   useEffect(() => {
     const code = searchParams.get('code');
-    const state = searchParams.get('state');
+    const state = searchParams.get('state') || 'driver';
 
     if (!code) {
       setError('無法取得授權碼');
       setLoading(false);
       return;
     }
+
+    // 根據 state 決定使用哪個 Channel
+    const isDispatcher = state === 'dispatcher';
+    const channelId = isDispatcher ? DISPATCHER_CHANNEL_ID : DRIVER_CHANNEL_ID;
+    const channelSecret = isDispatcher ? DISPATCHER_CHANNEL_SECRET : '96edf72369f40752fdbf3b03b4aca7a7';
+    const redirectUri = `${window.location.origin}/driver/line-callback`;
 
     // Exchange code for access token
     fetch('https://api.line.me/oauth2/v2.1/token', {
@@ -32,9 +41,9 @@ function LineCallbackContent() {
       body: new URLSearchParams({
         grant_type: 'authorization_code',
         code,
-        redirect_uri: `${window.location.origin}/driver/line-callback`,
-        client_id: CHANNEL_ID,
-        client_secret: CHANNEL_SECRET,
+        redirect_uri: redirectUri,
+        client_id: channelId,
+        client_secret: channelSecret,
       }),
     })
       .then((res) => res.json())
@@ -54,7 +63,8 @@ function LineCallbackContent() {
       .then((profile) => {
         // Store LINE info and redirect based on state
         localStorage.setItem('gmo_line_user', JSON.stringify(profile));
-        const state = searchParams.get('state');
+        localStorage.setItem('gmo_login_type', state);
+        
         if (state === 'dispatcher') {
           router.push('/dashboard?line_login=true');
         } else {
@@ -84,7 +94,7 @@ function LineCallbackContent() {
         <div className="text-red-500 mb-4">⚠️</div>
         <h1 className="text-xl font-bold text-[#fafaf9] mb-2">登入失敗</h1>
         <p className="text-[#a8a29e] mb-4">{error}</p>
-        <a href="/driver" className="btn-gold inline-block">返回登入頁</a>
+        <a href="/" className="btn-gold inline-block">返回首頁</a>
       </div>
     </div>
   );
