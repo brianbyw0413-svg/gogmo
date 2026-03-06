@@ -310,10 +310,10 @@ export default function HomePage() {
 
           {/* CTA */}
           <div className="text-center space-y-3">
-            <a href="https://lin.ee/te3BuUwK" className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#d4af37] to-[#e8c44a] text-[#0c0a09] rounded-lg font-bold text-xs md:text-sm shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all block max-w-md mx-auto">
+            <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2009340718&redirect_uri=https%3A%2F%2Fgmo.zeabur.app%2Fdriver%2Fline-callback&state=driver_register&scope=profile%20openid&bot_prompt=normal" className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#d4af37] to-[#e8c44a] text-[#0c0a09] rounded-lg font-bold text-xs md:text-sm shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all block max-w-md mx-auto">
               我是司機，我想加入GMO一起開車
             </a>
-            <a href="https://lin.ee/te3BuUwK" className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#d4af37] to-[#e8c44a] text-[#0c0a09] rounded-lg font-bold text-xs md:text-sm shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all block max-w-md mx-auto">
+            <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2009277112&redirect_uri=https%3A%2F%2Fgmo.zeabur.app%2Fdriver%2Fline-callback&state=dispatcher_register&scope=profile%20openid&bot_prompt=normal" className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#d4af37] to-[#e8c44a] text-[#0c0a09] rounded-lg font-bold text-xs md:text-sm shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all block max-w-md mx-auto">
               我是調度員，我想加入GMO快速派單
             </a>
           </div>

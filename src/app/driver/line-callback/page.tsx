@@ -69,13 +69,22 @@ function LineCallbackContent() {
       })
       .then((res) => res.json())
       .then((profile) => {
-        // Store LINE info and redirect based on state
+        // Store LINE info
         localStorage.setItem('gmo_line_user', JSON.stringify(profile));
         localStorage.setItem('gmo_login_type', state);
         
-        if (state === 'dispatcher') {
+        // 根據 state 決定導向
+        if (state === 'driver_register') {
+          // 司機註冊 → 導向註冊頁面
+          router.push('/driver/register?line_login=true');
+        } else if (state === 'dispatcher_register') {
+          // 調度註冊 → 導向註冊頁面
+          router.push('/driver/register-dispatcher?line_login=true');
+        } else if (state === 'dispatcher') {
+          // 調度登入 → 車頭後台
           router.push('/dashboard?line_login=true');
         } else {
+          // 司機登入 → 司機頁面
           router.push('/driver?line_login=true');
         }
       })
