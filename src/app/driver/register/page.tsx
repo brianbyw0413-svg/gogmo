@@ -340,7 +340,7 @@ function RegisterContent() {
                   value={formData.driverLicenseExpiry}
                   onChange={handleInputChange}
                   className="input-dark w-full mt-2"
-                  placeholder="到期日（選填）"
+                  placeholder="請填證件/保險到期日期"
                 />
               </div>
 
@@ -360,7 +360,7 @@ function RegisterContent() {
                   value={formData.vehicleRegExpiry}
                   onChange={handleInputChange}
                   className="input-dark w-full mt-2"
-                  placeholder="到期日（選填）"
+                  placeholder="請填證件/保險到期日期"
                 />
               </div>
 
@@ -380,7 +380,7 @@ function RegisterContent() {
                   value={formData.insuranceExpiry}
                   onChange={handleInputChange}
                   className="input-dark w-full mt-2"
-                  placeholder="到期日（選填）"
+                  placeholder="請填證件/保險到期日期"
                 />
               </div>
             </div>
