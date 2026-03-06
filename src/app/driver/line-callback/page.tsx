@@ -1,13 +1,13 @@
 // LINE Login callback page
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 const CHANNEL_ID = '2009340718';
 const CHANNEL_SECRET = '96edf72369f40752fdbf3b03b4aca7a7';
 
-export default function LineCallbackPage() {
+function LineCallbackContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [error, setError] = useState('');
@@ -83,5 +83,13 @@ export default function LineCallbackPage() {
         <a href="/driver" className="btn-gold inline-block">返回登入頁</a>
       </div>
     </div>
+  );
+}
+
+export default function LineCallbackPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#0c0a09]"><div className="text-[#a8a29e]">載入中...</div></div>}>
+      <LineCallbackContent />
+    </Suspense>
   );
 }
