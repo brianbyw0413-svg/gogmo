@@ -247,7 +247,7 @@ function RegisterDispatcherContent() {
 
         <div className="mt-6 text-center space-y-3">
           <p className="text-sm text-[#a8a29e]">加入 LINE 好友以完成註冊</p>
-          <a href="https://line.me/R/@627exwrq" target="_blank" rel="noopener noreferrer" className="text-[#d4af37] hover:underline block font-bold">
+          <a href="https://lin.ee/te3BuUwK" target="_blank" rel="noopener noreferrer" className="text-[#d4af37] hover:underline block font-bold">
             點擊加入 @627exwrq
           </a>
           <p className="text-xs text-[#78716c]">或 LINE ID：@627exwrq</p>
