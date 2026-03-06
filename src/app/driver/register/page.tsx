@@ -369,7 +369,10 @@ function RegisterContent() {
           </button>
         </form>
 
-        <div className="mt-6 text-center">
+        <div className="mt-6 text-center space-y-3">
+          <a href="https://line.me/R/@627exwrq" target="_blank" rel="noopener noreferrer" className="text-sm text-[#d4af37] hover:underline block">
+            加入 LINE 好友 →
+          </a>
           <a href="/driver" className="text-sm text-[#a8a29e] hover:text-[#d4af37]">
             ← 返回登入頁
           </a>
