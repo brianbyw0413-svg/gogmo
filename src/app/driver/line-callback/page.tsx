@@ -56,7 +56,7 @@ function LineCallbackContent() {
         localStorage.setItem('gmo_line_user', JSON.stringify(profile));
         const state = searchParams.get('state');
         if (state === 'dispatcher') {
-          router.push('/driver/register-dispatcher?line_login=true');
+          router.push('/dashboard?line_login=true');
         } else {
           router.push('/driver?line_login=true');
         }
