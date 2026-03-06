@@ -205,6 +205,39 @@ export default function HomePage() {
 
   const displayTrips = trips.slice(0, 20);
 
+  // 副標題列表 - 隨機輪播
+  const subtitles = [
+    { text: 'Come to GMO ， be a free driver！', en: true },
+    { text: '來GMO接單，做個自由的司機。', en: false },
+    { text: '來GMO，訂單不寂寞！', en: false },
+    { text: 'Come to GMO ，find a good driver！', en: true },
+  ];
+  const [subtitleIndex, setSubtitleIndex] = useState(0);
+
+  // 隨機切換副標題
+  useEffect(() => {
+    const rotate = () => {
+      setSubtitleIndex(prev => (prev + 1) % subtitles.length);
+    };
+    const interval = setInterval(rotate, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // 渲染帶有 GMO 標記的副標題
+  const renderSubtitle = (text: string) => {
+    const parts = text.split('GMO');
+    return (
+      <>
+        {parts.map((part, i) => (
+          <span key={i}>
+            {part}
+            {i < parts.length - 1 && <span className="text-[#fde047]">GMO</span>}
+          </span>
+        ))}
+      </>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-[#0c0a09] grid-bg">
       {/* 導航 */}
@@ -227,9 +260,13 @@ export default function HomePage() {
           {/* 標題 */}
           <div className="text-center mb-3">
             <h1 className="text-4xl md:text-6xl font-bold text-[#fafaf9] mb-2">
-              <span className="text-[#d4af37]">G</span>ive<span className="text-[#d4af37]">M</span>e<span className="text-[#d4af37]">O</span>rders
+              <span className="text-[#fde047]">G</span>O！<span className="text-[#fde047]">G</span>et<span className="text-[#fde047]">M</span>ore<span className="text-[#fde047]">O</span>rders！
             </h1>
-            <p className="text-sm md:text-lg text-[#78716c]">一起接單，做個自由的司機。</p>
+            <p className="text-sm md:text-lg text-[#fafaf9] h-6">
+              <span className="transition-opacity duration-500">
+                {renderSubtitle(subtitles[subtitleIndex].text)}
+              </span>
+            </p>
           </div>
 
           {/* 統計 */}
