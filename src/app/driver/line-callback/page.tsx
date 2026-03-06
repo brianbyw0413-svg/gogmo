@@ -8,7 +8,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 const DRIVER_CHANNEL_ID = '2009340718';
 const DISPATCHER_CHANNEL_ID = '2009277112';
 // 請填入 GMO-Dispatcher 的 Channel Secret
-const DISPATCHER_CHANNEL_SECRET = 'YOUR_DISPATCHER_CHANNEL_SECRET';
+const DISPATCHER_CHANNEL_SECRET = '8d86d9d32d3e5807f9c964f766a439be';
 
 function LineCallbackContent() {
   const searchParams = useSearchParams();
