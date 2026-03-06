@@ -126,8 +126,11 @@ function DriverPageContent() {
 
           <div className="mt-6 text-center space-y-2">
             <p className="text-sm text-[#a8a29e]">還沒註冊嗎？</p>
-            <Link href="/driver/register" className="text-sm text-[#d4af37] hover:underline">
-              立即註冊 →
+            <Link href="/driver/register" className="text-sm text-[#d4af37] hover:underline block">
+              我是司機，立即註冊 →
+            </Link>
+            <Link href="/driver/register-dispatcher" className="text-sm text-[#78716c] hover:text-[#a8a29e] block">
+              我是調度員，點此註冊 →
             </Link>
             <div>
               <Link href="/" className="text-sm text-[#a8a29e] hover:text-[#d4af37]">

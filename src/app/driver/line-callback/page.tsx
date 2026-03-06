@@ -52,10 +52,14 @@ function LineCallbackContent() {
       })
       .then((res) => res.json())
       .then((profile) => {
-        // Store LINE info and redirect to driver page
-        // For now, we'll use the displayName as the driver name
+        // Store LINE info and redirect based on state
         localStorage.setItem('gmo_line_user', JSON.stringify(profile));
-        router.push('/driver?line_login=true');
+        const state = searchParams.get('state');
+        if (state === 'dispatcher') {
+          router.push('/driver/register-dispatcher?line_login=true');
+        } else {
+          router.push('/driver?line_login=true');
+        }
       })
       .catch((err) => {
         setError(err.message || '登入失敗');

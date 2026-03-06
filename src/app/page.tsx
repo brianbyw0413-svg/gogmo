@@ -309,9 +309,12 @@ export default function HomePage() {
           </div>
 
           {/* CTA */}
-          <div className="text-center">
-            <a href="https://line.me/R/@627exwrq" className="inline-block px-6 py-3 bg-gradient-to-r from-[#d4af37] to-[#e8c44a] text-[#0c0a09] rounded-xl font-bold text-sm md:text-base shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all">
-              加入GMO，一起開車
+          <div className="text-center space-y-4">
+            <a href="https://line.me/R/@627exwrq" className="inline-block px-6 py-3 bg-gradient-to-r from-[#d4af37] to-[#e8c44a] text-[#0c0a09] rounded-xl font-bold text-sm md:text-base shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all block max-w-md mx-auto">
+              我是司機，我想加入GMO一起開車
+            </a>
+            <a href="https://line.me/R/@627exwrq" className="inline-block px-6 py-3 bg-gradient-to-r from-[#4a5568] to-[#2d3748] text-[#fafaf9] rounded-xl font-bold text-sm md:text-base shadow-[0_0_20px_rgba(74,85,104,0.3)] hover:shadow-[0_0_30px_rgba(74,85,104,0.5)] transition-all block max-w-md mx-auto">
+              我是調度員，我想加入GMO快速派單
             </a>
           </div>
         </div>
