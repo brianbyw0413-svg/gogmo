@@ -40,9 +40,9 @@ export default function AdminDispatchersPage() {
     fetchDispatchers();
   }, [filter]);
 
-  const checkAdmin = async () => {
-    const { data: { session } } = await supabaseAdmin.auth.getSession();
-    if (!session) {
+  const checkAdmin = () => {
+    const admin = localStorage.getItem('gmo_admin');
+    if (!admin) {
       router.push('/admin/login');
       return;
     }
