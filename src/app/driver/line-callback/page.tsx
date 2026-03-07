@@ -35,7 +35,7 @@ function LineCallbackContent() {
     }
 
     // 根據 state 決定使用哪個 Channel
-    const isDispatcher = state === 'dispatcher';
+    const isDispatcher = state === 'dispatcher' || state === 'dispatcher_register';
     const channelId = isDispatcher ? DISPATCHER_CHANNEL_ID : DRIVER_CHANNEL_ID;
     const channelSecret = isDispatcher ? DISPATCHER_CHANNEL_SECRET : '96edf72369f40752fdbf3b03b4aca7a7';
     const redirectUri = `${window.location.origin}/driver/line-callback`;
