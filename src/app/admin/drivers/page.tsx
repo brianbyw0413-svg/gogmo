@@ -86,7 +86,7 @@ export default function AdminDriversPage() {
       setAction(null);
       setReason('');
       // 自動切換到對應的分類
-      setFilter(newStatus);
+      setFilter(newStatus as 'pending' | 'approved' | 'rejected' | 'suspended' | 'all');
       fetchDrivers();
     }
   };
