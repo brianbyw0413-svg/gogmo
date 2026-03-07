@@ -95,10 +95,13 @@ export default function AdminDriversPage() {
     if (!confirm('確定要刪除此司機資料嗎？此操作無法復原。')) return;
     
     const { error } = await supabaseAdmin.from('drivers').delete().eq('id', driverId);
-    if (!error) {
+    if (error) {
+      alert('刪除失敗: ' + error.message);
+    } else {
       alert('已刪除');
-      // 立即從本地列表移除
+      // 立即從本地列表移除並強制重新整理
       setDrivers(drivers.filter(d => d.id !== driverId));
+      fetchDrivers(); // 強制重新整理確保同步
     }
   };
 
