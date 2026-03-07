@@ -376,7 +376,6 @@ function RegisterContent() {
                   required
                   className="input-dark w-full file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#d4af37] file:text-[#0c0a09] file:font-medium"
                 />
-                />
                 <p className="text-xs text-[#78716c] mt-1">請輸入證件到期日</p>
                 <input
                   type="date"
