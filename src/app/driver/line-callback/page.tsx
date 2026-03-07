@@ -3,6 +3,7 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { supabaseAdmin } from '@/lib/supabase';
 
 // Channel IDs
 const DRIVER_CHANNEL_ID = '2009340718';
@@ -73,19 +74,63 @@ function LineCallbackContent() {
         localStorage.setItem('gmo_line_user', JSON.stringify(profile));
         localStorage.setItem('gmo_login_type', state);
         
-        // 根據 state 決定導向
-        if (state === 'driver_register') {
-          router.push('/driver/register?line_login=true');
-        } else if (state === 'dispatcher_register') {
-          router.push('/driver/register-dispatcher?line_login=true');
-        } else if (state === 'dispatcher') {
-          router.push('/dashboard?line_login=true');
-        } else if (state === 'driver') {
-          router.push('/driver?line_login=true');
-        } else {
-          // 預設導向身份選擇頁面
-          router.push('/role-select?line_login=true');
-        }
+        // 根據 state 決定導向，並檢查是否已註冊
+        const checkRegistration = async () => {
+          if (state === 'driver_register') {
+            // 檢查是否已有司機資料
+            const { data: driver } = await supabaseAdmin
+              .from('drivers')
+              .select('id, status')
+              .eq('line_id', profile.userId)
+              .single();
+            
+            if (driver) {
+              if (driver.status === 'approved') {
+                // 已核准 → 導向司機儀表板
+                router.push('/driver?line_login=true');
+              } else if (driver.status === 'pending') {
+                // 待審核 → 顯示訊息
+                alert('您的司機申請正在審核中，請稍後再試');
+                router.push('/');
+              } else {
+                // 已駁回/停用 → 允許重新註冊
+                router.push('/driver/register?line_login=true&re_register=true');
+              }
+            } else {
+              // 無資料 → 前往註冊
+              router.push('/driver/register?line_login=true');
+            }
+          } else if (state === 'dispatcher_register') {
+            // 檢查是否已有調度員資料
+            const { data: dispatcher } = await supabaseAdmin
+              .from('dispatchers')
+              .select('id, status')
+              .eq('line_id', profile.userId)
+              .single();
+            
+            if (dispatcher) {
+              if (dispatcher.status === 'approved') {
+                router.push('/dashboard?line_login=true');
+              } else if (dispatcher.status === 'pending') {
+                alert('您的調度員申請正在審核中，請稍後再試');
+                router.push('/');
+              } else {
+                router.push('/driver/register-dispatcher?line_login=true&re_register=true');
+              }
+            } else {
+              router.push('/driver/register-dispatcher?line_login=true');
+            }
+          } else if (state === 'dispatcher') {
+            router.push('/dashboard?line_login=true');
+          } else if (state === 'driver') {
+            router.push('/driver?line_login=true');
+          } else {
+            // 預設導向身份選擇頁面
+            router.push('/role-select?line_login=true');
+          }
+        };
+        
+        checkRegistration();
       })
       .catch((err) => {
         setError(err.message || '登入失敗');
