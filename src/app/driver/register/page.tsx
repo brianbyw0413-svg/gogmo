@@ -143,6 +143,11 @@ function RegisterContent() {
       // 產生司機編號 FDXXXX
       const driverNumber = 'FD' + Math.floor(1000 + Math.random() * 9000);
 
+      // 檢查是否已有相同 line_id 的資料，若有則先刪除（允許重新註冊）
+      if (lineUser?.userId) {
+        await supabase.from('drivers').delete().eq('line_id', lineUser.userId);
+      }
+
       // 儲存司機資料
       const { error: insertError } = await supabase.from('drivers').insert({
         id: driverId,

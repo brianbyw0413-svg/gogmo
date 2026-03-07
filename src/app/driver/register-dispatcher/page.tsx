@@ -54,6 +54,11 @@ function RegisterDispatcherContent() {
       const dispatcherId = crypto.randomUUID();
       const dispatcherNumber = 'DP' + Math.floor(1000 + Math.random() * 9000);
 
+      // 檢查是否已有相同 line_id 的資料，若有則先刪除（允許重新註冊）
+      if (lineUser?.userId) {
+        await supabase.from('dispatchers').delete().eq('line_id', lineUser.userId);
+      }
+
       // 儲存調度員資料
       const { error: insertError } = await supabase.from('dispatchers').insert({
         id: dispatcherId,
