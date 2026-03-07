@@ -3,7 +3,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { supabase, supabaseAdmin } from '@/lib/supabase';
 
 function RegisterContent() {
   const router = useRouter();
@@ -145,7 +145,7 @@ function RegisterContent() {
 
       // 檢查是否已有相同 line_id 的資料，若有則先刪除（允許重新註冊）
       if (lineUser?.userId) {
-        await supabase.from('drivers').delete().eq('line_id', lineUser.userId);
+        await supabaseAdmin.from('drivers').delete().eq('line_id', lineUser.userId);
       }
 
       // 儲存司機資料
