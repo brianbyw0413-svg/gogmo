@@ -81,9 +81,7 @@ function DriverPageContent() {
         <div className="w-full max-w-md p-8 glass-card animate-fadeIn">
           {/* Logo */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#d4af37] to-[#b8962f] flex items-center justify-center mx-auto mb-4">
-              <span className="text-3xl font-bold text-[#0c0a09]">G</span>
-            </div>
+            <img src="/logo.png" alt="GMO" className="h-16 mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-[#fafaf9]">GMO 司機端</h1>
             <p className="text-[#a8a29e] mt-2">Give Me Order — 接單、賺錢</p>
           </div>
@@ -154,9 +152,14 @@ function DriverPageContent() {
     <div className="animate-fadeIn">
       {/* 歡迎文字 */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-[#fafaf9]">
-          嗨，{driver?.name} 👋
-        </h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-bold text-[#fafaf9]">
+            嗨，{driver?.name} 👋
+          </h1>
+          <span className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-medium">
+            ✅ 已認證
+          </span>
+        </div>
         <p className="text-[#a8a29e] mt-1">歡迎回到 GMO 接單平台</p>
       </div>
 
@@ -237,6 +240,18 @@ function DriverPageContent() {
           </div>
           <p className="text-sm font-medium text-[#fafaf9]">自客登記</p>
           <p className="text-xs text-[#a8a29e] mt-1">登記自有客戶行程</p>
+        </Link>
+        <Link
+          href="/driver/profile"
+          className="glass-card p-5 text-center hover:border-[#d4af37] transition-colors group col-span-2"
+        >
+          <div className="w-12 h-12 rounded-full bg-[#d4af37]/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-[#d4af37]/20 transition-colors">
+            <svg className="w-6 h-6 text-[#d4af37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+          <p className="text-sm font-medium text-[#fafaf9]">個人資料設定</p>
+          <p className="text-xs text-[#a8a29e] mt-1">查看提交的資料</p>
         </Link>
       </div>
     </div>
