@@ -3,10 +3,10 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-// Supabase 連線資訊（從環境變數讀取）
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://vtvytcrkoqbluvczyepm.supabase.co';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_SOp1vthQKdTdQUwoHsMIQA_FCTxzbie';
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY || 'sb_service_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0dnl0Y3Jrb3FibHV2Y3l5ZXBtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY0ODQ2MjIwMCwiZXhwIjoxOTY0MDM4MjAwfQ.9R4c3XKj9Y2Z5vT1rP8nL4mQ6jH2sA';
+// Supabase 連線資訊
+const supabaseUrl = 'https://vtvytcrkoqbluvczyepm.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0dnl0Y3Jrb3FibHV2Y3p5ZXBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4OTM1MDMsImV4cCI6MjA4NzQ2OTUwM30.811m4zP4IRTJh5XFcg1zclb3JH3XNmAbsCyCff2Cze8';
+const supabaseServiceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0dnl0Y3Jrb3FibHV2Y3p5ZXBtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MTg5MzUwMywiZXhwIjoyMDg3NDY5NTAzfQ.w7wq0Ha9F3ucYQvl-xQ-0FHss0TjX7V52eR1NsjG3zE';
 
 // 建立 Supabase 客戶端（一般用戶）
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
