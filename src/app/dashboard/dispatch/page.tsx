@@ -146,18 +146,99 @@ interface ChatMessage {
 }
 
 export default function DispatchPage() {
-  const [activeTab, setActiveTab] = useState<'ai' | 'manual'>('ai');
+  const [activeTab, setActiveTab] = useState<'ai' | 'manual' | 'batch'>('ai');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState('');
   const [pendingTrip, setPendingTrip] = useState<Partial<ParsedTrip> | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
+  
+  // 批次匯入相關
+  const [batchInput, setBatchInput] = useState('');
+  const [parsedBatchTrips, setParsedBatchTrips] = useState<Partial<ParsedTrip>[]>([]);
+  const [selectedBatchTrips, setSelectedBatchTrips] = useState<Set<number>>(new Set());
+  
   const chatEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // 批次解析多筆訊息
+  const handleBatchParse = () => {
+    if (!batchInput.trim()) return;
+    
+    // 用空行或數字開頭分割訊息
+    const rawMessages = batchInput.split(/(?:^\d+[.)：:]\s*|\n\s*\n)/).filter(m => m.trim());
+    const parsed: Partial<ParsedTrip>[] = [];
+    
+    rawMessages.forEach(msg => {
+      const result = parseDispatchText(msg.trim());
+      if (result.service_type || result.service_date || result.pickup_address || result.amount) {
+        parsed.push(result);
+      }
+    });
+    
+    setParsedBatchTrips(parsed);
+    // 預設全部選中
+    setSelectedBatchTrips(new Set(parsed.map((_, i) => i)));
+  };
+
+  // 切換批次選擇
+  const toggleBatchTrip = (index: number) => {
+    const newSet = new Set(selectedBatchTrips);
+    if (newSet.has(index)) {
+      newSet.delete(index);
+    } else {
+      newSet.add(index);
+    }
+    setSelectedBatchTrips(newSet);
+  };
+
+  // 批次建立行程
+  const handleBatchCreate = async () => {
+    if (selectedBatchTrips.size === 0) return;
+    setIsCreating(true);
+    
+    let successCount = 0;
+    for (const index of selectedBatchTrips) {
+      const trip = parsedBatchTrips[index];
+      if (trip && trip.service_type && trip.service_date && trip.amount) {
+        try {
+          const tripData = {
+            service_type: trip.service_type,
+            payment_mode: trip.payment_mode || 'customer_pay',
+            pickup_address: trip.pickup_address || '',
+            dropoff_address: trip.dropoff_address || '',
+            pickup_area: trip.pickup_area || '',
+            dropoff_area: trip.dropoff_area || '',
+            service_date: trip.service_date || '',
+            service_time: trip.service_time || '',
+            flight_number: trip.flight_number || '',
+            passenger_count: trip.passenger_count || 1,
+            luggage_count: trip.luggage_count || 0,
+            amount: trip.amount || 0,
+            driver_fee: trip.driver_fee || Math.round((trip.amount || 0) * 0.75),
+            note: trip.note || '',
+            contact_name: trip.contact_name || '',
+            contact_phone: trip.contact_phone || '',
+          };
+          await createTrip(tripData);
+          successCount++;
+        } catch (e) {
+          console.error('建立行程失敗', e);
+        }
+      }
+    }
+    
+    setSuccessMsg(`成功建立 ${successCount} 筆行程！`);
+    setParsedBatchTrips([]);
+    setSelectedBatchTrips(new Set());
+    setBatchInput('');
+    setTimeout(() => setSuccessMsg(''), 3000);
+    setIsCreating(false);
+  };
 
   // AI 解析並回應
   const handleSendMessage = () => {
@@ -286,11 +367,116 @@ export default function DispatchPage() {
           className={`px-4 py-2 rounded-lg text-sm transition-all ${activeTab === 'ai' ? 'bg-[#d4af37] text-[#0c0a09] font-bold' : 'bg-[#1c1917] text-[#a8a29e] border border-[#292524]'}`}>
           AI 解析發單
         </button>
+        <button onClick={() => setActiveTab('batch')}
+          className={`px-4 py-2 rounded-lg text-sm transition-all ${activeTab === 'batch' ? 'bg-[#d4af37] text-[#0c0a09] font-bold' : 'bg-[#1c1917] text-[#a8a29e] border border-[#292524]'}`}>
+          批次匯入
+        </button>
         <button onClick={() => setActiveTab('manual')}
           className={`px-4 py-2 rounded-lg text-sm transition-all ${activeTab === 'manual' ? 'bg-[#d4af37] text-[#0c0a09] font-bold' : 'bg-[#1c1917] text-[#a8a29e] border border-[#292524]'}`}>
           手動派單
         </button>
       </div>
+
+      {activeTab === 'batch' && (
+        <div className="glass-card p-4">
+          <h3 className="text-lg font-bold text-[#fafaf9] mb-3">批次匯入多筆訂單</h3>
+          <p className="text-[#a8a29e] text-sm mb-3">
+            將 LINE 群組的多筆派單訊息貼上（每筆用空行分隔），AI 會自動解析並可一次建立多筆行程。
+          </p>
+          <textarea
+            value={batchInput}
+            onChange={(e) => setBatchInput(e.target.value)}
+            placeholder={`請貼上多筆派單訊息，例如：
+
+1. 送機 3/5 06:35 IT200
+上車：台北市大安區忠孝東路
+桃園機場第一航廈
+2人 3件行李 $1200
+陳先生 0912345678
+
+2. 接機 3/6 14:20 CI641
+桃園機場第二航廈
+新竹市光復路
+3人 $2500
+李小明 0988765432`}
+            className="w-full h-48 bg-[#0c0a09] border border-[#292524] rounded-lg p-3 text-[#fafaf9] text-sm font-mono"
+          />
+          <div className="flex gap-2 mt-3">
+            <button
+              onClick={handleBatchParse}
+              className="px-4 py-2 bg-[#d4af37] text-[#0c0a09] rounded-lg font-bold"
+            >
+              解析訊息
+            </button>
+            <button
+              onClick={() => { setBatchInput(''); setParsedBatchTrips([]); setSelectedBatchTrips(new Set()); }}
+              className="px-4 py-2 bg-[#292524] text-[#a8a29e] rounded-lg"
+            >
+              清除
+            </button>
+          </div>
+
+          {/* 解析結果 */}
+          {parsedBatchTrips.length > 0 && (
+            <div className="mt-4">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-[#a8a29e]">解析到 {parsedBatchTrips.length} 筆行程，已選取 {selectedBatchTrips.size} 筆</span>
+                <button
+                  onClick={handleBatchCreate}
+                  disabled={selectedBatchTrips.size === 0 || isCreating}
+                  className={`px-4 py-2 rounded-lg font-bold ${
+                    selectedBatchTrips.size === 0 || isCreating
+                      ? 'bg-[#3a3735] text-[#6a6560] cursor-not-allowed'
+                      : 'bg-green-600 text-white hover:bg-green-700'
+                  }`}
+                >
+                  {isCreating ? '建立中...' : `建立 ${selectedBatchTrips.size} 筆行程`}
+                </button>
+              </div>
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {parsedBatchTrips.map((trip, i) => (
+                  <div
+                    key={i}
+                    onClick={() => toggleBatchTrip(i)}
+                    className={`p-3 rounded-lg border cursor-pointer transition-all ${
+                      selectedBatchTrips.has(i)
+                        ? 'border-[#d4af37] bg-[#d4af37]/10'
+                        : 'border-[#292524] bg-[#1a1918]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={selectedBatchTrips.has(i)}
+                        onChange={() => {}}
+                        className="w-4 h-4 accent-[#d4af37]"
+                      />
+                      <span className="text-[#d4af37] font-bold">#{i + 1}</span>
+                      <span className="text-[#fafaf9]">
+                        {trip.service_type === 'pickup' ? '接機' : '送機'} |
+                        {trip.service_date} {trip.service_time?.slice(0, 5)} |
+                        {trip.flight_number}
+                      </span>
+                    </div>
+                    <div className="text-[#a8a29e] text-sm ml-6 mt-1">
+                      {trip.pickup_address} → {trip.dropoff_address}
+                    </div>
+                    <div className="text-[#a8a29e] text-sm ml-6">
+                      {trip.passenger_count}人 | {trip.luggage_count}件 | ${trip.amount} | {trip.contact_name} {trip.contact_phone}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {successMsg && (
+            <div className="mt-3 p-3 bg-green-600/20 border border-green-600 rounded-lg text-green-400 text-center">
+              {successMsg}
+            </div>
+          )}
+        </div>
+      )}
 
       {activeTab === 'ai' ? (
         <div className="flex flex-col" style={{ height: 'calc(100vh - 220px)', minHeight: '500px' }}>
