@@ -62,13 +62,17 @@ export default function AdminDriversPage() {
     if (!selectedDriver || !action) return;
 
     let updates: any = {};
+    let newStatus = '';
     
     if (action === 'approve') {
       updates = { status: 'approved', verified_at: new Date().toISOString(), rejection_reason: null };
+      newStatus = 'approved';
     } else if (action === 'reject') {
       updates = { status: 'rejected', rejection_reason: reason };
+      newStatus = 'rejected';
     } else if (action === 'suspend') {
       updates = { status: 'suspended' };
+      newStatus = 'suspended';
     }
 
     const { error } = await supabase
@@ -81,6 +85,8 @@ export default function AdminDriversPage() {
       setSelectedDriver(null);
       setAction(null);
       setReason('');
+      // 自動切換到對應的分類
+      setFilter(newStatus);
       fetchDrivers();
     }
   };
@@ -91,6 +97,7 @@ export default function AdminDriversPage() {
     const { error } = await supabase.from('drivers').delete().eq('id', driverId);
     if (!error) {
       alert('已刪除');
+      // 立即重新整理列表
       fetchDrivers();
     }
   };
