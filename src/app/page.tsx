@@ -239,8 +239,7 @@ export default function HomePage() {
           </Link>
           <div className="flex items-center gap-2 text-xs">
             <Link href="/lobby" className="text-[#a8a29e] hover:text-[#d4af37]">接單大廳</Link>
-            <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2009340718&redirect_uri=https%3A%2F%2Fgmo.zeabur.app%2Fdriver%2Fline-callback&state=driver&scope=profile%20openid&bot_prompt=normal" className="px-3 py-1.5 bg-[#d4af37] text-[#0c0a09] rounded font-bold">司機登入</a>
-            <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2009277112&redirect_uri=https%3A%2F%2Fgmo.zeabur.app%2Fdriver%2Fline-callback&state=dispatcher&scope=profile%20openid&bot_prompt=normal" className="px-3 py-1.5 bg-[#d4af37] text-[#0c0a09] rounded font-bold">調度登入</a>
+            <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2009340718&redirect_uri=https%3A%2F%2Fgmo.zeabur.app%2Fdriver%2Fline-callback&state=login&scope=profile%20openid&bot_prompt=normal" className="px-3 py-1.5 bg-[#d4af37] text-[#0c0a09] rounded font-bold">LINE 登入</a>
             <Link href="/admin/login" className="text-xs text-[#5a5550] hover:text-[#a8a29e]">管理</Link>
           </div>
         </div>
@@ -313,7 +312,7 @@ export default function HomePage() {
             <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2009340718&redirect_uri=https%3A%2F%2Fgmo.zeabur.app%2Fdriver%2Fline-callback&state=driver_register&scope=profile%20openid&bot_prompt=normal" className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#d4af37] to-[#e8c44a] text-[#0c0a09] rounded-lg font-bold text-xs md:text-sm shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all block max-w-md mx-auto">
               我是司機，我想加入GMO一起開車
             </a>
-            <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2009277112&redirect_uri=https%3A%2F%2Fgmo.zeabur.app%2Fdriver%2Fline-callback&state=dispatcher_register&scope=profile%20openid&bot_prompt=normal" className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#d4af37] to-[#e8c44a] text-[#0c0a09] rounded-lg font-bold text-xs md:text-sm shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all block max-w-md mx-auto">
+            <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2009340718&redirect_uri=https%3A%2F%2Fgmo.zeabur.app%2Fdriver%2Fline-callback&state=dispatcher_register&scope=profile%20openid&bot_prompt=normal" className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#d4af37] to-[#e8c44a] text-[#0c0a09] rounded-lg font-bold text-xs md:text-sm shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all block max-w-md mx-auto">
               我是調度員，我想加入GMO快速派單
             </a>
           </div>
