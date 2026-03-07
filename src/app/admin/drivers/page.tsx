@@ -97,8 +97,8 @@ export default function AdminDriversPage() {
     const { error } = await supabase.from('drivers').delete().eq('id', driverId);
     if (!error) {
       alert('已刪除');
-      // 立即重新整理列表
-      fetchDrivers();
+      // 立即從本地列表移除
+      setDrivers(drivers.filter(d => d.id !== driverId));
     }
   };
 
