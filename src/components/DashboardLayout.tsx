@@ -22,8 +22,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const auth = localStorage.getItem('pickyouup_auth');
-    if (auth === 'true') setIsAuthenticated(true);
+    // 檢查兩種登入狀態：
+    // 1. LINE Login 登入（調度員/司機）
+    // 2. 密碼登入（舊版）
+    const lineUser = localStorage.getItem('gmo_line_user');
+    const mvpAuth = localStorage.getItem('pickyouup_auth');
+    
+    if (lineUser || mvpAuth === 'true') {
+      setIsAuthenticated(true);
+    }
     setIsLoading(false);
   }, []);
 
