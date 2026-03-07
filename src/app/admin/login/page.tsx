@@ -19,7 +19,7 @@ export default function AdminLoginPage() {
     // 簡單的客戶端驗證（實際應該由 server-side 驗證）
     if (username === 'admin' && password === 'gmo2026admin') {
       localStorage.setItem('gmo_admin', 'true');
-      router.push('/admin/drivers');
+      router.push('/admin');
     } else {
       setError('帳號或密碼錯誤');
     }
