@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase, supabaseAdmin } from '@/lib/supabase';
+import Link from 'next/link';
 
 interface Driver {
   id: string;
@@ -140,7 +141,15 @@ export default function AdminDriversPage() {
             <h1 className="text-2xl font-bold text-[#fafaf9]">司機審核管理</h1>
             <p className="text-[#a8a29e] mt-1">審核司機認證資料</p>
           </div>
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-4 items-center">
+            <Link href="/admin/dispatchers" className="text-[#d4af37] hover:underline">
+              調度員審核 →
+            </Link>
+            <Link href="/" className="text-[#a8a29e] hover:text-[#d4af37]">
+              回首頁
+            </Link>
+          </div>
+        </div>
             {(['pending', 'approved', 'rejected', 'suspended', 'all'] as const).map((f) => (
               <button
                 key={f}
