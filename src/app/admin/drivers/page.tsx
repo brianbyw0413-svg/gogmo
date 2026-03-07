@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase, supabaseAdmin } from '@/lib/supabase';
 
 interface Driver {
   id: string;
@@ -44,7 +44,7 @@ export default function AdminDriversPage() {
 
   const fetchDrivers = async () => {
     setLoading(true);
-    let query = supabase.from('drivers').select('*');
+    let query = supabaseAdmin.from('drivers').select('*');
     
     if (filter !== 'all') {
       query = query.eq('status', filter);
@@ -75,7 +75,7 @@ export default function AdminDriversPage() {
       newStatus = 'suspended';
     }
 
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('drivers')
       .update(updates)
       .eq('id', selectedDriver.id);
@@ -94,7 +94,7 @@ export default function AdminDriversPage() {
   const handleDelete = async (driverId: string) => {
     if (!confirm('確定要刪除此司機資料嗎？此操作無法復原。')) return;
     
-    const { error } = await supabase.from('drivers').delete().eq('id', driverId);
+    const { error } = await supabaseAdmin.from('drivers').delete().eq('id', driverId);
     if (!error) {
       alert('已刪除');
       // 立即從本地列表移除
