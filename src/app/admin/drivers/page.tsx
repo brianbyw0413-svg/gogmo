@@ -34,9 +34,9 @@ export default function AdminDriversPage() {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
-  const [action, setAction] = useState<'approve' | 'reject' | null>(null);
+  const [action, setAction] = useState<'approve' | 'reject' | 'suspend' | null>(null);
   const [reason, setReason] = useState('');
-  const [filter, setFilter] = useState<'pending' | 'approved' | 'rejected'>('pending');
+  const [filter, setFilter] = useState<'pending' | 'approved' | 'rejected' | 'suspended' | 'all'>('pending');
 
   useEffect(() => {
     fetchDrivers();
@@ -44,11 +44,13 @@ export default function AdminDriversPage() {
 
   const fetchDrivers = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('drivers')
-      .select('*')
-      .eq('status', filter)
-      .order('created_at', { ascending: false });
+    let query = supabase.from('drivers').select('*');
+    
+    if (filter !== 'all') {
+      query = query.eq('status', filter);
+    }
+    
+    const { data, error } = await query.order('created_at', { ascending: false });
     
     if (!error && data) {
       setDrivers(data);
@@ -59,11 +61,15 @@ export default function AdminDriversPage() {
   const handleAction = async () => {
     if (!selectedDriver || !action) return;
 
-    const updates: any = {
-      status: action === 'approve' ? 'approved' : 'rejected',
-      verified_at: action === 'approve' ? new Date().toISOString() : null,
-      rejection_reason: action === 'reject' ? reason : null,
-    };
+    let updates: any = {};
+    
+    if (action === 'approve') {
+      updates = { status: 'approved', verified_at: new Date().toISOString(), rejection_reason: null };
+    } else if (action === 'reject') {
+      updates = { status: 'rejected', rejection_reason: reason };
+    } else if (action === 'suspend') {
+      updates = { status: 'suspended' };
+    }
 
     const { error } = await supabase
       .from('drivers')
@@ -71,10 +77,20 @@ export default function AdminDriversPage() {
       .eq('id', selectedDriver.id);
 
     if (!error) {
-      alert(action === 'approve' ? '已核准該司機' : '已駁回該司機');
+      alert(action === 'approve' ? '已核准該司機' : action === 'reject' ? '已駁回該司機' : '已停用該司機');
       setSelectedDriver(null);
       setAction(null);
       setReason('');
+      fetchDrivers();
+    }
+  };
+
+  const handleDelete = async (driverId: string) => {
+    if (!confirm('確定要刪除此司機資料嗎？此操作無法復原。')) return;
+    
+    const { error } = await supabase.from('drivers').delete().eq('id', driverId);
+    if (!error) {
+      alert('已刪除');
       fetchDrivers();
     }
   };
@@ -84,11 +100,13 @@ export default function AdminDriversPage() {
       pending: 'bg-yellow-500/20 text-yellow-400',
       approved: 'bg-green-500/20 text-green-400',
       rejected: 'bg-red-500/20 text-red-400',
+      suspended: 'bg-orange-500/20 text-orange-400',
     };
     const labels: any = {
       pending: '待審核',
       approved: '已核准',
       rejected: '已駁回',
+      suspended: '已停用',
     };
     return <span className={`px-2 py-1 rounded-full text-xs ${colors[status]}`}>{labels[status]}</span>;
   };
@@ -112,8 +130,8 @@ export default function AdminDriversPage() {
             <h1 className="text-2xl font-bold text-[#fafaf9]">司機審核管理</h1>
             <p className="text-[#a8a29e] mt-1">審核司機認證資料</p>
           </div>
-          <div className="flex gap-2">
-            {(['pending', 'approved', 'rejected'] as const).map((f) => (
+          <div className="flex gap-2 flex-wrap">
+            {(['pending', 'approved', 'rejected', 'suspended', 'all'] as const).map((f) => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
@@ -123,7 +141,7 @@ export default function AdminDriversPage() {
                     : 'bg-[#292524] text-[#a8a29e] hover:text-[#fafaf9]'
                 }`}
               >
-                {f === 'pending' ? '待審' : f === 'approved' ? '已核准' : '已駁回'}
+                {f === 'pending' ? '待審' : f === 'approved' ? '已核准' : f === 'rejected' ? '已駁回' : f === 'suspended' ? '已停用' : '總名冊'}
               </button>
             ))}
           </div>
@@ -157,12 +175,20 @@ export default function AdminDriversPage() {
                     </div>
                   </div>
                 </div>
-                <button
-                  onClick={() => setSelectedDriver(driver)}
-                  className="px-4 py-2 bg-[#d4af37] text-[#0c0a09] rounded-lg text-sm font-medium hover:bg-[#e8c44a]"
-                >
-                  檢視詳情
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setSelectedDriver(driver)}
+                    className="px-4 py-2 bg-[#d4af37] text-[#0c0a09] rounded-lg text-sm font-medium hover:bg-[#e8c44a]"
+                  >
+                    檢視詳情
+                  </button>
+                  <button
+                    onClick={() => handleDelete(driver.id)}
+                    className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg text-sm font-medium hover:bg-red-500/30"
+                  >
+                    刪除
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -405,6 +431,12 @@ export default function AdminDriversPage() {
                         className="flex-1 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600"
                       >
                         駁回
+                      </button>
+                      <button
+                        onClick={() => setAction('suspend')}
+                        className="flex-1 py-3 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600"
+                      >
+                        停用
                       </button>
                     </div>
                   )}
