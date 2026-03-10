@@ -1,29 +1,37 @@
-// 管理員共用佈局
+// 管理員共用佈局 - 修復版
 'use client';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
   useEffect(() => {
     // 檢查是否已登入
     const admin = localStorage.getItem('gmo_admin');
     if (!admin) {
-      router.push('/admin/login');
+      window.location.href = '/admin/login';
     } else {
       setIsLoggedIn(true);
     }
-  }, [router]);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('gmo_admin');
-    router.push('/');
+    window.location.href = '/';
   };
+
+  // 顯示載入中
+  if (isLoggedIn === null) {
+    return (
+      <div className="min-h-screen bg-[#0c0a09] flex items-center justify-center">
+        <div className="text-[#d4af37]">載入中...</div>
+      </div>
+    );
+  }
 
   if (!isLoggedIn) {
     return null;

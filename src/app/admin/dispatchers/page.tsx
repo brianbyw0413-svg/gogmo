@@ -1,10 +1,15 @@
-// 調度員審核管理頁面
+// 調度員審核管理頁面 - 修復版
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabaseAdmin } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+
+// 建立 Supabase 客戶端
+const supabaseAdmin = createClient(
+  'https://vtvytcrkoqbluvczyepm.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0dnl0Y3Jrb3FibHV2Y3p5ZXBtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MTg5MzUwMywiZXhwIjoyMDg3NDY5NTAzfQ.w7wq0Ha9F3ucYQvl-xQ-0FHss0TjX7V52eR1NsjG3zE'
+);
 
 interface Dispatcher {
   id: string;
@@ -29,50 +34,88 @@ export default function AdminDispatchersPage() {
   const [dispatchers, setDispatchers] = useState<Dispatcher[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDispatcher, setSelectedDispatcher] = useState<Dispatcher | null>(null);
-  const [action, setAction] = useState<'approve' | 'reject' | 'suspend' | null>(null);
+  const [action, setAction] = useState<string>('');
   const [reason, setReason] = useState('');
-  const [filter, setFilter] = useState<'pending' | 'approved' | 'rejected' | 'suspended' | 'all'>('pending');
+  const [filter, setFilter] = useState<string>('pending');
+  const [showModal, setShowModal] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const router = useRouter();
+  const [initLoading, setInitLoading] = useState(true);
 
   useEffect(() => {
-    checkAdmin();
-    fetchDispatchers();
-  }, [filter]);
-
-  const checkAdmin = () => {
+    // 檢查登入狀態
     const admin = localStorage.getItem('gmo_admin');
     if (!admin) {
-      router.push('/admin/login');
+      window.location.href = '/admin/login';
       return;
     }
     setIsAdmin(true);
-  };
+    setInitLoading(false);
+  }, []);
+
+  useEffect(() => {
+    if (!isAdmin || initLoading) return;
+    fetchDispatchers();
+  }, [filter, isAdmin, initLoading]);
 
   const fetchDispatchers = async () => {
     setLoading(true);
-    let query = supabaseAdmin.from('dispatchers').select('*');
-    
-    if (filter !== 'all') {
-      query = query.eq('status', filter);
-    }
-    
-    const { data, error } = await query.order('created_at', { ascending: false });
-    
-    if (!error && data) {
-      setDispatchers(data);
+    try {
+      let query = supabaseAdmin.from('dispatchers').select('*');
+      
+      if (filter !== 'all') {
+        query = query.eq('status', filter);
+      }
+      
+      const { data, error } = await query.order('created_at', { ascending: false });
+      
+      if (!error && data) {
+        setDispatchers(data);
+      } else {
+        console.error('Fetch error:', error);
+      }
+    } catch (err) {
+      console.error('Fetch exception:', err);
     }
     setLoading(false);
   };
 
-  const handleAction = async () => {
+  const handleApprove = (dispatcher: Dispatcher) => {
+    setSelectedDispatcher(dispatcher);
+    setAction('approve');
+    setShowModal(true);
+  };
+
+  const handleReject = (dispatcher: Dispatcher) => {
+    setSelectedDispatcher(dispatcher);
+    setAction('reject');
+    setShowModal(true);
+  };
+
+  const handleSuspend = (dispatcher: Dispatcher) => {
+    setSelectedDispatcher(dispatcher);
+    setAction('suspend');
+    setShowModal(true);
+  };
+
+  const handleDelete = async (dispatcherId: string) => {
+    if (!confirm('確定要刪除此調度員資料嗎？此操作無法復原。')) return;
+    
+    const { error } = await supabaseAdmin.from('dispatchers').delete().eq('id', dispatcherId);
+    if (error) {
+      alert('刪除失敗: ' + error.message);
+    } else {
+      alert('刪除成功');
+      fetchDispatchers();
+    }
+  };
+
+  const confirmAction = async () => {
     if (!selectedDispatcher || !action) return;
 
     let updates: any = {};
     let newStatus = '';
     
     if (action === 'approve') {
-      // 自動產生調度員編號
       const dispatcherNumber = 'D' + Date.now().toString().slice(-6);
       updates = { 
         status: 'approved', 
@@ -94,24 +137,15 @@ export default function AdminDispatchersPage() {
       .update(updates)
       .eq('id', selectedDispatcher.id);
 
-    if (!error) {
-      alert(action === 'approve' ? '已核准該調度員' : action === 'reject' ? '已駁回該調度員' : '已停用該調度員');
-      setSelectedDispatcher(null);
-      setAction(null);
-      setReason('');
-      setFilter(newStatus as 'pending' | 'approved' | 'rejected' | 'suspended' | 'all');
-      fetchDispatchers();
-    }
-  };
-
-  const handleDelete = async (dispatcherId: string) => {
-    if (!confirm('確定要刪除此調度員資料嗎？此操作無法復原。')) return;
-    
-    const { error } = await supabaseAdmin.from('dispatchers').delete().eq('id', dispatcherId);
     if (error) {
-      alert('刪除失敗: ' + error.message);
+      alert('操作失敗: ' + error.message);
+      console.error('Update error:', error);
     } else {
-      alert('刪除成功');
+      alert(action === 'approve' ? '已核准該調度員' : action === 'reject' ? '已駁回該調度員' : '已停用該調度員');
+      setShowModal(false);
+      setSelectedDispatcher(null);
+      setAction('');
+      setReason('');
       fetchDispatchers();
     }
   };
@@ -136,7 +170,13 @@ export default function AdminDispatchersPage() {
     );
   };
 
-  if (!isAdmin) return null;
+  if (initLoading) {
+    return (
+      <div className="min-h-screen bg-[#0c0a09] flex items-center justify-center">
+        <div className="text-[#d4af37]">載入中...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0c0a09] text-[#fafaf9]">
@@ -156,22 +196,22 @@ export default function AdminDispatchersPage() {
         {/* 篩選標籤 */}
         <div className="flex gap-2 mb-6 flex-wrap">
           {[
-            { key: 'pending', label: '待審核', count: dispatchers.filter(d => d.status === 'pending').length },
-            { key: 'approved', label: '已核准', count: dispatchers.filter(d => d.status === 'approved').length },
-            { key: 'rejected', label: '已駁回', count: dispatchers.filter(d => d.status === 'rejected').length },
-            { key: 'suspended', label: '已停用', count: dispatchers.filter(d => d.status === 'suspended').length },
-            { key: 'all', label: '全部', count: dispatchers.length }
+            { key: 'pending', label: '待審核' },
+            { key: 'approved', label: '已核准' },
+            { key: 'rejected', label: '已駁回' },
+            { key: 'suspended', label: '已停用' },
+            { key: 'all', label: '全部' }
           ].map((tab) => (
             <button
               key={tab.key}
-              onClick={() => setFilter(tab.key as any)}
+              onClick={() => setFilter(tab.key)}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 filter === tab.key 
                   ? 'bg-[#d4af37] text-[#0c0a09]' 
                   : 'bg-[#292524] text-[#a8a29e] hover:bg-[#44403c]'
               }`}
             >
-              {tab.label} ({tab.count || dispatchers.length})
+              {tab.label}
             </button>
           ))}
         </div>
@@ -218,19 +258,19 @@ export default function AdminDispatchersPage() {
                 </div>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => { setSelectedDispatcher(dispatcher); setAction('approve'); }}
+                    onClick={() => handleApprove(dispatcher)}
                     className="px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-sm"
                   >
                     核准
                   </button>
                   <button
-                    onClick={() => { setSelectedDispatcher(dispatcher); setAction('reject'); }}
+                    onClick={() => handleReject(dispatcher)}
                     className="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm"
                   >
                     駁回
                   </button>
                   <button
-                    onClick={() => { setSelectedDispatcher(dispatcher); setAction('suspend'); }}
+                    onClick={() => handleSuspend(dispatcher)}
                     className="px-3 py-1 bg-gray-600 hover:bg-gray-700 rounded text-sm"
                   >
                     停用
@@ -249,7 +289,7 @@ export default function AdminDispatchersPage() {
       </div>
 
       {/* 審核對話框 */}
-      {selectedDispatcher && action && (
+      {showModal && selectedDispatcher && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
           <div className="bg-[#1a1918] border border-[#292524] rounded-lg p-6 max-w-md w-full">
             <h3 className="text-xl font-bold text-[#d4af37] mb-4">
@@ -279,13 +319,13 @@ export default function AdminDispatchersPage() {
 
             <div className="flex gap-2 justify-end">
               <button
-                onClick={() => { setSelectedDispatcher(null); setAction(null); setReason(''); }}
+                onClick={() => { setShowModal(false); setSelectedDispatcher(null); setAction(''); setReason(''); }}
                 className="px-4 py-2 bg-[#292524] hover:bg-[#44403c] rounded"
               >
                 取消
               </button>
               <button
-                onClick={handleAction}
+                onClick={confirmAction}
                 className={`px-4 py-2 rounded ${
                   action === 'approve' 
                     ? 'bg-green-600 hover:bg-green-700' 

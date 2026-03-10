@@ -1,481 +1,210 @@
-// 管理員審核頁面
+// 司機審核管理頁面 - 使用 gmo_members
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase, supabaseAdmin } from '@/lib/supabase';
-import Link from 'next/link';
+import { createClient } from '@supabase/supabase-js';
 
-interface Driver {
+const supabaseAdmin = createClient(
+  'https://vtvytcrkoqbluvczyepm.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0dnl0Y3Jrb3FibHV2Y3p5ZXBtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MTg5MzUwMywiZXhwIjoyMDg3NDY5NTAzfQ.w7wq0Ha9F3ucYQvl-xQ-0FHss0TjX7V52eR1NsjG3zE'
+);
+
+interface Member {
   id: string;
-  driver_number: string;
-  line_name: string;
-  line_picture_url: string;
+  username: string;
   name: string;
   phone: string;
-  license_plate: string;
-  car_model: string;
-  seats: number;
-  car_color: string;
+  role: string;
+  status: string;
   driver_license_url: string;
   driver_license_expiry: string;
   vehicle_reg_url: string;
   vehicle_reg_expiry: string;
   insurance_url: string;
   insurance_expiry: string;
-  good_conduct_url: string;
-  no_accident_url: string;
-  bank_name: string;
-  bank_code: string;
-  bank_account: string;
-  status: string;
   created_at: string;
 }
 
 export default function AdminDriversPage() {
-  const [drivers, setDrivers] = useState<Driver[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
-  const [action, setAction] = useState<'approve' | 'reject' | 'suspend' | null>(null);
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [action, setAction] = useState<string>('');
   const [reason, setReason] = useState('');
-  const [filter, setFilter] = useState<'pending' | 'approved' | 'rejected' | 'suspended' | 'all'>('pending');
+  const [filter, setFilter] = useState<string>('pending');
+  const [showModal, setShowModal] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [initLoading, setInitLoading] = useState(true);
 
   useEffect(() => {
-    fetchDrivers();
-  }, [filter]);
+    const admin = localStorage.getItem('gmo_admin');
+    if (!admin) {
+      window.location.href = '/login';
+      return;
+    }
+    setIsAdmin(true);
+    setInitLoading(false);
+  }, []);
 
-  const fetchDrivers = async () => {
+  useEffect(() => {
+    if (!isAdmin || initLoading) return;
+    fetchMembers();
+  }, [filter, isAdmin, initLoading]);
+
+  const fetchMembers = async () => {
     setLoading(true);
-    let query = supabaseAdmin.from('drivers').select('*');
-    
-    if (filter !== 'all') {
-      query = query.eq('status', filter);
-    }
-    
-    const { data, error } = await query.order('created_at', { ascending: false });
-    
-    if (!error && data) {
-      setDrivers(data);
-    }
+    try {
+      let query = supabaseAdmin.from('gmo_members').select('*').eq('role', 'driver');
+      if (filter !== 'all') {
+        query = query.eq('status', filter);
+      }
+      const { data, error } = await query.order('created_at', { ascending: false });
+      if (!error && data) setMembers(data);
+    } catch (err) { console.error(err); }
     setLoading(false);
   };
 
   const handleAction = async () => {
-    if (!selectedDriver || !action) return;
-
+    if (!selectedMember || !action) return;
     let updates: any = {};
-    let newStatus = '';
-    
     if (action === 'approve') {
-      updates = { status: 'approved', verified_at: new Date().toISOString(), rejection_reason: null };
-      newStatus = 'approved';
+      updates = { status: 'active', verified_at: new Date().toISOString() };
     } else if (action === 'reject') {
       updates = { status: 'rejected', rejection_reason: reason };
-      newStatus = 'rejected';
     } else if (action === 'suspend') {
       updates = { status: 'suspended' };
-      newStatus = 'suspended';
     }
 
-    const { error } = await supabaseAdmin
-      .from('drivers')
-      .update(updates)
-      .eq('id', selectedDriver.id);
-
-    if (!error) {
-      alert(action === 'approve' ? '已核准該司機' : action === 'reject' ? '已駁回該司機' : '已停用該司機');
-      setSelectedDriver(null);
-      setAction(null);
-      setReason('');
-      // 自動切換到對應的分類
-      setFilter(newStatus as 'pending' | 'approved' | 'rejected' | 'suspended' | 'all');
-      fetchDrivers();
-    }
-  };
-
-  const handleDelete = async (driverId: string) => {
-    if (!confirm('確定要刪除此司機資料嗎？此操作無法復原。')) return;
-    
-    const { error } = await supabaseAdmin.from('drivers').delete().eq('id', driverId);
+    const { error } = await supabaseAdmin.from('gmo_members').update(updates).eq('id', selectedMember.id);
     if (error) {
-      alert('刪除失敗: ' + error.message);
+      alert('操作失敗: ' + error.message);
     } else {
-      alert('已刪除');
-      // 立即從本地列表移除並強制重新整理
-      setDrivers(drivers.filter(d => d.id !== driverId));
-      fetchDrivers(); // 強制重新整理確保同步
+      alert(action === 'approve' ? '已核准該司機' : action === 'reject' ? '已駁回該司機' : '已停用該司機');
+      setShowModal(false);
+      setSelectedMember(null);
+      setAction('');
+      setReason('');
+      fetchMembers();
     }
   };
 
   const getStatusBadge = (status: string) => {
-    const colors: any = {
-      pending: 'bg-yellow-500/20 text-yellow-400',
-      approved: 'bg-green-500/20 text-green-400',
-      rejected: 'bg-red-500/20 text-red-400',
-      suspended: 'bg-orange-500/20 text-orange-400',
-    };
-    const labels: any = {
-      pending: '待審核',
-      approved: '已核准',
-      rejected: '已駁回',
-      suspended: '已停用',
-    };
-    return <span className={`px-2 py-1 rounded-full text-xs ${colors[status]}`}>{labels[status]}</span>;
+    const colors: any = { pending: 'bg-yellow-500', active: 'bg-green-500', rejected: 'bg-red-500', suspended: 'bg-gray-500' };
+    const labels: any = { pending: '待審核', active: '已核准', rejected: '已駁回', suspended: '已停用' };
+    return <span style={{ padding: '0.25rem 0.5rem', borderRadius: '0.25rem', fontSize: '0.75rem', color: 'white', backgroundColor: colors[status] || '#6b7280' }}>{labels[status] || status}</span>;
   };
 
-  const formatDate = (dateStr: string) => {
-    if (!dateStr) return '-';
-    return new Date(dateStr).toLocaleDateString('zh-TW');
+  const openDetail = (member: Member) => {
+    setSelectedMember(member);
+    setShowModal(true);
   };
 
-  const isExpired = (dateStr: string) => {
-    if (!dateStr) return false;
-    return new Date(dateStr) < new Date();
-  };
+  if (initLoading) return <div style={{ minHeight: '100vh', backgroundColor: '#0c0a09', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#d4af37' }}>載入中...</div>;
 
   return (
-    <div className="min-h-screen bg-[#0c0a09] p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* 導航列 */}
-        <div className="flex justify-between items-center mb-6">
-          <Link href="/" className="text-[#a8a29e] hover:text-[#d4af37]">
-            ← 回首頁
-          </Link>
-          <Link href="/admin/dispatchers" className="text-[#d4af37] hover:underline">
-            調度員審核 →
-          </Link>
+    <div style={{ minHeight: '100vh', backgroundColor: '#0c0a09', color: '#fafaf9' }}>
+      {/* 導航列 */}
+      <nav style={{ backgroundColor: '#1a1918', borderBottom: '1px solid #292524', padding: '1rem' }}>
+        <div style={{ maxWidth: '56rem', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h1 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#d4af37' }}>GMO 管理後台</h1>
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <a href="/admin/drivers" style={{ color: '#d4af37', fontWeight: 'bold' }}>司機審核</a>
+            <a href="/admin/dispatchers" style={{ color: '#a8a29e' }}>調度員審核</a>
+            <a href="/" style={{ color: '#a8a29e' }}>回首頁</a>
+          </div>
         </div>
+      </nav>
 
-        {/* 標題 */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-[#fafaf9]">司機審核管理</h1>
-            <p className="text-[#a8a29e] mt-1">審核司機認證資料</p>
-          </div>
-          <div className="flex gap-2 flex-wrap">
-            {(['pending', 'approved', 'rejected', 'suspended', 'all'] as const).map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`px-4 py-2 rounded-lg text-sm ${
-                  filter === f
-                    ? 'bg-[#d4af37] text-[#0c0a09]'
-                    : 'bg-[#292524] text-[#a8a29e] hover:text-[#fafaf9]'
-                }`}
-              >
-                {f === 'pending' ? '待審' : f === 'approved' ? '已核准' : f === 'rejected' ? '已駁回' : f === 'suspended' ? '已停用' : '總名冊'}
-              </button>
-            ))}
-          </div>
+      <div style={{ maxWidth: '56rem', margin: '0 auto', padding: '1.5rem' }}>
+        {/* 篩選 */}
+        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+          {['pending', 'active', 'rejected', 'suspended', 'all'].map(tab => (
+            <button key={tab} onClick={() => setFilter(tab)} style={{ padding: '0.5rem 1rem', borderRadius: '0.5rem', fontWeight: '500', backgroundColor: filter === tab ? '#d4af37' : '#292524', color: filter === tab ? '#0c0a09' : '#a8a29e', border: 'none', cursor: 'pointer' }}>
+              {tab === 'pending' ? '待審核' : tab === 'active' ? '已核准' : tab === 'rejected' ? '已駁回' : tab === 'suspended' ? '已停用' : '全部'}
+            </button>
+          ))}
         </div>
 
         {/* 列表 */}
-        {loading ? (
-          <div className="text-center text-[#a8a29e] py-12">載入中...</div>
-        ) : drivers.length === 0 ? (
-          <div className="glass-card p-12 text-center text-[#a8a29e]">
-            沒有待審核的司機
-          </div>
-        ) : (
-          <div className="grid gap-4">
-            {drivers.map((driver) => (
-              <div key={driver.id} className="glass-card p-4 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-[#292524] flex items-center justify-center text-[#d4af37] font-bold">
-                    {driver.name?.[0] || '司'}
-                  </div>
+        {loading ? <div style={{ textAlign: 'center', padding: '3rem', color: '#a8a29e' }}>載入中...</div> : members.length === 0 ? <div style={{ textAlign: 'center', padding: '3rem', color: '#a8a29e' }}>目前沒有司機資料</div> : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {members.map(member => (
+              <div key={member.id} onClick={() => openDetail(member)} style={{ backgroundColor: '#1a1918', border: '1px solid #292524', borderRadius: '0.5rem', padding: '1rem', cursor: 'pointer', transition: 'border-color 0.2s' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-[#fafaf9]">{driver.name}</span>
-                      {driver.driver_number && (
-                        <span className="text-xs text-[#d4af37]">{driver.driver_number}</span>
-                      )}
-                      {getStatusBadge(driver.status)}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ fontWeight: 'bold' }}>{member.name}</span>
+                      {getStatusBadge(member.status)}
                     </div>
-                    <div className="text-sm text-[#a8a29e]">
-                      {driver.phone} · {driver.license_plate} · {driver.car_model}
-                    </div>
+                    <div style={{ fontSize: '0.875rem', color: '#a8a29e' }}>電話: {member.phone}</div>
+                    <div style={{ fontSize: '0.75rem', color: '#78716c' }}>註冊時間: {new Date(member.created_at).toLocaleString('zh-TW')}</div>
                   </div>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setSelectedDriver(driver)}
-                    className="px-4 py-2 bg-[#d4af37] text-[#0c0a09] rounded-lg text-sm font-medium hover:bg-[#e8c44a]"
-                  >
-                    檢視詳情
-                  </button>
-                  <button
-                    onClick={() => handleDelete(driver.id)}
-                    className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg text-sm font-medium hover:bg-red-500/30"
-                  >
-                    刪除
-                  </button>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    {member.status === 'pending' && <button onClick={(e) => { e.stopPropagation(); setSelectedMember(member); setAction('approve'); setShowModal(true); }} style={{ padding: '0.25rem 0.75rem', borderRadius: '0.25rem', backgroundColor: '#22c55e', color: 'white', border: 'none', cursor: 'pointer', fontSize: '0.875rem' }}>核准</button>}
+                    <button onClick={(e) => { e.stopPropagation(); setSelectedMember(member); setAction('reject'); setShowModal(true); }} style={{ padding: '0.25rem 0.75rem', borderRadius: '0.25rem', backgroundColor: '#ef4444', color: 'white', border: 'none', cursor: 'pointer', fontSize: '0.875rem' }}>駁回</button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         )}
+      </div>
 
-        {/* 詳情 Modal */}
-        {selectedDriver && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-            <div className="bg-[#1c1a18] rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="p-6 border-b border-[#292524]">
-                <h2 className="text-xl font-bold text-[#fafaf9]">司機資料詳情</h2>
-              </div>
+      {/* 詳細 Modal */}
+      {showModal && selectedMember && (
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', zIndex: 50 }}>
+          <div style={{ backgroundColor: '#1a1918', border: '1px solid #292524', borderRadius: '0.5rem', padding: '1.5rem', maxWidth: '32rem', width: '100%' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#d4af37', marginBottom: '1rem' }}>司機資料審核</h3>
+            
+            <div style={{ backgroundColor: '#0c0a09', borderRadius: '0.5rem', padding: '1rem', marginBottom: '1rem' }}>
+              <p style={{ color: '#a8a29e', fontSize: '0.75rem' }}>姓名</p>
+              <p style={{ fontWeight: 'bold' }}>{selectedMember.name}</p>
+              <p style={{ color: '#a8a29e', fontSize: '0.75rem', marginTop: '0.5rem' }}>電話</p>
+              <p>{selectedMember.phone}</p>
+            </div>
+
+            {/* 證件資訊 */}
+            <div style={{ marginBottom: '1rem' }}>
+              <p style={{ color: '#d4af37', fontWeight: 'bold', marginBottom: '0.5rem' }}>證件有效期</p>
               
-              <div className="p-6 space-y-6">
-                {/* 基本資料 */}
-                <div>
-                  <h3 className="text-sm font-medium text-[#a8a29e] mb-3">基本資料</h3>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-[#78716c]">司機編號：</span>
-                      <span className="text-[#d4af37] font-bold">{selectedDriver.driver_number || '尚未編號'}</span>
-                    </div>
-                    <div>
-                      <span className="text-[#78716c]">LINE 名稱：</span>
-                      <span className="text-[#fafaf9]">{selectedDriver.line_name}</span>
-                    </div>
-                    <div>
-                      <span className="text-[#78716c]">姓名：</span>
-                      <span className="text-[#fafaf9]">{selectedDriver.name}</span>
-                    </div>
-                    <div>
-                      <span className="text-[#78716c]">電話：</span>
-                      <span className="text-[#fafaf9]">{selectedDriver.phone}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 銀行資料 */}
-                <div>
-                  <h3 className="text-sm font-medium text-[#a8a29e] mb-3">銀行資料</h3>
-                  <div className="grid grid-cols-3 gap-4 text-sm">
-                    <div>
-                      <span className="text-[#78716c]">銀行：</span>
-                      <span className="text-[#fafaf9]">{selectedDriver.bank_name || '-'}</span>
-                    </div>
-                    <div>
-                      <span className="text-[#78716c]">代碼：</span>
-                      <span className="text-[#fafaf9]">{selectedDriver.bank_code || '-'}</span>
-                    </div>
-                    <div>
-                      <span className="text-[#78716c]">帳號：</span>
-                      <span className="text-[#fafaf9]">{selectedDriver.bank_account || '-'}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 車輛資料 */}
-                <div>
-                  <h3 className="text-sm font-medium text-[#a8a29e] mb-3">車輛資料</h3>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-[#78716c]">車號：</span>
-                      <span className="text-[#fafaf9]">{selectedDriver.license_plate}</span>
-                    </div>
-                    <div>
-                      <span className="text-[#78716c]">車型：</span>
-                      <span className="text-[#fafaf9]">{selectedDriver.car_model}</span>
-                    </div>
-                    <div>
-                      <span className="text-[#78716c]">座位數：</span>
-                      <span className="text-[#fafaf9]">{selectedDriver.seats} 人座</span>
-                    </div>
-                    <div>
-                      <span className="text-[#78716c]">車色：</span>
-                      <span className="text-[#fafaf9]">{selectedDriver.car_color || '-'}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 證件 */}
-                <div>
-                  <h3 className="text-sm font-medium text-[#a8a29e] mb-3">證件資料</h3>
-                  <div className="space-y-4">
-                    {/* 職業駕照 */}
-                    <div className="flex items-center justify-between p-3 bg-[#292524] rounded-lg">
-                      <div>
-                        <p className="text-[#fafaf9]">職業駕照</p>
-                        <p className="text-xs text-[#78716c]">
-                          到期日：{formatDate(selectedDriver.driver_license_expiry)}
-                          {isExpired(selectedDriver.driver_license_expiry) && (
-                            <span className="text-red-400 ml-2">已過期</span>
-                          )}
-                        </p>
-                      </div>
-                      {selectedDriver.driver_license_url && (
-                        <a
-                          href={selectedDriver.driver_license_url}
-                          target="_blank"
-                          className="text-[#d4af37] text-sm hover:underline"
-                        >
-                          查看
-                        </a>
-                      )}
-                    </div>
-
-                    {/* 行照 */}
-                    <div className="flex items-center justify-between p-3 bg-[#292524] rounded-lg">
-                      <div>
-                        <p className="text-[#fafaf9]">行照</p>
-                        <p className="text-xs text-[#78716c]">
-                          到期日：{formatDate(selectedDriver.vehicle_reg_expiry)}
-                          {isExpired(selectedDriver.vehicle_reg_expiry) && (
-                            <span className="text-red-400 ml-2">已過期</span>
-                          )}
-                        </p>
-                      </div>
-                      {selectedDriver.vehicle_reg_url && (
-                        <a
-                          href={selectedDriver.vehicle_reg_url}
-                          target="_blank"
-                          className="text-[#d4af37] text-sm hover:underline"
-                        >
-                          查看
-                        </a>
-                      )}
-                    </div>
-
-                    {/* 保險證 */}
-                    <div className="flex items-center justify-between p-3 bg-[#292524] rounded-lg">
-                      <div>
-                        <p className="text-[#fafaf9]">保險證</p>
-                        <p className="text-xs text-[#78716c]">
-                          到期日：{formatDate(selectedDriver.insurance_expiry)}
-                          {isExpired(selectedDriver.insurance_expiry) && (
-                            <span className="text-red-400 ml-2">已過期</span>
-                          )}
-                        </p>
-                      </div>
-                      {selectedDriver.insurance_url && (
-                        <a
-                          href={selectedDriver.insurance_url}
-                          target="_blank"
-                          className="text-[#d4af37] text-sm hover:underline"
-                        >
-                          查看
-                        </a>
-                      )}
-                    </div>
-
-                    {/* 良民證 */}
-                    <div className="flex items-center justify-between p-3 bg-[#292524] rounded-lg">
-                      <div>
-                        <p className="text-[#fafaf9]">良民證 <span className="text-xs text-[#78716c]">（選傳）</span></p>
-                      </div>
-                      {selectedDriver.good_conduct_url ? (
-                        <a
-                          href={selectedDriver.good_conduct_url}
-                          target="_blank"
-                          className="text-[#d4af37] text-sm hover:underline"
-                        >
-                          查看
-                        </a>
-                      ) : (
-                        <span className="text-xs text-[#78716c]">未上傳</span>
-                      )}
-                    </div>
-
-                    {/* 無肇事紀錄 */}
-                    <div className="flex items-center justify-between p-3 bg-[#292524] rounded-lg">
-                      <div>
-                        <p className="text-[#fafaf9]">無肇事紀錄 <span className="text-xs text-[#78716c]">（選傳）</span></p>
-                      </div>
-                      {selectedDriver.no_accident_url ? (
-                        <a
-                          href={selectedDriver.no_accident_url}
-                          target="_blank"
-                          className="text-[#d4af37] text-sm hover:underline"
-                        >
-                          查看
-                        </a>
-                      ) : (
-                        <span className="text-xs text-[#78716c]">未上傳</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
+              <div style={{ backgroundColor: '#0c0a09', borderRadius: '0.5rem', padding: '0.75rem', marginBottom: '0.5rem' }}>
+                <p style={{ color: '#a8a29e', fontSize: '0.75rem' }}>1. 駕照到期日</p>
+                <p style={{ color: selectedMember.driver_license_expiry ? '#22c55e' : '#ef4444' }}>{selectedMember.driver_license_expiry || '未填寫'}</p>
               </div>
 
-              {/* 操作區 */}
-              {selectedDriver.status === 'pending' && (
-                <div className="p-6 border-t border-[#292524]">
-                  {action ? (
-                    <div className="space-y-4">
-                      {action === 'reject' && (
-                        <div>
-                          <label className="block text-sm text-[#a8a29e] mb-2">駁回原因</label>
-                          <select
-                            value={reason}
-                            onChange={(e) => setReason(e.target.value)}
-                            className="input-dark w-full"
-                          >
-                            <option value="">請選擇駁回原因</option>
-                            <option value="證件不符">證件不符</option>
-                            <option value="證件過期">證件過期</option>
-                            <option value="資料填寫錯誤">資料填寫錯誤</option>
-                            <option value="其他">其他</option>
-                          </select>
-                        </div>
-                      )}
-                      <div className="flex gap-3">
-                        <button
-                          onClick={handleAction}
-                          disabled={action === 'reject' && !reason}
-                          className={`flex-1 py-3 rounded-lg font-medium ${
-                            action === 'approve'
-                              ? 'bg-green-500 text-white'
-                              : 'bg-red-500 text-white'
-                          } disabled:opacity-50`}
-                        >
-                          確認{action === 'approve' ? '核准' : '駁回'}
-                        </button>
-                        <button
-                          onClick={() => { setAction(null); setReason(''); }}
-                          className="flex-1 py-3 bg-[#292524] text-[#a8a29e] rounded-lg"
-                        >
-                          取消
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex gap-3">
-                      <button
-                        onClick={() => setAction('approve')}
-                        className="flex-1 py-3 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600"
-                      >
-                        核准
-                      </button>
-                      <button
-                        onClick={() => setAction('reject')}
-                        className="flex-1 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600"
-                      >
-                        駁回
-                      </button>
-                      <button
-                        onClick={() => setAction('suspend')}
-                        className="flex-1 py-3 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600"
-                      >
-                        停用
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
+              <div style={{ backgroundColor: '#0c0a09', borderRadius: '0.5rem', padding: '0.75rem', marginBottom: '0.5rem' }}>
+                <p style={{ color: '#a8a29e', fontSize: '0.75rem' }}>2. 行照到期日</p>
+                <p style={{ color: selectedMember.vehicle_reg_expiry ? '#22c55e' : '#ef4444' }}>{selectedMember.vehicle_reg_expiry || '未填寫'}</p>
+              </div>
 
-              <div className="p-4 border-t border-[#292524]">
-                <button
-                  onClick={() => setSelectedDriver(null)}
-                  className="w-full py-3 text-[#a8a29e] hover:text-[#fafaf9]"
-                >
-                  關閉
-                </button>
+              <div style={{ backgroundColor: '#0c0a09', borderRadius: '0.5rem', padding: '0.75rem' }}>
+                <p style={{ color: '#a8a29e', fontSize: '0.75rem' }}>3. 保險到期日</p>
+                <p style={{ color: selectedMember.insurance_expiry ? '#22c55e' : '#ef4444' }}>{selectedMember.insurance_expiry || '未填寫'}</p>
               </div>
             </div>
+
+            {/* 圖片顯示區（預留） */}
+            {selectedMember.driver_license_url && (
+              <div style={{ marginBottom: '1rem' }}>
+                <p style={{ color: '#d4af37', fontWeight: 'bold', marginBottom: '0.5rem' }}>證件圖片</p>
+                <img src={selectedMember.driver_license_url} alt="駕照" style={{ maxWidth: '100%', borderRadius: '0.5rem' }} />
+              </div>
+            )}
+
+            {action === 'reject' && (
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', fontSize: '0.875rem', color: '#a8a29e', marginBottom: '0.5rem' }}>駁回原因</label>
+                <textarea value={reason} onChange={(e) => setReason(e.target.value)} rows={3} style={{ width: '100%', padding: '0.5rem', backgroundColor: '#0c0a09', border: '1px solid #292524', borderRadius: '0.5rem', color: '#fafaf9' }} placeholder="請輸入駁回原因..." />
+              </div>
+            )}
+
+            <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+              <button onClick={() => { setShowModal(false); setSelectedMember(null); setAction(''); setReason(''); }} style={{ padding: '0.5rem 1rem', borderRadius: '0.5rem', backgroundColor: '#292524', color: '#a8a29e', border: 'none', cursor: 'pointer' }}>取消</button>
+              <button onClick={handleAction} style={{ padding: '0.5rem 1rem', borderRadius: '0.5rem', backgroundColor: action === 'approve' ? '#22c55e' : action === 'reject' ? '#ef4444' : '#6b7280', color: 'white', border: 'none', cursor: 'pointer' }}>確認</button>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

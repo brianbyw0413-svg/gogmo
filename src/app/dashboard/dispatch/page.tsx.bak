@@ -26,7 +26,46 @@ interface ParsedTrip {
   contact_phone: string;
 }
 
-// 簡易 AI 解析器 — 從文字訊息中提取訂單資訊
+// AI API 解析函數
+async function parseWithAI(text: string): Promise<Partial<ParsedTrip>> {
+  try {
+    const response = await fetch('/api/ai/parse', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text })
+    });
+
+    if (!response.ok) throw new Error('AI 解析失敗');
+    const data = await response.json();
+    
+    if (data.success && data.parsed) {
+      return {
+        service_type: data.parsed.service_type || 'dropoff',
+        pickup_address: data.parsed.pickup_address || '',
+        dropoff_address: data.parsed.dropoff_address || '',
+        pickup_area: data.parsed.pickup_area || '',
+        dropoff_area: data.parsed.dropoff_area || '',
+        service_date: data.parsed.service_date || '',
+        service_time: data.parsed.service_time || '',
+        flight_number: data.parsed.flight_number || '',
+        passenger_count: data.parsed.passenger_count || 1,
+        luggage_count: data.parsed.luggage_count || 0,
+        amount: data.parsed.amount || 0,
+        driver_fee: data.parsed.driver_fee || 0,
+        note: data.parsed.note || '',
+        payment_mode: data.parsed.payment_mode || 'customer_pay',
+        contact_name: data.parsed.contact_name || '',
+        contact_phone: data.parsed.contact_phone || ''
+      };
+    }
+    throw new Error('解析結果格式錯誤');
+  } catch (error) {
+    console.error('AI 解析錯誤:', error);
+    throw error;
+  }
+}
+
+// 簡易 Regex 解析器 (fallback)
 function parseDispatchText(text: string): Partial<ParsedTrip> {
   const result: Partial<ParsedTrip> = {};
   const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
@@ -241,42 +280,12 @@ export default function DispatchPage() {
   };
 
   // AI 解析並回應
-  const handleSendMessage = async () => {
+  const handleSendMessage = () => {
     const text = inputText.trim();
     if (!text) return;
 
     const userMsg: ChatMessage = { role: 'user', content: text, timestamp: new Date() };
-    // 嘗試 AI 解析
-    let parsed;
-    try {
-      const res = await fetch('/api/ai/parse', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
-      });
-      const data = await res.json();
-      if (data.success && data.parsed) {
-        const arr = Array.isArray(data.parsed) ? data.parsed : [data.parsed];
-        setParsedBatchTrips(arr);
-        setSelectedBatchTrips(new Set(arr.map((_: any, i: number) => i)));
-        
-        let reply = arr.length === 1 
-          ? '✅ 已解析 1 筆\n' 
-          : `✅ 已解析 ${arr.length} 筆訂單\n\n`;
-        
-        arr.forEach((p: any, i: number) => {
-          if (arr.length > 1) reply += `--- 訂單 ${i+1} ---\n`;
-          if (p.service_type) reply += `  ${p.service_type === 'pickup' ? '接機' : '送機'}\n`;
-          if (p.amount) reply += `  $${p.amount}\n`;
-        });
-        
-        setMessages(prev => [...prev, { role: 'system', content: reply, timestamp: new Date() }]);
-        return;
-      }
-    } catch (e) {
-      console.error('AI 解析失敗', e);
-    }
-    parsed = parseDispatchText(text);
+    const parsed = parseDispatchText(text);
 
     // 產生系統回應
     const missing: string[] = [];
